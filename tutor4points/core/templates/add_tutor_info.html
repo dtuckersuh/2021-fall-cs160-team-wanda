@@ -1,0 +1,13 @@
+<!--Adding Time and Classes for Tutor Profile-->
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+    <form method="POST" class="form-group">
+        {% csrf_token %}
+        {{add_class_form|crispy}}
+        <button type="submit" class="btn btn-success">Add</button>
+        {{add_tutor_time_form|crispy}}
+        <button type="submit" class="btn btn-success">Continue</button>
+    </form>
+{% endblock %}

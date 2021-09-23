@@ -14,8 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from core import views as v
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # when pass in nothing to url, render register page
+    path('', v.register, name="register"),
+
+    # http://127.0.0.1:8000/add-tutor-info
+    path('add-tutor-info/', v.add_tutor_info, name="add_tutor_info")
 ]
