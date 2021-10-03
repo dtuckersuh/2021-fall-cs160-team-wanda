@@ -1,41 +1,43 @@
-from django.shortcuts import render
-from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.core.exceptions import ValidationError
+from .models import User, School, Tutor_Info
+
 # Create your views here.
 
 
 class RegisterForm (UserCreationForm):
-    # UserCreationForm comes with username, password1, password2 as default
 
-    # add additional fields
-    first_name = forms.CharField(label="Enter First Name")  # first name field
-    last_name = forms.CharField(label="Enter Last Name")  # last name field
-    # use email as username field
-    email = forms.EmailField(label="Enter E-mail")
-
-    def clean_email(self):
-        cleaned_email = self.cleaned_data.get('email').lower()
-        # makes sure emails are unique
-        if User.objects.filter(email=cleaned_email).exists():
-            raise ValidationError("A user with that email already exists")
-        return cleaned_email
+    # get school names from School model
+    school = forms.ModelChoiceField(queryset=School.objects.all())
 
     class Meta:
         model = User  # based on User model
 
         # layout where want fields to be, type in order you want it to appear
-        fields = ["first_name", "last_name", "email",
-                  "username",  "password1", "password2"]
+        fields = ("first_name", "last_name", "school", "email",
+                  "username", "password1", "password2")
 
 
-class AddClassForm (forms.Form):
-    school = forms.ChoiceField(choices=[(
-        'san jose state university', 'San Jose State University'), ('uc berkeley', 'UC Berkeley')])
-    class_taken = forms.CharField(label="Classes Taken", required=False)
+class ProfilePicUploadForm (forms.ModelForm):
+
+    class Meta:
+        model = User
+        fields = ('profile_pic',)
 
 
-class AddTutorTimeForm (forms.Form):
-    day_of_week = forms.ChoiceField(label='Day of Week', required=False, choices=[('sunday', 'Sunday'), (
-        'monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday'), ('saturday', 'Saturday')])
+class UpdateTutorProfileForm (forms.ModelForm):
+
+    class Meta:
+        model = Tutor_Info
+        fields = ('classes', 'times_available',
+                  'timezone', 'rate', )
+        widgets = {
+            'times_available': forms.Textarea(attrs={
+                'placeholder': 'Enter dates and times you are available to tutor (Ex: Monday 2-3pm, Wednesday 4-5pm)'}),
+            'classes': forms.Textarea(attrs={
+                'placeholder': 'Enter classes you have taken at your school (Ex: CS146, MATH42)'})
+        }
+        labels = {
+            'times_available': 'Dates and Times Available to Tutor',
+            'classes': 'Classes Taken'
+        }

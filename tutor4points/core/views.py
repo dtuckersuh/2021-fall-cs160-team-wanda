@@ -1,8 +1,12 @@
-from .forms import AddClassForm, RegisterForm, AddTutorTimeForm
+from django.contrib.auth import authenticate, login
+from .forms import RegisterForm, ProfilePicUploadForm, UpdateTutorProfileForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
-# registration view
+
+def login(request):
+    return render(request, "login.html")
 
 
 def register(request):
@@ -10,28 +14,52 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect("/add-tutor-info")
+            new_user = authenticate(username=form.cleaned_data.get(
+                'username'), password=form.cleaned_data.get('password1'))
+            messages.info(
+                request, "Thanks for registering. You are now logged in.")
+            login(request, new_user)
+            return redirect("/register2")
 
     else:
         form = RegisterForm()
     return render(request, "register.html", {"form": form})
 
-# View to add tutor school, class, and time
 
-
-def add_tutor_info(request):
+@login_required
+# registration part 2 view
+def register2(request):
     if request.method == "POST":
-        if 'add_class' in request.POST:
-            add_class_form = AddClassForm(request.POST)
-            if add_class_form.is_valid():
-                add_class_form.save()
-        elif 'add_tutor_time' in request.POST:
-            add_tutor_time_form = AddTutorTimeForm(request.POST)
-            if add_tutor_time_form.is_valid():
-                add_tutor_time_form.save()
-        return redirect("/")
+        form = ProfilePicUploadForm(
+            request.POST, request.FILES, instance=request.user)
+        if form.is_valid():
+            form.save()
+        if "no_tutor" in request.POST:
+            return redirect("/dashboard")
+        if "yes_tutor" in request.POST:
+            return redirect("/update-tutor-profile")
+    else:
+        form = ProfilePicUploadForm()
+    return render(request, "register2.html", {"form": form})
+
+
+@login_required
+# page allowing user to upate/creatae tutor profile
+def update_tutor_profile(request):
+    if request.method == "POST":
+        form = UpdateTutorProfileForm(request.POST)
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+        return redirect("/dashboard")
 
     else:
-        add_class_form = AddClassForm()
-        add_tutor_time_form = AddTutorTimeForm()
-    return render(request, "add_tutor_info.html", {'add_class_form': add_class_form, 'add_tutor_time_form': add_tutor_time_form})
+        form = UpdateTutorProfileForm()
+    return render(request, "update_tutor_profile.html", {"form": form})
+
+
+@login_required
+# dashboard page
+def dashboard(request):
+    return render(request, "dashboard.html")

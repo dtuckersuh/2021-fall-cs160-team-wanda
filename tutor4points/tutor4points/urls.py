@@ -15,14 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from core import views as v
+from core import views as views
+
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
-    # when pass in nothing to url, render register page
-    path('', v.register, name="register"),
-
-    # http://127.0.0.1:8000/add-tutor-info
-    path('add-tutor-info/', v.add_tutor_info, name="add_tutor_info")
-]
+    path('', views.login, name="login"),
+    path('register/', views.register, name="register"),
+    path('register2/', views.register2, name="register2"),
+    path('update-tutor-profile/', views.update_tutor_profile,
+         name="update_tutor_profile"),
+    path('dashboard/', views.dashboard,
+         name="dashboard"),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
