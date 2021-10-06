@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 
-def login(request):
+def login_user(request):
     return render(request, "login.html")
 
 
@@ -32,11 +32,15 @@ def register2(request):
     if request.method == "POST":
         form = ProfilePicUploadForm(
             request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            form.save()
         if "no_tutor" in request.POST:
+            if form.is_valid():
+                form.save()
             return redirect("/dashboard")
         if "yes_tutor" in request.POST:
+            if form.is_valid():
+                profile = form.save(commit=False)
+                profile.is_tutor = True  # mark that person wants to be a tutor
+                profile.save()
             return redirect("/update-tutor-profile")
     else:
         form = ProfilePicUploadForm()
@@ -44,14 +48,12 @@ def register2(request):
 
 
 @login_required
-# page allowing user to upate/creatae tutor profile
+# page allowing user to upate/create tutor profile
 def update_tutor_profile(request):
     if request.method == "POST":
-        form = UpdateTutorProfileForm(request.POST)
+        form = UpdateTutorProfileForm(request.POST, instance=request.user)
         if form.is_valid():
-            profile = form.save(commit=False)
-            profile.user = request.user
-            profile.save()
+            form.save()
         return redirect("/dashboard")
 
     else:
