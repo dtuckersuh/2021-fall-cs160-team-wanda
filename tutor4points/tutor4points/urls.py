@@ -18,6 +18,7 @@ from django.urls import path, include
 from core import views as views
 
 from django.conf import settings
+from django.contrib.auth.views import LogoutView
 from django.conf.urls.static import static
 
 urlpatterns = [
@@ -27,6 +28,6 @@ urlpatterns = [
     path('register2/', views.register2, name="register2"),
     path('update-tutor-profile/', views.update_tutor_profile,
          name="update_tutor_profile"),
-    path('dashboard/', views.dashboard,
-         name="dashboard"),
+    path('dashboard/', views.dashboard, name="dashboard"),
+    path('logout/', LogoutView.as_view(), name="logout"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

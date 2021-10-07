@@ -1,6 +1,16 @@
 <!--Login Page-->
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
 {% block heading %}
-Please Login or Register Before Continuing
+Welcome to Tutor4Points!
+{% endblock %}
+
+{% block content %}
+<form method="POST" class="form-group">
+        {% csrf_token %}
+        {{form|crispy}}
+        <p> Don't have an account? Please <a href="/register">Register</a>!</p>
+        <button type="submit" class="btn btn-success">Login</button>
+</form>
 {% endblock %}

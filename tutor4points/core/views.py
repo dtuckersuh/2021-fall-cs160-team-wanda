@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, forms
 from .forms import RegisterForm, ProfilePicUploadForm, UpdateTutorProfileForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -6,7 +6,20 @@ from django.contrib.auth.decorators import login_required
 
 
 def login_user(request):
-    return render(request, "login.html")
+    if request.method == "POST":
+        form = forms.AuthenticationForm(request, request.POST)
+        if form.is_valid():
+            user = authenticate(username=form.cleaned_data.get(
+                'username'), password=form.cleaned_data.get('password'))
+
+            if user is not None:
+                login(request, user)
+                return redirect('/dashboard')
+            else:
+                return redirect('/')
+    else:
+        form = forms.AuthenticationForm()
+    return render(request, "login.html", {"form": form})
 
 
 def register(request):
@@ -16,8 +29,6 @@ def register(request):
             form.save()
             new_user = authenticate(username=form.cleaned_data.get(
                 'username'), password=form.cleaned_data.get('password1'))
-            messages.info(
-                request, "Thanks for registering. You are now logged in.")
             login(request, new_user)
             return redirect("/register2")
 
@@ -26,7 +37,7 @@ def register(request):
     return render(request, "register.html", {"form": form})
 
 
-@login_required
+@ login_required
 # registration part 2 view
 def register2(request):
     if request.method == "POST":
@@ -47,7 +58,7 @@ def register2(request):
     return render(request, "register2.html", {"form": form})
 
 
-@login_required
+@ login_required
 # page allowing user to upate/create tutor profile
 def update_tutor_profile(request):
     if request.method == "POST":
@@ -61,7 +72,7 @@ def update_tutor_profile(request):
     return render(request, "update_tutor_profile.html", {"form": form})
 
 
-@login_required
+@ login_required
 # dashboard page
 def dashboard(request):
     return render(request, "dashboard.html")

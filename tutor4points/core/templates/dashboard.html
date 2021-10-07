@@ -5,3 +5,10 @@
 Dashboard
 {% endblock %}
 
+{% block content %}
+ <form method="POST" class="form-group">
+    {% csrf_token %}
+    <a class="btn btn-success" href="{% url 'logout' %}">Logout</a>
+  </form>
+{% endblock %}
+
