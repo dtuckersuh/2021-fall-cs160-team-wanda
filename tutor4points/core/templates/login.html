@@ -1,16 +1,25 @@
 <!--Login Page-->
 {% extends 'base.html' %}
 
-{% load crispy_forms_tags %}
+{% block extrahead%}
+{% load static %}
+<link rel="stylesheet" type = "text/css" href = "{% static 'css/login.css' %}"/>
+{% endblock%}
+
+
 {% block heading %}
 Welcome to Tutor4Points!
 {% endblock %}
 
+{% load crispy_forms_tags %}
 {% block content %}
 <form method="POST" class="form-group">
         {% csrf_token %}
-        {{form|crispy}}
-        <p> Don't have an account? Please <a href="/register">Register</a>!</p>
-        <button type="submit" class="btn btn-success">Login</button>
+        <div class="container">
+                {{form |crispy}}
+                <button type="submit" class="btn-block btn-success btn-style mt-4">Login</button>
+                <p style = "text-align:center; margin: 15px;"> Don't have an account? Please <a href="/users/register">Register</a> !</p>
+        </div>
 </form>
+
 {% endblock %}

@@ -1,0 +1,9 @@
+@media (min-width: 1200px) {
+    .container{
+        max-width: 400px;
+    }
+}
+
+.btn-style {
+    height: 40px;
+}

@@ -1,12 +1,83 @@
 <!--Register Page-->
 {% extends 'base.html' %}
 
+{% block extrahead%}
+{% load static %}
+<link rel="stylesheet" type = "text/css" href = "{% static 'css/register.css' %}"/>
+{% endblock%}
+
+{% block heading %}
+Register
+{% endblock %}
+
 {% load crispy_forms_tags %}
 {% block content %}
-  <form method="POST" class="form-group">
-        {% csrf_token %}
-        {{form|crispy}}
-        <button type="submit" class="btn btn-success">Next</button>
-        <p> Already have an account? Please <a href="/">Login</a>!</p>
-  </form>
+  <form method = 'POST' enctype='multipart/form-data'>
+    {% csrf_token %}
+    <div class = "container">
+      {{form.profile_pic | as_crispy_field}}
+      
+      <div class = "form-row">
+        <div class="col-6">
+          {{form.first_name | as_crispy_field}}
+        </div>
+        <div class="col-6">
+          {{form.last_name | as_crispy_field}}
+        </div>
+        <div class="col-6">
+          {{form.email | as_crispy_field}}
+        </div>
+        <div class="col-6">
+          {{form.school | as_crispy_field}}
+        </div>
+        <div class="col-4">
+          {{form.username | as_crispy_field}}
+        </div>
+        <div class="col-4">
+          {{form.password1| as_crispy_field}}
+        </div>
+        <div class="col-4">
+          {{form.password2 | as_crispy_field}}
+        </div>
+      </div>
+
+      {{form.is_tutor | as_crispy_field}}
+
+      <div class = "form-row" id="tutor-form">
+        <div class="col-6 d-none">
+          {{form.classes_taken | as_crispy_field}}
+        </div>
+        <div class="col-6 d-none">
+          {{form.times_available | as_crispy_field}}
+        </div>
+        <div class="col-6 d-none">
+          {{form.time_zone | as_crispy_field}}
+        </div>
+        <div class="col-6 d-none">
+          {{form.rate | as_crispy_field}}
+        </div>
+      </div>
+
+    <button type="submit" class="btn-block btn-success btn-style">Next</button>
+        <p style = "text-align:center; margin: 15px;"> Already have an account? Please <a href="/login/">Login</a> !</p>
+    </div>
+
+    <script>
+      var tutorChk = document.getElementById("id_is_tutor")
+      tutorChk.addEventListener ('change', function() {
+      var divTutorForm = document.getElementById("tutor-form").children
+
+        for (var i = 0; i < divTutorForm.length; i++){
+          console.log (this.checked)
+          if (this.checked){
+            divTutorForm[i].classList.remove ('d-none')
+            divTutorForm[i].classList.add ('d-block')
+          }
+          else{
+            divTutorForm[i].classList.remove ('d-block')
+            divTutorForm[i].classList.add ('d-none')
+          }
+        }
+      })
+</script>
 {% endblock %}

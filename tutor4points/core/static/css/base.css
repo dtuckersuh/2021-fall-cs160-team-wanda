@@ -1,0 +1,11 @@
+.header {
+    text-align:center;
+    margin: 35px;
+    font-family: 'Oswald', serif;
+}
+
+.main-content {
+    background-color:#484d5c;
+    color: white;
+    font-family: 'Open Sans';
+}
