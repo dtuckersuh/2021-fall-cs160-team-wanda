@@ -16,16 +16,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from core import views as views
-
+from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib.auth.views import LogoutView
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', lambda request: redirect('login')),
     path('login/', views.login_user, name="login"),
     path('users/register', views.register, name="register"),
     path('home/', views.home, name="home"),
     path('logout/', LogoutView.as_view(), name="logout"),
-    
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

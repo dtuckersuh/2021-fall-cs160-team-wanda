@@ -25,6 +25,7 @@ class User (AbstractUser):  # Custom User Model that inherits from Abstract User
     time_zone = models.CharField(
         max_length=8, choices=TIME_ZONES_CHOICES, null=True)
     rate = models.IntegerField(null=True)
+    average_rating = models.FloatField(null=True)
 
     def __str__(self):
         return f'{self.username} {self.is_tutor}'
