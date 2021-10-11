@@ -3,7 +3,7 @@
 
 {% block extrahead%}
 {% load static %}
-<link rel="stylesheet" type = "text/css" href = "{% static 'css/register.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'css/register.css' %}" />
 {% endblock%}
 
 {% block heading %}
@@ -12,72 +12,89 @@ Register
 
 {% load crispy_forms_tags %}
 {% block content %}
-  <form method = 'POST' enctype='multipart/form-data'>
-    {% csrf_token %}
-    <div class = "container">
-      {{form.profile_pic | as_crispy_field}}
-      
-      <div class = "form-row">
-        <div class="col-6">
-          {{form.first_name | as_crispy_field}}
-        </div>
-        <div class="col-6">
-          {{form.last_name | as_crispy_field}}
-        </div>
-        <div class="col-6">
-          {{form.email | as_crispy_field}}
-        </div>
-        <div class="col-6">
-          {{form.school | as_crispy_field}}
-        </div>
-        <div class="col-4">
-          {{form.username | as_crispy_field}}
-        </div>
-        <div class="col-4">
-          {{form.password1| as_crispy_field}}
-        </div>
-        <div class="col-4">
-          {{form.password2 | as_crispy_field}}
-        </div>
+<form method='POST' enctype='multipart/form-data'>
+  {% csrf_token %}
+  <div class="container">
+    <div class="d-inline-flex">
+      <div class="col-md-8 d-flex imgUpload" id="imgUpload">
+        {{form.profile_pic | as_crispy_field}}
       </div>
-
-      {{form.is_tutor | as_crispy_field}}
-
-      <div class = "form-row" id="tutor-form">
-        <div class="col-6 d-none">
-          {{form.classes_taken | as_crispy_field}}
-        </div>
-        <div class="col-6 d-none">
-          {{form.times_available | as_crispy_field}}
-        </div>
-        <div class="col-6 d-none">
-          {{form.time_zone | as_crispy_field}}
-        </div>
-        <div class="col-6 d-none">
-          {{form.rate | as_crispy_field}}
-        </div>
+      <div class="col-md-4 d-flex profileImgPreview hide" id="profileImgPreview">
+        <img id="profileImg" class="hide profileImg" src="" alt="Your Profile Image" />
       </div>
-
-    <button type="submit" class="btn-block btn-success btn-style">Next</button>
-        <p style = "text-align:center; margin: 15px;"> Already have an account? Please <a href="/login/">Login</a> !</p>
+    </div>
+    <div class="form-row">
+      <div class="col-6">
+        {{form.first_name | as_crispy_field}}
+      </div>
+      <div class="col-6">
+        {{form.last_name | as_crispy_field}}
+      </div>
+      <div class="col-6">
+        {{form.email | as_crispy_field}}
+      </div>
+      <div class="col-6">
+        {{form.school | as_crispy_field}}
+      </div>
+      <div class="col-4">
+        {{form.username | as_crispy_field}}
+      </div>
+      <div class="col-4">
+        {{form.password1| as_crispy_field}}
+      </div>
+      <div class="col-4">
+        {{form.password2 | as_crispy_field}}
+      </div>
     </div>
 
-    <script>
-      var tutorChk = document.getElementById("id_is_tutor")
-      tutorChk.addEventListener ('change', function() {
-      var divTutorForm = document.getElementById("tutor-form").children
+    {{form.is_tutor | as_crispy_field}}
 
-        for (var i = 0; i < divTutorForm.length; i++){
-          console.log (this.checked)
-          if (this.checked){
-            divTutorForm[i].classList.remove ('d-none')
-            divTutorForm[i].classList.add ('d-block')
-          }
-          else{
-            divTutorForm[i].classList.remove ('d-block')
-            divTutorForm[i].classList.add ('d-none')
-          }
+    <div class="form-row" id="tutor-form">
+      <div class="col-6 d-none">
+        {{form.classes_taken | as_crispy_field}}
+      </div>
+      <div class="col-6 d-none">
+        {{form.times_available | as_crispy_field}}
+      </div>
+      <div class="col-6 d-none">
+        {{form.time_zone | as_crispy_field}}
+      </div>
+      <div class="col-6 d-none">
+        {{form.rate | as_crispy_field}}
+      </div>
+    </div>
+
+    <button type="submit" class="btn-block btn-success btn-style">Next</button>
+    <p style="text-align:center; margin: 15px;"> Already have an account? Please <a href="/login/">Login</a> !</p>
+  </div>
+
+  <script>
+    const tutorChk = document.getElementById("id_is_tutor")
+    tutorChk.addEventListener('change', function () {
+      const divTutorForm = document.getElementById("tutor-form").children
+
+      for (let i = 0; i < divTutorForm.length; i++) {
+        console.log(this.checked)
+        if (this.checked) {
+          divTutorForm[i].classList.remove('d-none')
+          divTutorForm[i].classList.add('d-block')
         }
-      })
-</script>
-{% endblock %}
+        else {
+          divTutorForm[i].classList.remove('d-block')
+          divTutorForm[i].classList.add('d-none')
+        }
+      }
+    })
+
+    document.getElementById('id_profile_pic').onchange = function (event) {
+      const [file] = this.files
+      if (file) {
+        document.getElementById('profileImg').src = URL.createObjectURL(file)
+        document.getElementById('profileImg').classList.remove('hide')
+        document.getElementById('profileImgPreview').classList.remove('hide')
+
+        this.parentNode.querySelector('.custom-file-label').textContent = file.name
+      }
+    }
+  </script>
+  {% endblock %}

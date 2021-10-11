@@ -7,8 +7,7 @@ from crispy_forms.helper import FormHelper
 # Create your views here.
 
 
-class RegisterForm (UserCreationForm):
-
+class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
 
@@ -34,26 +33,32 @@ class RegisterForm (UserCreationForm):
 
         # layout where want fields to be, type in order you want it to appear
         fields = ('profile_pic', "first_name", "last_name", "school", "email",
-                  "username", "password1", "password2", 'is_tutor', 'classes_taken', 'times_available',
-                  'time_zone', 'rate')
+                  "username", "password1", "password2", 'is_tutor',
+                  'classes_taken', 'times_available', 'time_zone', 'rate')
 
         widgets = {
-            'first_name': forms.TextInput(attrs={
-                'placeholder': 'First Name'}),
-            'last_name': forms.TextInput(attrs={
-                'placeholder': 'Last Name'}),
-            'email': forms.TextInput(attrs={
-                'placeholder': 'email@address.com'}),
-            'username': forms.TextInput(attrs={
-                'placeholder': 'Username'}),
-            'password1': forms.TextInput(attrs={
-                'placeholder': 'Password'}),
-            'times_available': forms.Textarea(attrs={
-                'placeholder': 'Example: Monday 2-3pm, Wednesday 4-5pm', 'rows': 5}),
-            'classes_taken': forms.Textarea(attrs={
-                'placeholder': 'Example: CS146, MATH42', 'rows': 5}),
-            'rate': forms.NumberInput(attrs={
-                'placeholder': 'Example: 1700'})
+            'first_name':
+            forms.TextInput(attrs={'placeholder': 'First Name'}),
+            'last_name':
+            forms.TextInput(attrs={'placeholder': 'Last Name'}),
+            'email':
+            forms.TextInput(attrs={'placeholder': 'email@address.com'}),
+            'username':
+            forms.TextInput(attrs={'placeholder': 'Username'}),
+            'password1':
+            forms.TextInput(attrs={'placeholder': 'Password'}),
+            'times_available':
+            forms.Textarea(attrs={
+                'placeholder': 'Example: Monday 2-3pm, Wednesday 4-5pm',
+                'rows': 5
+            }),
+            'classes_taken':
+            forms.Textarea(attrs={
+                'placeholder': 'Example: CS146, MATH42',
+                'rows': 5
+            }),
+            'rate':
+            forms.NumberInput(attrs={'placeholder': 'Example: 1700'})
         }
 
         labels = {

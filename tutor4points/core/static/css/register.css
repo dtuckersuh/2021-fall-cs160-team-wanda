@@ -1,22 +1,55 @@
 @media (min-width: 1200px) {
-    .container{
-        max-width: 800px;
-    }
+  .container {
+    max-width: 800px;
+  }
 }
 
 .header {
-    margin-top: 35px;
-    margin-bottom: 20px;
+  margin-top: 35px;
+  margin-bottom: 20px;
 }
 
 .btn-style {
-    height: 40px;
+  height: 40px;
 }
 
 .text-muted {
-    color: red;
+  color: red;
 }
 
 .helptext {
-    visibility: hidden;
+  visibility: hidden;
+}
+
+.profileImgPreview {
+  margin: 0px;
+  float: right;
+  padding: 0px;
+}
+
+.hide {
+  display: none;
+}
+
+.imgUpload {
+  margin: 0px;
+  float: left;
+  padding: 0px;
+}
+
+.profileImg {
+  margin: 0px;
+  max-height: 200px;
+  max-width: 250px;
+  float: right;
+  padding: 0px;
+  padding-left: 50px;
+}
+
+.d-inline-flex {
+  min-width: 100%;
+}
+
+.form-group {
+  width: 100%;
 }
