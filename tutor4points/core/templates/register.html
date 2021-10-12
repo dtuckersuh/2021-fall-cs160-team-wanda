@@ -50,16 +50,16 @@ Register
     {{form.is_tutor | as_crispy_field}}
 
     <div class="form-row" id="tutor-form">
-      <div class="col-6 d-none">
+      <div class="col-6">
         {{form.classes_taken | as_crispy_field}}
       </div>
-      <div class="col-6 d-none">
+      <div class="col-6">
         {{form.times_available | as_crispy_field}}
       </div>
-      <div class="col-6 d-none">
+      <div class="col-6">
         {{form.time_zone | as_crispy_field}}
       </div>
-      <div class="col-6 d-none">
+      <div class="col-6">
         {{form.rate | as_crispy_field}}
       </div>
     </div>
@@ -70,20 +70,10 @@ Register
 
   <script>
     const tutorChk = document.getElementById("id_is_tutor")
-    tutorChk.addEventListener('change', function () {
-      const divTutorForm = document.getElementById("tutor-form").children
+    document.getElementById("tutor-form").querySelectorAll('.col-6').forEach(row => row.classList.add(!tutorChk.checked && 'd-none'))
 
-      for (let i = 0; i < divTutorForm.length; i++) {
-        console.log(this.checked)
-        if (this.checked) {
-          divTutorForm[i].classList.remove('d-none')
-          divTutorForm[i].classList.add('d-block')
-        }
-        else {
-          divTutorForm[i].classList.remove('d-block')
-          divTutorForm[i].classList.add('d-none')
-        }
-      }
+    tutorChk.addEventListener('change', function () {
+      document.getElementById("tutor-form").querySelectorAll('.col-6').forEach(row => row.classList.toggle('d-none'))
     })
 
     document.getElementById('id_profile_pic').onchange = function (event) {

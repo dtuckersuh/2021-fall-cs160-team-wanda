@@ -8,8 +8,8 @@ def login_user(request):
     if request.method == "POST":
         form = forms.AuthenticationForm(request, request.POST)
         if form.is_valid():
-            user = authenticate(username=form.cleaned_data.get(
-                'username'), password=form.cleaned_data.get('password'))
+            user = authenticate(username=form.cleaned_data.get('username'),
+                                password=form.cleaned_data.get('password'))
 
             if user is not None:
                 login(request, user)
@@ -26,8 +26,9 @@ def register(request):
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            new_user = authenticate(username=form.cleaned_data.get(
-                'username'), password=form.cleaned_data.get('password1'))
+            new_user = authenticate(
+                username=form.cleaned_data.get('username'),
+                password=form.cleaned_data.get('password1'))
             login(request, new_user)
             return redirect("/home")
 
@@ -36,7 +37,7 @@ def register(request):
     return render(request, "register.html", {"form": form})
 
 
-@ login_required
+@login_required
 # dahshboard/home page
 def home(request):
     return render(request, "home.html")
