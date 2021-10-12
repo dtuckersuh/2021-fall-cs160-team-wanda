@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, forms
 from django.contrib.auth.decorators import login_required
 
 
-def login_user(request):
+def loginUser(request):
     if request.method == "POST":
         form = forms.AuthenticationForm(request, request.POST)
         if form.is_valid():

@@ -3,6 +3,14 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
+class School(models.Model):  # Model storing all school names
+    name = models.CharField(
+        max_length=50, unique=True)  # fields must be unique
+
+    def __str__(self):
+        return self.name
+
+
 class User (AbstractUser):  # Custom User Model that inherits from Abstract User class
     TIME_ZONES_CHOICES = (
         ('pacific', 'Pacific Time (PT)'),
@@ -15,7 +23,7 @@ class User (AbstractUser):  # Custom User Model that inherits from Abstract User
     first_name = models.CharField(max_length=100)  # first name field
     last_name = models.CharField(max_length=100)  # last name field
     email = models.EmailField(unique=True)  # email field, has to be unique
-    school = models.CharField(max_length=100)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
     profile_pic = models.ImageField(
         blank=True, upload_to="images/profile_pics", default="images/profile_pics/default_pic.png")  # store path to profile pic
     total_points = models.FloatField(default=0)
@@ -25,15 +33,8 @@ class User (AbstractUser):  # Custom User Model that inherits from Abstract User
     time_zone = models.CharField(
         max_length=8, choices=TIME_ZONES_CHOICES, null=True)
     rate = models.IntegerField(null=True)
-    average_rating = models.FloatField(null=True)
+    tutor_avg_rating = models.FloatField(null=True)
+    tutee_avg_rating = models.FloatField(null=True)
 
     def __str__(self):
         return f'{self.username} {self.is_tutor}'
-
-
-class School(models.Model):  # Model storing all school names
-    school_name = models.CharField(
-        max_length=50, unique=True)  # fields must be unique
-
-    def __str__(self):
-        return self.school_name

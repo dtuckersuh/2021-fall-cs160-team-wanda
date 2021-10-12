@@ -25,15 +25,12 @@ class RegisterForm(UserCreationForm):
         self.fields['time_zone'].required = False
         self.fields['rate'].required = False
 
-    # get school names from School model
-    school = forms.ModelChoiceField(queryset=School.objects.all())
-
     class Meta:
         model = User  # based on User model
 
         # layout where want fields to be, type in order you want it to appear
         fields = ('profile_pic', "first_name", "last_name", "school", "email",
-                  "username", "password1", "password2", 'is_tutor',
+                  "username", "password1", "password2", 'school', 'is_tutor',
                   'classes_taken', 'times_available', 'time_zone', 'rate')
 
         widgets = {
