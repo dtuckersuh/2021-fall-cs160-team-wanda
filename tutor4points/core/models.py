@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
+
 # Create your models here.
 
 
@@ -23,7 +26,7 @@ class User (AbstractUser):  # Custom User Model that inherits from Abstract User
     first_name = models.CharField(max_length=100)  # first name field
     last_name = models.CharField(max_length=100)  # last name field
     email = models.EmailField(unique=True)  # email field, has to be unique
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    school = models.ForeignKey(School, null=True, on_delete=models.SET_NULL)
     profile_pic = models.ImageField(
         blank=True, upload_to="images/profile_pics", default="images/profile_pics/default_pic.png")  # store path to profile pic
     total_points = models.FloatField(default=0)
@@ -38,3 +41,51 @@ class User (AbstractUser):  # Custom User Model that inherits from Abstract User
 
     def __str__(self):
         return f'{self.username} {self.is_tutor}'
+
+
+class tutor_request (models.Model):
+    class_name = models.CharField(max_length=100)
+    # automatically set date every time object is saved
+    date_requested = models.DateField(auto_now=True)
+    tutor_date = models.DateField()
+    location = models.CharField(max_length=100)
+    time = models.TimeField()
+    tutor = models.ForeignKey(
+        get_user_model(), null=True, on_delete=models.SET_NULL, related_name='tutor')
+    tutee = models.ForeignKey(
+        get_user_model(), null=True, on_delete=models.SET_NULL)
+    accepted = models.BooleanField(null=True)  # null by default
+    completed = models.BooleanField(default=False)
+    paid = models.BooleanField(default=False)
+
+
+class transaction (models.Model):
+    PAYMENT_METHODS = (
+        ('visa', 'VISA'),
+        ('points', 'POINTS'),
+    )
+    points = models.FloatField()
+    method = models.CharField(max_length=25, choices=PAYMENT_METHODS)
+    sent_to = models.ForeignKey(
+        get_user_model(), null=True, on_delete=models.SET_NULL)
+    sent_from = models.ForeignKey(
+        get_user_model(), null=True, on_delete=models.SET_NULL, related_name='sent_from')
+    date = models.DateField()
+
+
+class rating (models.Model):
+    RATING_TYPES = (
+        ('tutee', 'TUTEE'),
+        ('tutor', 'TUTOR')
+    )
+
+    type = models.CharField(max_length=5, choices=RATING_TYPES)
+    rating = models.IntegerField(null=True, validators=[
+                                 MinValueValidator(0), MaxValueValidator(5)])
+    # automatically set date every time object is saved
+    date = models.DateField(auto_now=True)
+    given_by = models.ForeignKey(
+        get_user_model(), null=True, on_delete=models.SET_NULL, related_name='given_by')
+    given_to = models.ForeignKey(
+        get_user_model(), null=True, on_delete=models.SET_NULL)
+    comment = models.TextField()
