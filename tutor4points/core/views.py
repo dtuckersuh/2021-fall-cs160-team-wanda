@@ -1,6 +1,6 @@
 from .forms import RegisterForm
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, forms
+from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
 
 
@@ -41,3 +41,20 @@ def register(request):
 # dahshboard/home page
 def home(request):
     return render(request, "home.html")
+
+
+def tutors(request):
+    if request.method == 'GET':
+        current_user = request.user
+        users = get_user_model().objects.all()
+        tutors = users.filter(is_tutor=True, school=current_user.school)
+
+        return render(request, 'tutors.html', {'tutors': tutors})
+
+
+def users(request):
+    current_user = request.user
+    if request.method == 'GET':
+        pass
+    elif request.method == 'POST':
+        pass
