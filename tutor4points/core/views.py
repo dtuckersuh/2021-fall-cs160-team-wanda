@@ -1,4 +1,4 @@
-from .forms import RegisterForm
+from .forms import RegisterForm, UpdateProfileForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
@@ -43,6 +43,7 @@ def home(request):
     return render(request, "home.html")
 
 
+@login_required
 def tutors(request):
     if request.method == 'GET':
         current_user = request.user
@@ -52,11 +53,16 @@ def tutors(request):
         return render(request, 'tutors.html', {'tutors': tutors})
 
 
+@login_required
 def users(request, id):
-    current_user = request.user
-    # if request.method == 'GET':
-    #     pass
-    # elif request.method == 'POST':
-    #     pass
 
-    return render(request, 'users_profile.html', {'user': current_user})
+    # get user that is specified by URL
+    user = get_user_model().objects.get(pk=id)
+    if request.method == 'POST':
+        form = UpdateProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+    else:
+        form = UpdateProfileForm(instance=user)
+
+    return render(request, 'users_profile.html', {'user': user, 'form': form, 'current_user': request.user.id == id})

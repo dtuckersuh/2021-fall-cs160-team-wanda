@@ -2,8 +2,10 @@
 
 {% block extrahead%}
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/tutors.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'css/user-profile.css' %}" />
 {% endblock%}
+
+{% load crispy_forms_tags %}
 
 {% block heading %}
 <img src = "{{user.profile_pic.url}}" class = "profile-pic"> <br>
@@ -11,8 +13,70 @@
 {% endblock %}
 
 {% block content %}
-<button type ="submit", name="edit", value="edit">Edit</button>
 
+{% if current_user %}
+<button type ="submit" name="edit" value="edit" class="btn-success" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
+{% endif %}
+
+<div id = "edit-profile-modal" class="modal fade">
+    <div class = "modal-dialog modal-lg">
+        <div class = "modal-content">
+            <div class = "modal-container">
+                <div class = "form-container">
+                    <form method="POST" class="form-group" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <div class="col">
+                            {{form.profile_pic | as_crispy_field}}
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-6">
+                                {{form.first_name | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.last_name | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.email| as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.school | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.classes_taken | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.times_available | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.time_zone | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.rate | as_crispy_field}}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-block btn-success btn-style">Update</button>
+                    </form>
+                </div>
+
+                <div  class = "profile-pic-container">
+                     <img id = "profile-img" src = "{{user.profile_pic.url}}" class="profile-pic">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('id_profile_pic').onchange = function (event) {
+      const [file] = this.files
+      if (file) {
+        document.getElementById('profile-img').src = URL.createObjectURL(file)
+
+        this.parentNode.querySelector('.custom-file-label').textContent = file.name
+      }
+    }
+</script>
 
 {{user.school}} <br>
 Total Points: {{user.total_points}} <br>
