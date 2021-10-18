@@ -52,9 +52,11 @@ def tutors(request):
         return render(request, 'tutors.html', {'tutors': tutors})
 
 
-def users(request):
+def users(request, id):
     current_user = request.user
-    if request.method == 'GET':
-        pass
-    elif request.method == 'POST':
-        pass
+    # if request.method == 'GET':
+    #     pass
+    # elif request.method == 'POST':
+    #     pass
+
+    return render(request, 'users_profile.html', {'user': current_user})

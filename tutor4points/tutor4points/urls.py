@@ -29,6 +29,6 @@ urlpatterns = [
     path('home/', views.home, name="home"),
     path('logout/', LogoutView.as_view(), name="logout"),
     path('tutors/', views.tutors, name="tutors"),
-    path('users/<int:id>', views.user)
+    path('users/<int:id>', views.users)
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

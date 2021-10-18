@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block extrahead%}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/tutors.css' %}" />
+{% endblock%}
+
+{% block heading %}
+<img src = "{{user.profile_pic.url}}" class = "profile-pic"> <br>
+{{user.first_name}} {{user.last_name}} <br>
+{% endblock %}
+
+{% block content %}
+<button type ="submit", name="edit", value="edit">Edit</button>
+
+
+{{user.school}} <br>
+Total Points: {{user.total_points}} <br>
+
+{% if user.tutee_avg_rating %}
+Tutee rating:
+{{user.tutee_avg_rating}}
+{% else %}
+No tutee history
+{% endif %}
+<br>
+{% if user.is_tutor %}
+Times available: {{user.times_available}} <br>
+Time zone: {{user.time_zone}}<br>
+Classes taken: {{user.classes_taken}}<br>
+Rate: {{user.rate}} points per hour<br>
+{% if user.tutor_avg_rating %}
+Tutor rating:
+{{user.tutor_avg_rating}}<br>
+{% else %}
+No tutoring history
+{% endif %} <br>
+
+{% endif %}
+{% endblock %}
