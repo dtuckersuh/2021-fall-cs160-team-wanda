@@ -1,6 +1,6 @@
-from .forms import RegisterForm
+from .forms import RegisterForm, UpdateProfileForm
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, forms
+from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
 
 
@@ -41,3 +41,28 @@ def register(request):
 # dahshboard/home page
 def home(request):
     return render(request, "home.html")
+
+
+@login_required
+def tutors(request):
+    if request.method == 'GET':
+        current_user = request.user
+        users = get_user_model().objects.all()
+        tutors = users.filter(is_tutor=True, school=current_user.school)
+
+        return render(request, 'tutors.html', {'tutors': tutors})
+
+
+@login_required
+def users(request, id):
+
+    # get user that is specified by URL
+    user = get_user_model().objects.get(pk=id)
+    if request.method == 'POST':
+        form = UpdateProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+    else:
+        form = UpdateProfileForm(instance=user)
+
+    return render(request, 'users_profile.html', {'user': user, 'form': form, 'current_user': request.user.id == id})
