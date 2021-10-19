@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block extrahead%}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/tutors.css' %}" />
+{% endblock%}
+
+{% block heading %}
+Tutors
+{% endblock %}
+
+{% block content %}
+
+{% for tutor in tutors %}
+<div class = "info-container d-flex">
+
+<div>
+{{tutor.first_name}} {{tutor.last_name}} <br/>
+Classes Taken: {{tutor.classes_taken}}  <br/>
+
+{% if tutor.times_available %}
+{{tutor.times_available}}  <br/>
+{% else %}
+TBD <br/>
+{% endif %}
+{{tutor.rate}}  <br/>
+{{tutor.tutor_avg_rating}} <br/>
+</div>
+
+<div>
+<img src = "{{tutor.profile_pic.url}}" class = "profile-pic">
+</div>
+
+</div>
+{% endfor %}
+
+{% endblock %}

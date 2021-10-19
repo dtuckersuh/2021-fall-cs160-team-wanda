@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block extrahead%}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/user-profile.css' %}" />
+{% endblock%}
+
+{% load crispy_forms_tags %}
+
+{% block heading %}
+
+{% endblock %}
+
+{% block content %}
+
+
+<script>
+    document.getElementById('id_profile_pic').onchange = function (event) {
+      const [file] = this.files
+      if (file) {
+        document.getElementById('profile-img').src = URL.createObjectURL(file)
+
+        this.parentNode.querySelector('.custom-file-label').textContent = file.name
+      }
+    }
+</script>
+<div class="profile">
+    <div class="left-column">
+        <div class="name">{{user.first_name}} {{user.last_name}}</div>
+        <div class="school-name">{{user.school}} </div>
+        <div class="total-points">Total Points: {{user.total_points}}</div>
+        <div class="rating">
+            {% if user.tutor_avg_rating %}
+            <b>Tutor rating:</b>
+            {{user.tutor_avg_rating}}<br>
+            {% else %}
+            <i>No tutoring history</i>
+            {% endif %} <br>
+
+            {% if user.tutee_avg_rating %}
+            Tutee rating:
+            {{user.tutee_avg_rating}}
+            {% else %}
+            <i>No tutee history</i>
+            {% endif %}
+        </div>
+        <div class="tutor-info">
+            <br>
+            {% if user.is_tutor %}
+            <b>Times available:</b> <br>{{user.times_available}} <br><br>
+            <b>Time zone: </b>{{user.time_zone}}<br><br>
+            <b>Currently tutoring for:</b><br> {{user.classes_taken}}<br><br>
+            <b>Rate:</b> {{user.rate}} points per hour<br>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="right-column">
+            <img src = "{{user.profile_pic.url}}" class = "profile-pic"> <br>
+
+{% if current_user %}
+<button type ="submit" name="edit" value="edit" class="btn-success" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
+{% endif %}
+
+<div id = "edit-profile-modal" class="modal fade">
+    <div class = "modal-dialog modal-lg">
+        <div class = "modal-content">
+            <div class = "modal-container">
+                <div class = "form-container">
+                    <form method="POST" class="form-group" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <div class="col">
+                            {{form.profile_pic | as_crispy_field}}
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-6">
+                                {{form.first_name | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.last_name | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.email| as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.school | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.classes_taken | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.times_available | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.time_zone | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form.rate | as_crispy_field}}
+                            </div>
+                        </div>
+                        <button type="submit" class="btn-block btn-success btn-style">Update</button>
+                    </form>
+                </div>
+
+                <div  class = "profile-pic-container">
+                     <img id = "profile-img" src = "{{user.profile_pic.url}}" class="profile-pic">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            
+    </div>
+
+</div>
+{% endblock %}

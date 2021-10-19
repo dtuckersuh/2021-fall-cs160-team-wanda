@@ -71,3 +71,48 @@ class RegisterForm(UserCreationForm):
 
     helper = FormHelper()
     helper.form_id = 'form'
+
+
+class UpdateProfileForm(forms.ModelForm):
+
+    class Meta:
+        model = User
+
+        # layout where want fields to be, type in order you want it to appear
+        fields = ('profile_pic', "first_name", "last_name", "school", "email",
+                  'school', 'classes_taken', 'times_available', 'time_zone', 'rate')
+
+        # customize placeholders
+        widgets = {
+            'first_name':
+            forms.TextInput(attrs={'placeholder': 'First Name'}),
+            'last_name':
+            forms.TextInput(attrs={'placeholder': 'Last Name'}),
+            'times_available':
+            forms.Textarea(attrs={
+                'placeholder': 'Example: Monday 2-3pm, Wednesday 4-5pm',
+                'rows': 5
+            }),
+            'classes_taken':
+            forms.Textarea(attrs={
+                'placeholder': 'Example: CS146, MATH42',
+                'rows': 5
+            }),
+            'rate':
+            forms.NumberInput(attrs={'placeholder': 'Example: 1700'}),
+            'profile_pic':
+            forms.FileInput()
+        }
+
+        # customize form labels
+        labels = {
+            'profile_pic': "Profile Picture",
+            'first_name': "First Name",
+            'last_name': "Last Name",
+            'classes_taken': "Classes Taken",
+            'times_available': "Times Available",
+            'time_zone': "Time Zone",
+            'rate': 'Rate (pts/hr): 100 points = $1.00'
+        }
+    helper = FormHelper()
+    helper.form_id = 'form'
