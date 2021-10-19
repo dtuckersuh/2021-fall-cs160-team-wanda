@@ -8,11 +8,55 @@
 {% load crispy_forms_tags %}
 
 {% block heading %}
-<img src = "{{user.profile_pic.url}}" class = "profile-pic"> <br>
-{{user.first_name}} {{user.last_name}} <br>
+
 {% endblock %}
 
 {% block content %}
+
+
+<script>
+    document.getElementById('id_profile_pic').onchange = function (event) {
+      const [file] = this.files
+      if (file) {
+        document.getElementById('profile-img').src = URL.createObjectURL(file)
+
+        this.parentNode.querySelector('.custom-file-label').textContent = file.name
+      }
+    }
+</script>
+<div class="profile">
+    <div class="left-column">
+        <div class="name">{{user.first_name}} {{user.last_name}}</div>
+        <div class="school-name">{{user.school}} </div>
+        <div class="total-points">Total Points: {{user.total_points}}</div>
+        <div class="rating">
+            {% if user.tutor_avg_rating %}
+            <b>Tutor rating:</b>
+            {{user.tutor_avg_rating}}<br>
+            {% else %}
+            <i>No tutoring history</i>
+            {% endif %} <br>
+
+            {% if user.tutee_avg_rating %}
+            Tutee rating:
+            {{user.tutee_avg_rating}}
+            {% else %}
+            <i>No tutee history</i>
+            {% endif %}
+        </div>
+        <div class="tutor-info">
+            <br>
+            {% if user.is_tutor %}
+            <b>Times available:</b> <br>{{user.times_available}} <br><br>
+            <b>Time zone: </b>{{user.time_zone}}<br><br>
+            <b>Currently tutoring for:</b><br> {{user.classes_taken}}<br><br>
+            <b>Rate:</b> {{user.rate}} points per hour<br>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="right-column">
+            <img src = "{{user.profile_pic.url}}" class = "profile-pic"> <br>
 
 {% if current_user %}
 <button type ="submit" name="edit" value="edit" class="btn-success" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
@@ -66,39 +110,8 @@
         </div>
     </div>
 </div>
+            
+    </div>
 
-<script>
-    document.getElementById('id_profile_pic').onchange = function (event) {
-      const [file] = this.files
-      if (file) {
-        document.getElementById('profile-img').src = URL.createObjectURL(file)
-
-        this.parentNode.querySelector('.custom-file-label').textContent = file.name
-      }
-    }
-</script>
-
-{{user.school}} <br>
-Total Points: {{user.total_points}} <br>
-
-{% if user.tutee_avg_rating %}
-Tutee rating:
-{{user.tutee_avg_rating}}
-{% else %}
-No tutee history
-{% endif %}
-<br>
-{% if user.is_tutor %}
-Times available: {{user.times_available}} <br>
-Time zone: {{user.time_zone}}<br>
-Classes taken: {{user.classes_taken}}<br>
-Rate: {{user.rate}} points per hour<br>
-{% if user.tutor_avg_rating %}
-Tutor rating:
-{{user.tutor_avg_rating}}<br>
-{% else %}
-No tutoring history
-{% endif %} <br>
-
-{% endif %}
+</div>
 {% endblock %}
