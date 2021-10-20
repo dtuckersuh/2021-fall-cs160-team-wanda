@@ -1,8 +1,48 @@
 .info-container {
     background-color: green;
-    margin: 2px;
+    margin-bottom: 25px;
+    margin-left: 80px;
+    margin-right: 80px;
+    padding: 10px;
+    gap:15px;
+    border-style: solid;
+    align-items: center;
+    border-color:darkgreen;
 }
 
 .profile-pic{
-   width:25%; 
+    height:120px;
+    width:120px;
+    padding:5px;
+    background-color:darkgreen;
 }
+
+.name-column{
+    font-size: 45px;
+    width:40%;
+}
+
+.classes-column{
+    font-size:20px;
+}
+
+.times-column{
+    font-size: 15px;
+    width:30%
+}
+
+.request-button{
+    height:50px;
+    width: 140px;
+
+}
+.tutor-rate-column{
+    font-size: 25px;
+}
+
+.tutor-rating-column{
+    margin-left:40px;
+    width: 20%;
+    font-size:50px;
+}
+
