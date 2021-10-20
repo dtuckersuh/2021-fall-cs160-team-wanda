@@ -6,7 +6,6 @@
      display: flex;
      flex-direction: row;
      padding: 80px;
-
 }
 
 .left-column{
@@ -43,6 +42,10 @@
 .total-points{
      font-size:25px;
      font-weight:bold;
+}
+
+.time-zone{
+     text-transform:uppercase;
 }
 
 .tutor-info{

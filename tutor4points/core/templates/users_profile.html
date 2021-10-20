@@ -31,86 +31,90 @@
         <div class="total-points">Total Points: {{user.total_points}}</div>
         <div class="rating">
             {% if user.tutor_avg_rating %}
-            <b>Tutor rating:</b>
-            {{user.tutor_avg_rating}}<br>
+                <b>Tutor rating:</b>
+                {{user.tutor_avg_rating}}<br>
             {% else %}
-            <i>No tutoring history</i>
+                <i>No tutoring history</i>
             {% endif %} <br>
 
             {% if user.tutee_avg_rating %}
-            Tutee rating:
-            {{user.tutee_avg_rating}}
+                Tutee rating:
+                {{user.tutee_avg_rating}}
             {% else %}
-            <i>No tutee history</i>
+                <i>No tutee history</i>
             {% endif %}
         </div>
         <div class="tutor-info">
             <br>
             {% if user.is_tutor %}
-            <b>Times available:</b> <br>{{user.times_available}} <br><br>
-            <b>Time zone: </b>{{user.time_zone}}<br><br>
-            <b>Currently tutoring for:</b><br> {{user.classes_taken}}<br><br>
-            <b>Rate:</b> {{user.rate}} points per hour<br>
+                <b>Times available:</b> <br>{{user.times_available}} <br><br>
+
+                <b>Time zone: </b>
+                <div class="time-zone">
+                    {{user.time_zone}}</div>
+                <br>
+                <b>Currently tutoring for:</b><br> {{user.classes_taken}}<br><br>
+                <b>Rate:</b> {{user.rate}} pts/hr<br>
             {% endif %}
         </div>
     </div>
 
     <div class="right-column">
-            <img src = "{{user.profile_pic.url}}" class = "profile-pic"> <br>
+        <img src = "{{user.profile_pic.url}}" class = "profile-pic"> <br>
 
-{% if current_user %}
-<button type ="submit" name="edit" value="edit" class="btn-success" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
-{% endif %}
+        {% if current_user %}
+        <button type ="submit" name="edit" value="edit" class="btn-success" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
+        {% endif %}
 
-<div id = "edit-profile-modal" class="modal fade">
-    <div class = "modal-dialog modal-lg">
-        <div class = "modal-content">
-            <div class = "modal-container">
-                <div class = "form-container">
-                    <form method="POST" class="form-group" enctype='multipart/form-data'>
-                        {% csrf_token %}
-                        <div class="col">
-                            {{form.profile_pic | as_crispy_field}}
+        <div id = "edit-profile-modal" class="modal fade">
+            <div class = "modal-dialog modal-lg">
+                <div class = "modal-content">
+                    <div class = "modal-container">
+                        <div class = "form-container">
+                            <form method="POST" class="form-group" enctype='multipart/form-data'>
+                                {% csrf_token %}
+                                <div class="col">
+                                    {{form.profile_pic | as_crispy_field}}
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="col-6">
+                                        {{form.first_name | as_crispy_field}}
+                                    </div>
+                                    <div class="col-6">
+                                        {{form.last_name | as_crispy_field}}
+                                    </div>
+                                    <div class="col-6">
+                                        {{form.email| as_crispy_field}}
+                                    </div>
+                                    <div class="col-6">
+                                        {{form.school | as_crispy_field}}
+                                    </div>
+                                    <div class="col-6">
+                                        {{form.classes_taken | as_crispy_field}}
+                                    </div>
+                                    <div class="col-6">
+                                        {{form.times_available | as_crispy_field}}
+                                    </div>
+                                    <div class="col-6">
+                                        {{form.time_zone | as_crispy_field}}
+                                    </div>
+                                    <div class="col-6">
+                                        {{form.rate | as_crispy_field}}
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn-block btn-success btn-style">Update</button>
+                            </form>
                         </div>
 
-                        <div class="form-row">
-                            <div class="col-6">
-                                {{form.first_name | as_crispy_field}}
-                            </div>
-                            <div class="col-6">
-                                {{form.last_name | as_crispy_field}}
-                            </div>
-                            <div class="col-6">
-                                {{form.email| as_crispy_field}}
-                            </div>
-                            <div class="col-6">
-                                {{form.school | as_crispy_field}}
-                            </div>
-                            <div class="col-6">
-                                {{form.classes_taken | as_crispy_field}}
-                            </div>
-                            <div class="col-6">
-                                {{form.times_available | as_crispy_field}}
-                            </div>
-                            <div class="col-6">
-                                {{form.time_zone | as_crispy_field}}
-                            </div>
-                            <div class="col-6">
-                                {{form.rate | as_crispy_field}}
-                            </div>
+                        <div  class = "profile-pic-container">
+                            <img id = "profile-img" src = "{{user.profile_pic.url}}" class="profile-pic">
                         </div>
-                        <button type="submit" class="btn-block btn-success btn-style">Update</button>
-                    </form>
-                </div>
-
-                <div  class = "profile-pic-container">
-                     <img id = "profile-img" src = "{{user.profile_pic.url}}" class="profile-pic">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-            
+                    
     </div>
 
 </div>
