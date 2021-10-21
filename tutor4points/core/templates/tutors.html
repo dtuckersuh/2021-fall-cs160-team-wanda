@@ -11,26 +11,49 @@ Tutors
 
 {% block content %}
 
+<div>
+    <button type ="submit" name="filter" value="filter" class="filter-button" >Filter</button>
+</div>
+
 {% for tutor in tutors %}
 <div class = "info-container d-flex">
 
-<div>
-{{tutor.first_name}} {{tutor.last_name}} <br/>
-Classes Taken: {{tutor.classes_taken}}  <br/>
+    <div>
+        <img src = "{{tutor.profile_pic.url}}" class = "profile-pic">
+    </div>
 
-{% if tutor.times_available %}
-{{tutor.times_available}}  <br/>
-{% else %}
-TBD <br/>
-{% endif %}
-{{tutor.rate}}  <br/>
-{{tutor.tutor_avg_rating}} <br/>
-</div>
+    <div class = "name-column">
+        {{tutor.first_name}} {{tutor.last_name}} <br/>
+        <div class = "classes-column">
+            {{tutor.classes_taken}}  <br/>
+        </div>
+    </div>
 
-<div>
-<img src = "{{tutor.profile_pic.url}}" class = "profile-pic">
-</div>
 
+
+    <div class = "times-column">
+        {% if tutor.times_available %}
+            {{tutor.times_available}}  <br/>
+        {% else %}
+            TBD <br/>
+        {% endif %}
+    </div>
+
+
+    <div>
+        <button type ="submit" name="request" value="request" class="request-button" >Request</button>
+    </div>
+    
+
+    <div class="tutor-rating-column">
+        {{tutor.tutor_avg_rating}} ★<br/>
+
+        <div class = "tutor-rate-column">
+            {{tutor.rate}} pts/hr<br/>
+        </div>
+    </div>
+
+    
 </div>
 {% endfor %}
 

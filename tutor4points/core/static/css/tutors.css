@@ -1,8 +1,55 @@
+.filter-button{
+    background-color: #20293F;
+    color: white;
+    margin: 15px;
+    padding: 10px;
+    width: 120px;
+    margin-left: 80px;
+
+}
+
 .info-container {
-    background-color: green;
-    margin: 2px;
+    background-color: #20293F;
+    margin-bottom: 25px;
+    margin-left: 80px;
+    margin-right: 80px;
+    padding: 15px;
+    gap:15px;
+    align-items: center;
 }
 
 .profile-pic{
-   width:25%; 
+    height:120px;
+    width:120px;
+    padding:5px;
 }
+
+.name-column{
+    font-size: 45px;
+    width:40%;
+}
+
+.classes-column{
+    font-size:20px;
+}
+
+.times-column{
+    font-size: 18px;
+    width:30%
+}
+
+.request-button{
+    height:50px;
+    width: 140px;
+
+}
+.tutor-rate-column{
+    font-size: 25px;
+}
+
+.tutor-rating-column{
+    margin-left:40px;
+    width: 20%;
+    font-size:50px;
+}
+
