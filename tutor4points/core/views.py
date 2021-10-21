@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
 
-
+# loginUser handles "/login" endpoint
+# logs in the user that has the specified login credentials from the login form
 def loginUser(request):
     if request.method == "POST":
         form = forms.AuthenticationForm(request, request.POST)
@@ -20,7 +21,8 @@ def loginUser(request):
         form = forms.AuthenticationForm()
     return render(request, "login.html", {"form": form})
 
-
+# register handles "/users/register" endpoint
+# allows user to enter account information into register form, creates an account for the user, and logs them in
 def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST, request.FILES)
@@ -36,13 +38,14 @@ def register(request):
         form = RegisterForm()
     return render(request, "register.html", {"form": form})
 
-
+# home handles "/home" endpoint
+# redirects to home page
 @login_required
-# dahshboard/home page
 def home(request):
     return render(request, "home.html")
 
-
+# tutors handles "/tutors" endpoint
+# allows user to view all tutors that attend the same school as them
 @login_required
 def tutors(request):
     if request.method == 'GET':
@@ -53,6 +56,9 @@ def tutors(request):
         return render(request, 'tutors.html', {'tutors': tutors})
 
 
+# users handles "/users/<int:id>" endpoint
+# allows users to view profile of user specified by user id
+# allows users to edit their profile
 @login_required
 def users(request, id):
 

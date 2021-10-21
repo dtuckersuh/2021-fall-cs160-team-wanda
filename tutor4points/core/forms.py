@@ -4,9 +4,7 @@ from django.forms.widgets import PasswordInput
 from .models import User, School
 from crispy_forms.helper import FormHelper
 
-# Create your views here.
-
-
+# Form that allows user to create an account
 class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
@@ -72,7 +70,8 @@ class RegisterForm(UserCreationForm):
     helper = FormHelper()
     helper.form_id = 'form'
 
-
+# Form that allows user to update their profile_pic, first_name, last_name, school, email
+# is_tutor, classes_taken, times_available, time_zone, rate
 class UpdateProfileForm(forms.ModelForm):
 
     class Meta:
@@ -80,7 +79,7 @@ class UpdateProfileForm(forms.ModelForm):
 
         # layout where want fields to be, type in order you want it to appear
         fields = ('profile_pic', "first_name", "last_name", "school", "email",
-                  'school', 'classes_taken', 'times_available', 'time_zone', 'rate')
+                'is_tutor', 'classes_taken', 'times_available', 'time_zone', 'rate')
 
         # customize placeholders
         widgets = {
@@ -109,6 +108,7 @@ class UpdateProfileForm(forms.ModelForm):
             'profile_pic': "Profile Picture",
             'first_name': "First Name",
             'last_name': "Last Name",
+            'is_tutor': "I want to be a tutor on Tutor4Points",
             'classes_taken': "Classes Taken",
             'times_available': "Times Available",
             'time_zone': "Time Zone",
