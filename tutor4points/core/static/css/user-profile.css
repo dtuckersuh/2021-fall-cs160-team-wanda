@@ -56,3 +56,30 @@
     font-size:16px;
 }
 
+.modal-content{
+     color:black;
+     background-color: white;
+     margin: 10px;
+ }
+ 
+ .modal-container{
+     display: flex;
+     flex-direction: row;
+     /* background-color: blue; */
+     padding: 20px;
+ }
+ 
+ .modal-profile-pic{
+     width: 100%;
+ }
+ 
+ .profile-pic-container{
+     flex:1;
+     /* background-color: red; */
+ }
+ 
+ .form-container{
+     flex:3;
+     /* background-color: yellow; */
+ }
+

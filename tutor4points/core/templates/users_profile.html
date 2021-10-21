@@ -90,6 +90,7 @@
                                     <div class="col-6">
                                         {{form.school | as_crispy_field}}
                                     </div>
+                                    {{form.is_tutor | as_crispy_field}}
                                     <div class="col-6">
                                         {{form.classes_taken | as_crispy_field}}
                                     </div>
@@ -108,7 +109,7 @@
                         </div>
 
                         <div  class = "profile-pic-container">
-                            <img id = "profile-img" src = "{{user.profile_pic.url}}" class="profile-pic">
+                            <img id = "profile-img" src = "{{user.profile_pic.url}}" class="modal-profile-pic">
                         </div>
                     </div>
                 </div>
