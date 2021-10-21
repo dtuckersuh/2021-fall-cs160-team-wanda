@@ -1,20 +1,27 @@
+.filter-button{
+    background-color: #20293F;
+    color: white;
+    margin: 15px;
+    padding: 10px;
+    width: 120px;
+    margin-left: 80px;
+
+}
+
 .info-container {
-    background-color: green;
+    background-color: #20293F;
     margin-bottom: 25px;
     margin-left: 80px;
     margin-right: 80px;
-    padding: 10px;
+    padding: 15px;
     gap:15px;
-    border-style: solid;
     align-items: center;
-    border-color:darkgreen;
 }
 
 .profile-pic{
     height:120px;
     width:120px;
     padding:5px;
-    background-color:darkgreen;
 }
 
 .name-column{
@@ -27,7 +34,7 @@
 }
 
 .times-column{
-    font-size: 15px;
+    font-size: 18px;
     width:30%
 }
 
