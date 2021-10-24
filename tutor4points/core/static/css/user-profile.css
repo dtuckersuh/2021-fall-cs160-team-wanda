@@ -56,30 +56,45 @@
     font-size:16px;
 }
 
+.modal {
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  transform: translate(-50%, -50%);
+}
+
+.modal-lg {
+     max-width: 65%;
+ }
+
 .modal-content{
      color:black;
      background-color: white;
      margin: 10px;
  }
  
- .modal-container{
+ .modal-flex-container{
      display: flex;
      flex-direction: row;
-     /* background-color: blue; */
      padding: 20px;
  }
  
  .modal-profile-pic{
      width: 100%;
+     height:auto;
  }
  
  .profile-pic-container{
-     flex:1;
-     /* background-color: red; */
+     padding-left: 10px;
+     padding-right: 10px;
+     /* display:flex; */
+     flex:2;
+     /* justify-content: center;
+     align-items: center; */
+
  }
  
  .form-container{
-     flex:3;
-     /* background-color: yellow; */
+     flex:5;
  }
 

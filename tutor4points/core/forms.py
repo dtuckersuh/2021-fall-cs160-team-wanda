@@ -18,11 +18,6 @@ class RegisterForm(UserCreationForm):
         self.fields['password2'].widget = PasswordInput(
             attrs={'placeholder': 'Repeat Password'})
 
-        self.fields['classes_taken'].required = False
-        self.fields['times_available'].required = False
-        self.fields['time_zone'].required = False
-        self.fields['rate'].required = False
-
     class Meta:
         model = User  # based on User model
 
