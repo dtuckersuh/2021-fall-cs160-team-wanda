@@ -27,8 +27,8 @@ urlpatterns = [
     path('login/', views.loginUser, name="login"),
     path('users/register', views.register, name="register"),
     path('home/', views.home, name="home"),
+    path('points/', views.points, name="points"),
     path('logout/', LogoutView.as_view(), name="logout"),
     path('tutors/', views.tutors, name="tutors"),
-    path('users/<int:id>', views.users, name="user") ## User Profile Page
-
+    path('users/<int:id>', views.users, name="user")  ## User Profile Page
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
