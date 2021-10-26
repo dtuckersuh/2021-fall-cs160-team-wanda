@@ -86,7 +86,7 @@ def users(request, id):
 # allows users to view current points, purchase points, or transfer points to tutors
 @login_required
 def points(request):
-    # add custom forms for points and replace forms below
+    # TODO add custom forms for points and replace forms below
     current_user = request.user
     users = get_user_model().objects.all()
     tutors = users.filter(is_tutor=True, school=current_user.school)
