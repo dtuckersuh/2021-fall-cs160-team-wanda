@@ -59,9 +59,15 @@
             <div class = "modal-dialog modal-lg">
                 <div class = "modal-content">
                     <div class = "modal-flex-container">
+
+                        <div class = "profile-pic-container">
+                            <img id = "profile-img" src = "{{user.profile_pic.url}}" class="modal-profile-pic">
+                        </div>
+
                         <div class = "form-container">
                             <form method="POST" class="form-group" enctype='multipart/form-data'>
                                 {% csrf_token %}
+
                                 <div class="col">
                                     {{form.profile_pic | as_crispy_field}}
                                 </div>
@@ -100,10 +106,6 @@
 
                                 <button type="submit" class="btn-block btn-success btn-style">Update</button>
                             </form>
-                        </div>
-
-                        <div  class = "profile-pic-container">
-                            <img id = "profile-img" src = "{{user.profile_pic.url}}" class="modal-profile-pic">
                         </div>
                     </div>
                 </div>

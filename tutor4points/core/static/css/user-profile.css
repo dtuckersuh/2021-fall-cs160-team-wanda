@@ -56,42 +56,32 @@
     font-size:16px;
 }
 
-.modal {
-  position: absolute;
-  left: 50%;
-  top: 55%;
-  transform: translate(-50%, -50%);
-}
-
 .modal-lg {
-     max-width: 65%;
+    max-width: 40%;
  }
 
 .modal-content{
-     color:black;
-     background-color: white;
      margin: 10px;
  }
  
  .modal-flex-container{
-     display: flex;
-     flex-direction: row;
-     padding: 20px;
+    border-style: outset;
+    border-width: 0.4rem;
+    border-color: rgb(223, 182, 79);
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    background-color: #2b2b2b;
  }
  
  .modal-profile-pic{
-     width: 100%;
-     height:auto;
+     width: 45%;
  }
  
  .profile-pic-container{
-     padding-left: 10px;
-     padding-right: 10px;
-     /* display:flex; */
+     display: flex;
      flex:2;
-     /* justify-content: center;
-     align-items: center; */
-
+     justify-content: center;
  }
  
  .form-container{
