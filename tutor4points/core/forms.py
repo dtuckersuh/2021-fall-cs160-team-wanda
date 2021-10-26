@@ -4,6 +4,7 @@ from django.forms.widgets import PasswordInput
 from .models import User, School
 from crispy_forms.helper import FormHelper
 
+
 # Form that allows user to create an account
 class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
@@ -70,16 +71,17 @@ class RegisterForm(UserCreationForm):
     helper = FormHelper()
     helper.form_id = 'form'
 
+
 # Form that allows user to update their profile_pic, first_name, last_name, school, email
 # is_tutor, classes_taken, times_available, time_zone, rate
 class UpdateProfileForm(forms.ModelForm):
-
     class Meta:
         model = User
 
         # layout where want fields to be, type in order you want it to appear
         fields = ('profile_pic', "first_name", "last_name", "school", "email",
-                'is_tutor', 'classes_taken', 'times_available', 'time_zone', 'rate')
+                  'is_tutor', 'classes_taken', 'times_available', 'time_zone',
+                  'rate')
 
         # customize placeholders
         widgets = {
@@ -114,5 +116,57 @@ class UpdateProfileForm(forms.ModelForm):
             'time_zone': "Time Zone",
             'rate': 'Rate (pts/hr): 100 points = $1.00'
         }
+
+    helper = FormHelper()
+    helper.form_id = 'form'
+
+
+# Form that allows user to purchase points
+# TODO rewrite form
+class PurchasePointsForm(forms.ModelForm):
+    class Meta:
+        model = User
+
+        # layout where want fields to be, type in order you want it to appear
+        fields = ('total_points', )
+
+        # customize placeholders
+        widgets = {
+            'total_points':
+            forms.NumberInput(attrs={
+                'placeholder': 'Example: 10000',
+            })
+        }
+
+        # customize form labels
+        labels = {
+            'total_points': 'Enter Amount of Points to Purchase',
+        }
+
+    helper = FormHelper()
+    helper.form_id = 'form'
+
+# Form that allows user to cash out points
+# TODO rewrite form
+class CashOutPointsForm(forms.ModelForm):
+    class Meta:
+        model = User
+
+        # layout where want fields to be, type in order you want it to appear
+        fields = ('total_points', )
+
+        # customize placeholders
+        widgets = {
+            'total_points':
+            forms.NumberInput(attrs={
+                'placeholder': 'Example: 10000',
+            })
+        }
+
+        # customize form labels
+        labels = {
+            'total_points': 'Enter Amount of Points to Cash Out',
+        }
+
     helper = FormHelper()
     helper.form_id = 'form'

@@ -1,0 +1,82 @@
+<!--Points Page-->
+{% extends 'base.html' %}
+
+{% block extrahead%}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/points.css' %}" />
+{% endblock%}
+
+{% block heading %}
+Points
+{% endblock %}
+
+<!-- {% load crispy_forms_tags %} -->
+{% block content %}
+<div class="container-fluid main-container">
+    <div class="row d-flex">
+        <div class="point-col">
+            <h2>Purchase Points</h2>
+            <div class="container-fluid point-content">
+                <p id="point-exchange-rate">Exchange Rate:&nbsp 1 Point = $0.01</p>
+                <div class="purchase-amount">
+                    <form method='POST' enctype='multipart/form-data'>
+                        <!-- Replace with form to purchase points -->
+                        {{form_purchase.total_points | as_crispy_field}}
+                        <button type="submit" class="btn-block btn-success btn-style">Purchase</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="point-col">
+            <h2>Account Balance</h2>
+            <div class="container-fluid, point-content">
+                <p class="total-points" id="total-points">
+                    {{user.total_points}}<br>
+                    points
+                </p>
+                <div class="purchase-amount">
+                    <form method='POST' enctype='multipart/form-data'>
+                        <!-- Replace with form to cash out points -->
+                        {{form_cash_out.total_points | as_crispy_field}}
+                        <!-- end replacement -->
+                        <button type="submit" class="btn-block btn-success btn-style">Cash Out</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="point-col">
+            <h2>Pay Tutor</h2>
+            <div class="container-fluid, point-content">
+                <div class="purchase-amount">
+                    <form method='POST' enctype='multipart/form-data'>
+                        <label>Select Tutor</label>
+                        <div class="select-tutor">
+                            <!-- Replace with form to pay tutor -->
+                            <select class="custom-select">
+                                {% for tutor in tutors %}
+                                <option>
+                                    <span>
+                                        <!-- <img src="{{tutor.profile_pic.url}}" class="profile-pic"> -->
+                                        <div class="name-column">
+                                            {{tutor.first_name}} {{tutor.last_name}}
+                                        </div>
+                                    </span>
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <!-- end replacement -->
+                        </div>
+                        <label>Enter Amount of Points to Send to Tutor</label>
+                        <input type="text" class="margin-bottom"/>
+                        <button type="submit" class="btn-block btn-success btn-style">Complete Payment</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{ user.total_points | json_script:"total-points-unformatted" }}
+<script>
+    document.getElementById('total-points').innerHTML = `${Intl.NumberFormat('en-US').format(document.getElementById('total-points-unformatted').textContent)}<br>points`;
+</script>
+{% endblock %}
