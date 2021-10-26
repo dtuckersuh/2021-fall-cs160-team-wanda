@@ -1,11 +1,30 @@
-.header {
-    text-align:center;
-    margin: 35px;
-    font-family: 'Oswald', serif;
+.header h1 {
+  text-align: center;
+  margin: 35px;
+  font-family: "Oswald", serif;
+  font-size: 4rem;
+  font-weight: bolder;
 }
 
 .main-content {
-    background-color:#484d5c;
-    color: white;
-    font-family: 'Open Sans';
+  background-color: #111111;
+  /* background-color: white; */
+  /* color: rgb(98, 0, 255); */
+  color: white;
+  font-family: "Open Sans";
 }
+
+.navbar-custom {
+  /* background-color: rgb(98, 0, 255); */
+  background-color: rgb(219, 190, 118);
+}
+
+/* .btn-success, .btn-success:active, .btn-success:visited {
+    background-color: rgb(204, 156, 0) !important;
+    border-color: rgb(209, 165, 55) !important;
+}
+
+.btn-success:hover {
+    background-color: rgb(224, 173, 43) !important;
+    border-color: rgb(224, 173, 43) !important;
+} */
