@@ -52,8 +52,8 @@ Points
                         <label>Select Tutor</label>
                         <div class="select-tutor">
                             <!-- Replace with form to pay tutor -->
-                            {% for tutor in tutors %}
                             <select class="custom-select">
+                                {% for tutor in tutors %}
                                 <option>
                                     <span>
                                         <!-- <img src="{{tutor.profile_pic.url}}" class="profile-pic"> -->
@@ -62,8 +62,8 @@ Points
                                         </div>
                                     </span>
                                 </option>
+                                {% endfor %}
                             </select>
-                            {% endfor %}
                             <!-- end replacement -->
                         </div>
                         <label>Enter Amount of Points to Send to Tutor</label>
