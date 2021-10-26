@@ -4,27 +4,47 @@
   font-family: "Oswald", serif;
   font-size: 4rem;
   font-weight: bolder;
+  margin-top:70px;
 }
 
 .main-content {
-  background-color: #111111;
+  background-color: #373F51;
   /* background-color: white; */
   /* color: rgb(98, 0, 255); */
-  color: white;
+  color: #F4FAFF;
   font-family: "Open Sans";
 }
 
 .navbar-custom {
   /* background-color: rgb(98, 0, 255); */
-  background-color: rgb(219, 190, 118);
+  background-color: #934DD1;
 }
 
-/* .btn-success, .btn-success:active, .btn-success:visited {
-    background-color: rgb(204, 156, 0) !important;
-    border-color: rgb(209, 165, 55) !important;
+.btn-success, .btn-success:active, .btn-success:visited {
+    background-color: #934DD1 !important;
+    border: none;
+    padding:10px;
+    border-radius: 10px;
 }
 
 .btn-success:hover {
-    background-color: rgb(224, 173, 43) !important;
-    border-color: rgb(224, 173, 43) !important;
-} */
+    background-color: #893CCD!important;
+    border: none;
+}
+
+.link-primary{
+   color: #8fc93a !important;
+}
+
+.btn-secondary, .btn-secondary:active, .btn-secondary:visited{
+
+  background-color: #88C035 !important;
+  border: none;
+  padding:10px;
+  border-radius: 10px;
+}
+
+.btn-secondary:hover{
+  background-color: #7DB030!important;
+  border:none;
+}

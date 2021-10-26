@@ -63,7 +63,7 @@
         <img src = "{{user.profile_pic.url}}" class = "profile-pic"> <br>
 
         {% if current_user %}
-        <button type ="submit" name="edit" value="edit" class="btn-success" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
+        <button type ="submit" name="edit" value="edit" class="btn-secondary" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
         {% endif %}
 
         <div id = "edit-profile-modal" class="modal fade">
@@ -104,7 +104,7 @@
                                         {{form.rate | as_crispy_field}}
                                     </div>
                                 </div>
-                                <button type="submit" class="btn-block btn-success btn-style">Update</button>
+                                <button type="submit" class="btn-block btn-secondary btn-style">Update</button>
                             </form>
                         </div>
 

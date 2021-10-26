@@ -5,19 +5,27 @@
 .profile{
      display: flex;
      flex-direction: row;
-     padding: 100px;
+     padding: 48px 120px 48px 120px;
      justify-content: center;
-     background-color: #20293F;
+     border-style:solid;
+     border-color:#D6FF79;
+     background-color: #323849;
+     border-width: 2px;
+     margin-left: 200px;
+     margin-right: 200px;
+     margin-top: 70px;
+     border-radius: 2rem;
 }
 
 .left-column{
-     
      justify-content: center;
      display:flex;
      flex-direction: column;
-     font-size: 20px;
+     padding: 30px;
+     font-size: 30px;
      text-align: center;
      width:50%;
+
 }
 
 .right-column{
@@ -29,21 +37,25 @@
 }
 
 .name{
+    font-family:Oswald;
     font-size:80px;
     font-weight:bold;
 }
 
 .school-name{
+     font-family:Oswald;
      font-size:30px;
      font-weight: bold;
      margin: 10px;
 }
 
 .rating{
-    font-size:15px;
+     margin-top:20px;
+     font-size:15px;
 }
 
 .total-points{
+     font-family:Oswald;
      font-size:25px;
      font-weight:bold;
 }

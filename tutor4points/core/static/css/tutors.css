@@ -1,4 +1,4 @@
-.filter-button{
+/* .filter-button{
     background-color: #20293F;
     color: white;
     margin: 15px;
@@ -6,26 +6,31 @@
     width: 120px;
     margin-left: 80px;
 
-}
+} */
 
 .info-container {
-    background-color: #20293F;
-    margin-bottom: 25px;
-    margin-left: 80px;
-    margin-right: 80px;
-    padding: 15px;
-    gap:15px;
+    margin-bottom: 30px;
+    margin-left: 230px;
+    margin-right: 230px;
+    padding: 25px;
+    gap:25px;
     align-items: center;
+    border-style:solid;
+    border-color:#D6FF79;
+    border-width:2px;
+    border-radius:2rem;
+    background-color: #323849;
 }
 
 .profile-pic{
-    height:120px;
-    width:120px;
+    height:80px;
+    width:80px;
     padding:5px;
+    border-radius: 50%;
 }
 
 .name-column{
-    font-size: 45px;
+    font-size: 25px;
     width:40%;
 }
 
@@ -41,15 +46,22 @@
 .request-button{
     height:50px;
     width: 140px;
+    background-color: #88C035;
+    color: #F4FAFF;
+    border-style: none;
+    border-radius:15px;
+}
 
+.request-button:hover{
+    background-color: #7DB030;
 }
 .tutor-rate-column{
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .tutor-rating-column{
     margin-left:40px;
     width: 20%;
-    font-size:50px;
+    font-size:30px;
 }
 
