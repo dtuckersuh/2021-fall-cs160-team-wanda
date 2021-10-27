@@ -13,17 +13,6 @@
 
 {% block content %}
 
-
-<script>
-    document.getElementById('id_profile_pic').onchange = function (event) {
-      const [file] = this.files
-      if (file) {
-        document.getElementById('profile-img').src = URL.createObjectURL(file)
-
-        this.parentNode.querySelector('.custom-file-label').textContent = file.name
-      }
-    }
-</script>
 <div class="profile">
     <div class="left-column">
         <div class="name">{{user.first_name}} {{user.last_name}}</div>
@@ -66,13 +55,19 @@
         <button type ="submit" name="edit" value="edit" class="btn-secondary" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
         {% endif %}
 
-        <div id = "edit-profile-modal" class="modal fade">
+        <div class="modal fade" id = "edit-profile-modal">
             <div class = "modal-dialog modal-lg">
                 <div class = "modal-content">
-                    <div class = "modal-container">
+                    <div class = "modal-flex-container">
+
+                        <div class = "profile-pic-container">
+                            <img id = "profile-img" src = "{{user.profile_pic.url}}" class="modal-profile-pic">
+                        </div>
+
                         <div class = "form-container">
                             <form method="POST" class="form-group" enctype='multipart/form-data'>
                                 {% csrf_token %}
+
                                 <div class="col">
                                     {{form.profile_pic | as_crispy_field}}
                                 </div>
@@ -90,7 +85,11 @@
                                     <div class="col-6">
                                         {{form.school | as_crispy_field}}
                                     </div>
-                                    {{form.is_tutor | as_crispy_field}}
+                                </div>
+
+                                {{form.is_tutor | as_crispy_field}}
+
+                                <div class = "form-row" id = "tutor-form">
                                     <div class="col-6">
                                         {{form.classes_taken | as_crispy_field}}
                                     </div>
@@ -104,19 +103,34 @@
                                         {{form.rate | as_crispy_field}}
                                     </div>
                                 </div>
+                              
                                 <button type="submit" class="btn-block btn-secondary btn-style">Update</button>
+                              
                             </form>
-                        </div>
-
-                        <div  class = "profile-pic-container">
-                            <img id = "profile-img" src = "{{user.profile_pic.url}}" class="modal-profile-pic">
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-                    
+        </div>          
     </div>
-
 </div>
+
+<script>
+    const tutorChk = document.getElementById("id_is_tutor")
+    document.getElementById("tutor-form").querySelectorAll('.col-6').forEach(row => row.classList.add(!tutorChk.checked && 'd-none'))
+
+    tutorChk.addEventListener('change', function () {
+      document.getElementById("tutor-form").querySelectorAll('.col-6').forEach(row => row.classList.toggle('d-none'))
+    })
+
+    document.getElementById('id_profile_pic').onchange = function (event) {
+      const [file] = this.files
+      if (file) {
+        document.getElementById('profile-img').src = URL.createObjectURL(file)
+
+        this.parentNode.querySelector('.custom-file-label').textContent = file.name
+      }
+    }
+</script>
+
 {% endblock %}

@@ -68,30 +68,35 @@
     font-size:16px;
 }
 
+.modal-lg {
+    max-width: 40%;
+ }
+
 .modal-content{
-     color:black;
-     background-color: white;
      margin: 10px;
  }
  
- .modal-container{
-     display: flex;
-     flex-direction: row;
-     /* background-color: blue; */
-     padding: 20px;
+ .modal-flex-container{
+    border-style: outset;
+    border-width: 0.4rem;
+    border-color: rgb(223, 182, 79);
+    display: flex;
+    padding: 20px;
+    flex-direction: column;
+    background-color: #2b2b2b;
  }
  
  .modal-profile-pic{
-     width: 100%;
+     width: 45%;
  }
  
  .profile-pic-container{
-     flex:1;
-     /* background-color: red; */
+     display: flex;
+     flex:2;
+     justify-content: center;
  }
  
  .form-container{
-     flex:3;
-     /* background-color: yellow; */
+     flex:5;
  }
 
