@@ -7,7 +7,7 @@
 }
 
 .main-content {
-  background-color:#111111;
+  background-color: #111111;
   /* background-color: white; */
   /* color: rgb(98, 0, 255); */
   color: white;
@@ -15,11 +15,11 @@
 }
 
 .navbar-custom {
-    /* background-color: rgb(98, 0, 255); */
-    background-color: rgb(219, 190, 118);
+  /* background-color: rgb(98, 0, 255); */
+  background-color: rgb(219, 190, 118);
 }
 
-.btn-success, .btn-success:active, .btn-success:visited {
+/* .btn-success, .btn-success:active, .btn-success:visited {
     background-color: rgb(204, 156, 0) !important;
     border-color: rgb(209, 165, 55) !important;
 }
@@ -27,4 +27,4 @@
 .btn-success:hover {
     background-color: rgb(224, 173, 43) !important;
     border-color: rgb(224, 173, 43) !important;
-}
+} */
