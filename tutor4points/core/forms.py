@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.forms.widgets import PasswordInput
 from .models import User, School
 from crispy_forms.helper import FormHelper
-
+from django.contrib.auth import get_user_model
 
 # Form that allows user to create an account
 class RegisterForm(UserCreationForm):
@@ -122,51 +122,17 @@ class UpdateProfileForm(forms.ModelForm):
 
 
 # Form that allows user to purchase points
-# TODO rewrite form
-class PurchasePointsForm(forms.ModelForm):
-    class Meta:
-        model = User
-
-        # layout where want fields to be, type in order you want it to appear
-        fields = ('total_points', )
-
-        # customize placeholders
-        widgets = {
-            'total_points':
-            forms.NumberInput(attrs={
-                'placeholder': 'Example: 10000',
-            })
-        }
-
-        # customize form labels
-        labels = {
-            'total_points': 'Enter Amount of Points to Purchase',
-        }
-
-    helper = FormHelper()
-    helper.form_id = 'form'
+class PurchasePointsForm(forms.Form):
+    purchased_points = forms.FloatField(label = 'purchase')
 
 # Form that allows user to cash out points
-# TODO rewrite form
-class CashOutPointsForm(forms.ModelForm):
-    class Meta:
-        model = User
+class CashOutPointsForm(forms.Form):
+    cashed_points = forms.IntegerField(label = 'cash_out')
 
-        # layout where want fields to be, type in order you want it to appear
-        fields = ('total_points', )
+class TransferPointsForm(forms.Form):
+    def __init__(self, *args,**kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args,**kwargs)
 
-        # customize placeholders
-        widgets = {
-            'total_points':
-            forms.NumberInput(attrs={
-                'placeholder': 'Example: 10000',
-            })
-        }
-
-        # customize form labels
-        labels = {
-            'total_points': 'Enter Amount of Points to Cash Out',
-        }
-
-    helper = FormHelper()
-    helper.form_id = 'form'
+        self.fields ['tutors'] = forms.ModelChoiceField(queryset = get_user_model().objects.all().filter(is_tutor = True,school = self.user.school))
+        self.fields ['amount_to_transfer'] = forms.IntegerField(label = 'transfer')

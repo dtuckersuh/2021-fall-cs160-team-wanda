@@ -8,7 +8,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class School(models.Model):  # Model storing all school names
     name = models.CharField(
-        max_length=50, unique=True)  # fields must be unique
+        max_length=50, unique=True)  # fields mu{% csrf_token %}st be unique
 
     def __str__(self):
         return self.name
@@ -40,7 +40,7 @@ class User (AbstractUser):  # Custom User Model that inherits from Abstract User
     tutee_avg_rating = models.FloatField(null=True)
 
     def __str__(self):
-        return f'{self.username} {self.is_tutor}'
+        return f'{self.first_name} {self.last_name}'
 
 
 class tutor_request (models.Model):
