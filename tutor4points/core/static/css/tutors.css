@@ -1,11 +1,9 @@
 /* .filter-button{
+    width: 120px;
+    margin: 15px 15px 15px 80px;
+    padding: 10px;
     background-color: #20293F;
     color: white;
-    margin: 15px;
-    padding: 10px;
-    width: 120px;
-    margin-left: 80px;
-
 } */
 
 .info-container {
@@ -13,19 +11,21 @@
     margin-left: 230px;
     margin-right: 230px;
     padding: 25px;
-    gap:25px;
     align-items: center;
+    gap:25px;
+    background-color: #323849;
     border-style:solid;
     border-color:#D6FF79;
     border-width:2px;
     border-radius:2rem;
-    background-color: #323849;
 }
 
 .profile-pic{
     height:80px;
     width:80px;
     padding:5px;
+    object-fit: cover;
+    overflow:hidden;
     border-radius: 50%;
 }
 
@@ -46,14 +46,14 @@
 .request-button{
     height:50px;
     width: 140px;
-    background-color: #88C035;
+    background-color: #934DD1;
     color: #F4FAFF;
     border-style: none;
     border-radius:15px;
 }
 
 .request-button:hover{
-    background-color: #7DB030;
+    background-color: #893CCD;
 }
 .tutor-rate-column{
     font-size: 20px;
@@ -61,7 +61,7 @@
 
 .tutor-rating-column{
     margin-left:40px;
-    width: 20%;
     font-size:30px;
+    width: 20%;
 }
 

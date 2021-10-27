@@ -5,15 +5,13 @@
 .profile{
      display: flex;
      flex-direction: row;
+     margin: 70px 200px 0px 200px;
      padding: 48px 120px 48px 120px;
      justify-content: center;
+     background-color: #323849;
      border-style:solid;
      border-color:#D6FF79;
-     background-color: #323849;
      border-width: 2px;
-     margin-left: 200px;
-     margin-right: 200px;
-     margin-top: 70px;
      border-radius: 2rem;
 }
 
@@ -25,7 +23,6 @@
      font-size: 30px;
      text-align: center;
      width:50%;
-
 }
 
 .right-column{
@@ -74,16 +71,18 @@
 
 .modal-content{
      margin: 10px;
+     border-radius: 2rem;
  }
  
  .modal-flex-container{
-    border-style: outset;
-    border-width: 0.4rem;
-    border-color: rgb(223, 182, 79);
     display: flex;
     padding: 20px;
     flex-direction: column;
-    background-color: #2b2b2b;
+    background-color: #323849;
+    border-style: solid;
+    border-width: 0.3rem;
+    border-color: #D6FF79;
+    border-radius: 2rem;
  }
  
  .modal-profile-pic{
