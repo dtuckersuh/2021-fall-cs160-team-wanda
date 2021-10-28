@@ -59,7 +59,7 @@ def home(request):
 def tutors(request):
     if request.method == 'GET':
         current_user = request.user
-        users = get_user_model().objects.all()
+        users = get_user_model().objects.all().exclude(pk=current_user.id)
         tutors = users.filter(is_tutor=True, school=current_user.school)
 
         return render(request, 'tutors.html', {'tutors': tutors})
@@ -74,7 +74,7 @@ def users(request, id):
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
     if request.method == 'POST':
-        form = UpdateProfileForm(request.POST, instance=user)
+        form = UpdateProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
     else:
