@@ -8,7 +8,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class School(models.Model):  # Model storing all school names
     name = models.CharField(
-        max_length=50, unique=True)  # fields mu{% csrf_token %}st be unique
+        max_length=50, unique=True)  # fields must be unique
 
     def __str__(self):
         return self.name

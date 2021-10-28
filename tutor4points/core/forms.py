@@ -118,16 +118,15 @@ class UpdateProfileForm(forms.ModelForm):
 
 # Form that allows user to purchase points
 class PurchasePointsForm(forms.Form):
-    purchased_points = forms.FloatField(label = 'purchase')
+    purchased_points = forms.IntegerField(label = 'Enter the amount to purchase', required = False)
 
 # Form that allows user to cash out points
 class CashOutPointsForm(forms.Form):
-    cashed_points = forms.IntegerField(label = 'cash_out')
+    cashed_points = forms.FloatField(label = 'Enter the amount to cash out', required = False)
 
 class TransferPointsForm(forms.Form):
     def __init__(self, *args,**kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args,**kwargs)
-
-        self.fields ['tutors'] = forms.ModelChoiceField(queryset = get_user_model().objects.all().filter(is_tutor = True,school = self.user.school))
-        self.fields ['amount_to_transfer'] = forms.IntegerField(label = 'transfer')
+        self.fields ['tutors'] = forms.ModelChoiceField(queryset = get_user_model().objects.all().filter(is_tutor = True,school = self.user.school), required = False)
+        self.fields ['amount_to_transfer'] = forms.IntegerField(label = 'Enter the amount to transfer', required = False)
