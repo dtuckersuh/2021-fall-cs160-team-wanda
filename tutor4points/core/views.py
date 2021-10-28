@@ -1,8 +1,8 @@
-from .forms import RegisterForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm
+from .forms import RegisterForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
-
+from django.http import HttpResponse, HttpResponseRedirect
 
 # loginUser handles "/login" endpoint
 # logs in the user that has the specified login credentials from the login form
@@ -59,7 +59,7 @@ def home(request):
 def tutors(request):
     if request.method == 'GET':
         current_user = request.user
-        users = get_user_model().objects.all()
+        users = get_user_model().objects.all().exclude(pk=current_user.id)
         tutors = users.filter(is_tutor=True, school=current_user.school)
 
         return render(request, 'tutors.html', {'tutors': tutors})
@@ -74,7 +74,7 @@ def users(request, id):
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
     if request.method == 'POST':
-        form = UpdateProfileForm(request.POST, instance=user)
+        form = UpdateProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
     else:
@@ -91,24 +91,61 @@ def users(request, id):
 # allows users to view current points, purchase points, or transfer points to tutors
 @login_required
 def points(request):
-    # TODO add custom forms for points and replace forms below
-    current_user = request.user
-    users = get_user_model().objects.all()
+    current_user = request.user #the user
+    users = get_user_model().objects.all() #list of users to display
     tutors = users.filter(is_tutor=True, school=current_user.school)
-    if request.method == 'POST':
-        form_purchase = PurchasePointsForm(request.POST, instance=request.user)
-        if form_purchase.is_valid():
-            form_purchase.save()
-        form_cash_out = CashOutPointsForm(request.POST, instance=request.user)
-        if form_cash_out.is_valid():
-            form_cash_out.save()
+    error = '' #blank error
+    if request.method == 'POST': #if we get a post
+        form_purchase = PurchasePointsForm(request.POST) #create the forms
+        form_cash_out = CashOutPointsForm(request.POST)
+        form_transfer = TransferPointsForm(request.POST, user = request.user)
+        if 'purchase' in request.POST: #if we got a purchase
+            if form_purchase.is_valid(): #validate
+                if(form_purchase.cleaned_data['purchased_points'] != None): #make sure they entered a number
+                    if (form_purchase.cleaned_data['purchased_points'] > 0): #validate data
+                        current_user.total_points +=form_purchase.cleaned_data['purchased_points'] #save if positive
+                        current_user.save()
+                    else:
+                        error = "Enter a positive value for points purchased" #or else send an error
+                else:
+                    error = "Please enter a value for points purchased" #or else send an error
+        elif 'cash_out' in request.POST:  #Same with cash out
+            if form_cash_out.is_valid():
+                if(form_cash_out.cleaned_data['cashed_points'] != None):
+                    if (form_cash_out.cleaned_data['cashed_points'] > 0 and form_cash_out.cleaned_data['cashed_points'] <= request.user.total_points ):
+                        current_user.total_points -=form_cash_out.cleaned_data['cashed_points']
+                        current_user.save()
+                    elif(form_cash_out.cleaned_data['cashed_points'] > 0):
+                        error = "Enter a value less than or equal to your current points for points redeemed" #two different errors depending on data
+                    else:
+                        error = "Enter a positive value for points redeemed"
+                else:
+                    error = "Please enter a value for points redeemed"
+        elif 'transfer' in request.POST: #same with transfer
+                if form_transfer.is_valid():
+                    if(form_transfer.cleaned_data['amount_to_transfer'] != None and form_transfer.cleaned_data['tutors'] != None):
+                        if(form_transfer.cleaned_data['amount_to_transfer'] > 0 and form_transfer.cleaned_data['amount_to_transfer'] <= request.user.total_points):
+                            current_user.total_points -= form_transfer.cleaned_data['amount_to_transfer']
+                            current_user.save()
+                            form_transfer.cleaned_data['tutors'].total_points += form_transfer.cleaned_data['amount_to_transfer'] #make sure
+                            form_transfer.cleaned_data['tutors'].save()
+                        elif(form_transfer.cleaned_data['amount_to_transfer'] > 0):
+                            error = "Enter a value less than or equal to your current points for points transferred"
+                        else:
+                            error = "Enter a positive value for points transferred"
+                    else:
+                        error = "Please enter a value for tutor and points transferred"
+
     else:
         form_purchase = PurchasePointsForm()
         form_cash_out = CashOutPointsForm()
+        form_transfer = TransferPointsForm(user = request.user)
     return render(
         request, "points.html", {
             'user': request.user,
             'form_purchase': form_purchase,
             'form_cash_out': form_cash_out,
-            'tutors': tutors
+            'tutors': tutors,
+            'form_transfer_points': form_transfer,
+            'error_message' : error
         })

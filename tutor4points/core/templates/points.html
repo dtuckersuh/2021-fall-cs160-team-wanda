@@ -8,6 +8,9 @@
 
 {% block heading %}
 Points
+<font color="red">
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+</font>
 {% endblock %}
 
 <!-- {% load crispy_forms_tags %} -->
@@ -19,11 +22,13 @@ Points
             <div class="container-fluid point-content">
                 <p id="point-exchange-rate">Exchange Rate:&nbsp 1 Point = $0.01</p>
                 <div class="purchase-amount">
-                    <form method='POST' enctype='multipart/form-data'>
-                        <!-- Replace with form to purchase points -->
-                        {{form_purchase.total_points | as_crispy_field}}
-                        <button type="submit" class="btn-block btn-success btn-style">Purchase</button>
-                    </form>
+                  <form action="/points/" method="POST">
+                    {% csrf_token %}
+                    {{ form_purchase }}
+                    <input type="submit"name="purchase" value="Submit">
+                  </form>
+
+
                 </div>
             </div>
         </div>
@@ -35,12 +40,11 @@ Points
                     points
                 </p>
                 <div class="purchase-amount">
-                    <form method='POST' enctype='multipart/form-data'>
-                        <!-- Replace with form to cash out points -->
-                        {{form_cash_out.total_points | as_crispy_field}}
-                        <!-- end replacement -->
-                        <button type="submit" class="btn-block btn-success btn-style">Cash Out</button>
-                    </form>
+                  <form action="/points/" method="POST">
+                    {% csrf_token %}
+                    {{ form_cash_out}}
+                    <input type="submit"name="cash_out" value="Submit">
+                  </form>
                 </div>
             </div>
         </div>
@@ -49,26 +53,16 @@ Points
             <div class="container-fluid, point-content">
                 <div class="purchase-amount">
                     <form method='POST' enctype='multipart/form-data'>
+                        {% csrf_token %}
                         <label>Select Tutor</label>
                         <div class="select-tutor">
                             <!-- Replace with form to pay tutor -->
-                            <select class="custom-select">
-                                {% for tutor in tutors %}
-                                <option>
-                                    <span>
-                                        <!-- <img src="{{tutor.profile_pic.url}}" class="profile-pic"> -->
-                                        <div class="name-column">
-                                            {{tutor.first_name}} {{tutor.last_name}}
-                                        </div>
-                                    </span>
-                                </option>
-                                {% endfor %}
-                            </select>
+                            {{form_transfer_points.tutors| as_crispy_field}}
                             <!-- end replacement -->
                         </div>
-                        <label>Enter Amount of Points to Send to Tutor</label>
-                        <input type="text" class="margin-bottom"/>
-                        <button type="submit" class="btn-block btn-success btn-style">Complete Payment</button>
+
+                          {{form_transfer_points.amount_to_transfer| as_crispy_field}}
+                        <button type="submit" name="transfer" class="btn-block btn-success btn-style">Complete Payment</button>
                     </form>
                 </div>
             </div>
