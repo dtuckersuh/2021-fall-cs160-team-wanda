@@ -7,7 +7,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 # loginUser handles "/login" endpoint
 # logs in the user that has the specified login credentials from the login form
 def loginUser(request):
-    if request.method == "POST":
+    if request.user.is_authenticated:
+        return redirect ("home")
+    elif request.method == "POST":
         form = forms.AuthenticationForm(request, request.POST)
         if form.is_valid():
             user = authenticate(username=form.cleaned_data.get('username'),
@@ -17,7 +19,7 @@ def loginUser(request):
                 login(request, user)
                 return redirect('home')
             else:
-                return redirect('/login')
+                return redirect('login')
     else:
         form = forms.AuthenticationForm()
     return render(request, "login.html", {"form": form})
@@ -34,7 +36,7 @@ def register(request):
                 username=form.cleaned_data.get('username'),
                 password=form.cleaned_data.get('password1'))
             login(request, new_user)
-            return redirect("/home")
+            return redirect("home")
 
     else:
         form = RegisterForm()
@@ -45,7 +47,10 @@ def register(request):
 # redirects to home page
 @login_required
 def home(request):
-    return render(request, "home.html")
+    if request.user.is_authenticated:
+        return render(request, "home.html")
+    else:
+        return redirect ("")
 
 
 # tutors handles "/tutors" endpoint

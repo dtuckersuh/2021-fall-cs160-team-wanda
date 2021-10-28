@@ -31,13 +31,13 @@ class User (AbstractUser):  # Custom User Model that inherits from Abstract User
         blank=True, upload_to="images/profile_pics", default="images/profile_pics/default_pic.png")  # store path to profile pic
     total_points = models.FloatField(default=0)
     is_tutor = models.BooleanField(default=False)
-    classes_taken = models.TextField(null=True)
-    times_available = models.TextField(null=True)
+    classes_taken = models.TextField(null=True, blank=True)
+    times_available = models.TextField(null=True, blank=True)
     time_zone = models.CharField(
-        max_length=8, choices=TIME_ZONES_CHOICES, null=True)
-    rate = models.IntegerField(null=True)
-    tutor_avg_rating = models.FloatField(null=True)
-    tutee_avg_rating = models.FloatField(null=True)
+        max_length=8, choices=TIME_ZONES_CHOICES, null=True, blank=True)
+    rate = models.IntegerField(null=True, blank=True)
+    tutor_avg_rating = models.FloatField(null=True, blank=True)
+    tutee_avg_rating = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

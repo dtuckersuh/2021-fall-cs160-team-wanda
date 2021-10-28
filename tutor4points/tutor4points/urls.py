@@ -23,10 +23,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', lambda request: redirect('login')),
+    path('', views.home, name="home"),
     path('login/', views.loginUser, name="login"),
     path('users/register', views.register, name="register"),
-    path('home/', views.home, name="home"),
     path('points/', views.points, name="points"),
     path('logout/', LogoutView.as_view(), name="logout"),
     path('tutors/', views.tutors, name="tutors"),
