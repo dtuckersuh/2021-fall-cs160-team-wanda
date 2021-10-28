@@ -1,16 +1,16 @@
-@media (min-width: 1200px) {
+@media (min-width: 75rem) {
   .container {
-    max-width: 800px;
+    max-width: 50rem;
   }
 }
 
 .header {
-  margin-top: 35px;
-  margin-bottom: 20px;
+  margin-top:2.188rem;
+  margin-bottom: 1.25rem;
 }
 
 .btn-style {
-  height: 40px;
+  height: 2.5rem;
 }
 
 .text-muted {
@@ -22,9 +22,9 @@
 }
 
 .profileImgPreview {
-  margin: 0px;
+  margin:0rem;
   float: right;
-  padding: 0px;
+  padding:0rem;
 }
 
 .hide {
@@ -32,18 +32,18 @@
 }
 
 .imgUpload {
-  margin: 0px;
+  margin:0rem;
   float: left;
-  padding: 0px;
+  padding:0rem;
 }
 
 .profileImg {
-  margin: 0px;
-  max-height: 200px;
-  max-width: 250px;
+  margin:0rem;
+  max-height:12.5rem;
+  max-width: 15.625rem;
   float: right;
-  padding: 0px;
-  padding-left: 50px;
+  padding:0rem;
+  padding-left:3.125rem;
 }
 
 .d-inline-flex {

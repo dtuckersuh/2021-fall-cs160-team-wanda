@@ -1,67 +1,67 @@
 /* .filter-button{
-    width: 120px;
-    margin: 15px 15px 15px 80px;
-    padding: 10px;
+    width: 7.5rem;
+    margin: 0.938rem 0.938rem 0.938rem 5rem;
+    padding: 0.625rem;
     background-color: #20293F;
     color: white;
 } */
 
 .info-container {
-    margin-bottom: 30px;
-    margin-left: 230px;
-    margin-right: 230px;
-    padding: 25px;
+    margin-bottom: 1.875rem;
+    margin-left: 14.375rem;
+    margin-right: 14.375rem;
+    padding: 1.563rem;
     align-items: center;
-    gap:25px;
+    gap:1.563rem;
     background-color: #323849;
     border-style:solid;
     border-color:#D6FF79;
-    border-width:2px;
+    border-width:0.125rem;
     border-radius:2rem;
 }
 
 .profile-pic{
-    height:80px;
-    width:80px;
-    padding:5px;
+    height:5rem;
+    width:5rem;
+    padding:0.313rem;
     object-fit: cover;
     overflow:hidden;
     border-radius: 50%;
 }
 
-.name-column{
-    font-size: 25px;
+.name{
+    font-size: 1.563rem;
     width:40%;
 }
 
-.classes-column{
-    font-size:20px;
+.classes{
+    font-size:1.25rem;
 }
 
-.times-column{
-    font-size: 18px;
+.times{
+    font-size: 1.125rem;
     width:30%
 }
 
 .request-button{
-    height:50px;
-    width: 140px;
+    height:3.125rem;
+    width:8.75rem;
     background-color: #934DD1;
     color: #F4FAFF;
     border-style: none;
-    border-radius:15px;
+    border-radius:0.938rem;
 }
 
 .request-button:hover{
     background-color: #893CCD;
 }
-.tutor-rate-column{
-    font-size: 20px;
+.tutor-rate{
+    font-size:1.25rem;
 }
 
-.tutor-rating-column{
-    margin-left:40px;
-    font-size:30px;
+.tutor-rating{
+    margin-left:2.5rem;
+    font-size:1.875rem;
     width: 20%;
 }
 

@@ -17,7 +17,9 @@
     <div class="left-column">
         <div class="name">{{user.first_name}} {{user.last_name}}</div>
         <div class="school-name">{{user.school}} </div>
-        <div class="total-points">Total Points: {{user.total_points}}</div>
+        {% if current_user %}
+            <div class="total-points">Total Points: {{user.total_points}}</div>
+        {% endif %}
         <div class="rating">
             {% if user.tutor_avg_rating %}
                 <b>Tutor rating:</b>

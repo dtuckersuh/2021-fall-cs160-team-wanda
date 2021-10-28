@@ -23,16 +23,16 @@ Tutors
         <img src = "{{tutor.profile_pic.url}}" class = "profile-pic">
     </div>
 
-    <div class = "name-column">
+    <div class = "name">
         {{tutor.first_name}} {{tutor.last_name}} <br/>
-        <div class = "classes-column">
+        <div class = "classes">
             {{tutor.classes_taken}}  <br/>
         </div>
     </div>
 
 
 
-    <div class = "times-column">
+    <div class = "times">
         {% if tutor.times_available %}
             {{tutor.times_available}}  <br/>
         {% else %}
@@ -42,14 +42,14 @@ Tutors
 
 
     <div>
-        <button type ="submit" name="request" value="request" class="request-button" >Request</button>
+        <button type ="submit" name="request" value="request" class="request-button">Request</button>
     </div>
     
 
-    <div class="tutor-rating-column">
+    <div class="tutor-rating">
         {{tutor.tutor_avg_rating}} ★<br/>
 
-        <div class = "tutor-rate-column">
+        <div class = "tutor-rate">
             {{tutor.rate}} pts/hr<br/>
         </div>
     </div>

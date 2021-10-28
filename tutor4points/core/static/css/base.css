@@ -1,10 +1,10 @@
 .header h1 {
   text-align: center;
-  margin: 35px;
+  margin: 2.188rem;
   font-family: "Oswald", serif;
   font-size: 4rem;
   font-weight: bolder;
-  margin-top:70px;
+  margin-top:4.375rem;
 }
 
 .main-content {
@@ -20,8 +20,10 @@
 .btn-success, .btn-success:active, .btn-success:visited {
     background-color: #934DD1 !important;
     border: none;
-    padding:10px;
-    border-radius: 10px;
+    padding:0.625rem;
+    border-radius:0.625rem;
+    /* font-family:"Open Sans";
+    letter-spacing: -0.05rem; */
 }
 
 .btn-success:hover {
@@ -34,14 +36,13 @@
 }
 
 .btn-secondary, .btn-secondary:active, .btn-secondary:visited{
-
-  background-color: #88C035 !important;
+  background-color: #934DD1 !important;
   border: none;
-  padding:10px;
-  border-radius: 10px;
+  padding:0.625rem;
+  border-radius: 0.625rem;
 }
 
 .btn-secondary:hover{
-  background-color: #7DB030!important;
+  background-color: #893CCD!important;
   border:none;
 }
