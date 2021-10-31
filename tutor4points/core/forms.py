@@ -118,15 +118,76 @@ class UpdateProfileForm(forms.ModelForm):
 
 # Form that allows user to purchase points
 class PurchasePointsForm(forms.Form):
-    purchased_points = forms.IntegerField(label = 'Enter the amount to purchase', required = False)
-
-# Form that allows user to cash out points
-class CashOutPointsForm(forms.Form):
-    cashed_points = forms.FloatField(label = 'Enter the amount to cash out', required = False)
-
-class TransferPointsForm(forms.Form):
     def __init__(self, *args,**kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args,**kwargs)
-        self.fields ['tutors'] = forms.ModelChoiceField(queryset = get_user_model().objects.all().filter(is_tutor = True,school = self.user.school), required = False)
-        self.fields ['amount_to_transfer'] = forms.IntegerField(label = 'Enter the amount to transfer', required = False)
+
+        self.fields ['purchased_points'] = forms.IntegerField(label = 'Enter amount to purchase (points)')
+        self.fields ['purchased_points'].initial = 0
+        self.fields ['purchased_points'].widget.attrs['placeholder'] = 'Number of points'
+
+    def clean_purchased_points (self): #validate purchased points field
+        purchased_points = self.cleaned_data['purchased_points']
+        if (purchased_points == None or purchased_points <= 0):
+            self.add_error ('purchased_points', 'Please enter a positive value.')
+        return purchased_points
+
+    def save(self):
+        self.user.total_points += self.cleaned_data['purchased_points'] #save if positive
+        self.user.save()
+
+# Form that allows user to cash out points
+class CashOutPointsForm(forms.Form):
+    def __init__(self, *args,**kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args,**kwargs)
+
+        self.fields ['cashed_points'] = forms.FloatField(label = 'Enter amount to cash out (points)')
+        self.fields ['cashed_points'].initial = 0
+        self.fields ['cashed_points'].widget.attrs['placeholder'] = 'Number of points'
+
+    def clean_cashed_points (self): #validate cashed points field
+        cashed_points = self.cleaned_data['cashed_points']
+        if (cashed_points == None or cashed_points <= 0):
+            self.add_error ('cashed_points', 'Please enter a positive value.')
+        elif (cashed_points >= self.user.total_points):
+            self.add_error ('cashed_points', 'Please enter a value less than or equal to your points balance.')
+        return cashed_points
+
+    def save(self):
+        self.user.total_points -= self.cleaned_data['cashed_points']
+        self.user.save()
+
+# Form that allows user to transfer points from one person to another
+class TransferPointsForm(forms.Form):
+
+    def __init__(self, *args,**kwargs):
+        self.user = kwargs.pop('user', None)
+        super().__init__(*args,**kwargs)
+        self.fields ['tutors'] = forms.ModelChoiceField(label = 'Select Tutor', queryset = get_user_model().objects.all().filter(is_tutor = True,school = self.user.school))
+        self.fields ['amount_to_transfer'] = forms.IntegerField(label = 'Enter the amount to transfer (points)')
+        self.fields ['amount_to_transfer'].initial = 0
+        self.fields ['amount_to_transfer'].widget.attrs['placeholder'] = 'Number of points'
+        self.error_css_class = 'error'
+
+    def clean_amount_to_transfer (self): #validate amount to transfer field
+        amount_to_transfer = self.cleaned_data['amount_to_transfer']
+        if (amount_to_transfer == None or amount_to_transfer <= 0): #if they didnt enter a positive number
+            self.add_error ('amount_to_transfer', 'Please enter a positive value.')
+        elif (amount_to_transfer >= self.user.total_points): #if
+            self.add_error ('amount_to_transfer', "Please enter a value less than or equal to your current points balance.")
+        return amount_to_transfer
+
+    def clean_tutors(self): #validate tutors field
+        tutor = self.cleaned_data['tutors']
+        if (tutor == None):
+            self.add_error ('tutors', "Please choose a tutor")
+        return tutor
+
+    def save(self):
+        amount_to_transfer = self.cleaned_data['amount_to_transfer']
+        tutor = self.cleaned_data['tutors']
+        self.user.total_points -= amount_to_transfer
+        self.user.save()
+        tutor.total_points += amount_to_transfer
+        tutor.save()
