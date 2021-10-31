@@ -35,7 +35,7 @@ Dashboard
                 <div class="list-container">
                     <h2>Suggested Sessions</h2>
                         <!-- TODO: Refactor repeated code -->
-                        {% for tutor in tutors %}
+                        {% for tutor in tutors|slice:":3" %}
                             <div class="info-container d-flex">
                                 <div>
                                     <img src="{{tutor.profile_pic.url}}" class="profile-pic">
@@ -57,7 +57,11 @@ Dashboard
                                     <button type="submit" name="request" value="request" class="request-button" >Request</button>
                                 </div>
                                 <div class="tutor-rating-column">
-                                    {{tutor.tutor_avg_rating}} ★<br/>
+                                    {% if tutor.tutor_avg_rating %}
+                                        {{tutor.tutor_avg_rating}} ★<br/>
+                                    {% else %}
+                                       N/A
+                                    {% endif %}
                                     <div class="tutor-rate-column">
                                         {{tutor.rate}} pts/hr<br/>
                                     </div>
