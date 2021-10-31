@@ -47,8 +47,11 @@ def register(request):
 # redirects to home page
 @login_required
 def home(request):
-    if request.user.is_authenticated:
-        return render(request, "home.html")
+    current_user = request.user
+    if current_user.is_authenticated:
+        users = get_user_model().objects.all().exclude(pk=current_user.id)
+        tutors = users.filter(is_tutor=True, school=current_user.school)
+        return render(request, "home.html", {"tutors": tutors})
     else:
         return redirect ("")
 
