@@ -150,7 +150,7 @@ class CashOutPointsForm(forms.Form):
         cashed_points = self.cleaned_data['cashed_points']
         if (cashed_points == None or cashed_points <= 0):
             self.add_error ('cashed_points', 'Please enter a positive value.')
-        elif (cashed_points >= self.user.total_points):
+        elif (cashed_points > self.user.total_points): #if user tries to cash out more points than point balance
             self.add_error ('cashed_points', 'Please enter a value less than or equal to your points balance.')
         return cashed_points
 
@@ -164,7 +164,7 @@ class TransferPointsForm(forms.Form):
     def __init__(self, *args,**kwargs):
         self.user = kwargs.pop('user', None)
         super().__init__(*args,**kwargs)
-        self.fields ['tutors'] = forms.ModelChoiceField(label = 'Select Tutor', queryset = get_user_model().objects.all().filter(is_tutor = True,school = self.user.school))
+        self.fields ['tutors'] = forms.ModelChoiceField(label = 'Select Tutor', queryset = get_user_model().objects.all().filter(is_tutor = True,school = self.user.school).exclude (pk = self.user.id))
         self.fields ['amount_to_transfer'] = forms.IntegerField(label = 'Enter the amount to transfer (points)')
         self.fields ['amount_to_transfer'].initial = 0
         self.fields ['amount_to_transfer'].widget.attrs['placeholder'] = 'Number of points'
@@ -174,7 +174,7 @@ class TransferPointsForm(forms.Form):
         amount_to_transfer = self.cleaned_data['amount_to_transfer']
         if (amount_to_transfer == None or amount_to_transfer <= 0): #if they didnt enter a positive number
             self.add_error ('amount_to_transfer', 'Please enter a positive value.')
-        elif (amount_to_transfer >= self.user.total_points): #if
+        elif (amount_to_transfer > self.user.total_points): #if user tries to transfer more points than point balance
             self.add_error ('amount_to_transfer', "Please enter a value less than or equal to your current points balance.")
         return amount_to_transfer
 

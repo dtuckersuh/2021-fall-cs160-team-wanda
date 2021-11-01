@@ -36,7 +36,7 @@ Dashboard
                     <h2>Suggested Sessions</h2>
                         <!-- TODO: Refactor repeated code -->
                         {% for tutor in tutors|slice:":3" %}
-                            <div class="info-container d-flex">
+                            <div class="info-container d-flex" id = "tutor-{{tutor.id}}" data-id="{{tutor.id}}">
                                 <div>
                                     <img src="{{tutor.profile_pic.url}}" class="profile-pic">
                                 </div>
@@ -73,6 +73,13 @@ Dashboard
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+    document.querySelectorAll('.info-container').forEach(tutorEntry => {
+        tutorEntry.addEventListener('click', event => location.href = `/users/${tutorEntry.dataset.id}`)
+    })
+</script>
+
 {% endwith %}
 {% endblock %}
 

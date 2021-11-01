@@ -41,6 +41,10 @@
     background-color: #323849;
 }
 
+.info-container:hover {
+    background-color: #242835;
+}
+
 .profile-pic {
     height:80px;
     width:80px;
@@ -64,14 +68,14 @@
 .request-button{
     height:50px;
     width: 140px;
-    background-color: #934DD1; 
+    background-color:#934DD1; 
     color: #F4FAFF;
     border-style: none;
     border-radius:15px;
 }
 
 .request-button:hover{
-    background-color: #7DB030;
+    background-color:#893CCD;
 }
 .tutor-rate-column{
     font-size: 20px;

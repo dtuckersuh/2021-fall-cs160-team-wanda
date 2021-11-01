@@ -8,9 +8,6 @@
 
 {% block heading %}
 Points
-<font color="red">
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-</font>
 {% endblock %}
 
 <!-- {% load crispy_forms_tags %} -->
@@ -56,9 +53,7 @@ Points
                 <div class="purchase-amount">
                     <form method='POST' enctype='multipart/form-data'>
                         {% csrf_token %}
-                        <div class="select-tutor">
-                            {{form_transfer_points| crispy}}
-                        </div>
+                        {{form_transfer_points| crispy}}
                         <button type="submit" name="transfer" class="btn-block btn-success">Complete Payment</button>
                     </form>
                 </div>

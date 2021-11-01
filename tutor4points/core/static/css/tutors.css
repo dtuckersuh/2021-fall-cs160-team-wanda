@@ -22,6 +22,10 @@
     background-color: #323849;
 }
 
+.info-container:hover {
+    background-color: #242835;
+}
+
 .profile-pic{
     height:80px;
     width:80px;
