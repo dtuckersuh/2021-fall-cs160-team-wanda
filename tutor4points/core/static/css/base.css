@@ -1,10 +1,9 @@
 .header h1 {
   text-align: center;
-  margin: 2.188rem;
+  margin: 4.375rem 2.188rem 2.188rem 2.188rem;
   font-family: "Oswald", serif;
   font-size: 4rem;
   font-weight: bolder;
-  margin-top:4.375rem;
 }
 
 .main-content {
@@ -20,8 +19,8 @@
 .btn-success, .btn-success:active, .btn-success:visited {
     background-color: #934DD1 !important;
     border: none;
-    padding:0.625rem;
     border-radius:0.625rem;
+    padding:0.625rem;
 }
 
 .btn-success:hover {
