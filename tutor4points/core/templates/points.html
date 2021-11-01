@@ -8,27 +8,26 @@
 
 {% block heading %}
 Points
-<font color="red">
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-</font>
 {% endblock %}
 
 <!-- {% load crispy_forms_tags %} -->
 {% block content %}
 <div class="container-fluid main-container">
+    <div class="alert alert-success hidden" id="success-box" role="alert">
+        {{success_message}}
+    </div>
     <div class="row d-flex">
         <div class="point-col">
-            <h2>Purchase Points</h2>
+            <h2>Purchase</h2>
             <div class="container-fluid point-content">
-                <p id="point-exchange-rate">Exchange Rate:&nbsp 1 Point = $0.01</p>
+
                 <div class="purchase-amount">
-                  <form action="/points/" method="POST">
-                    {% csrf_token %}
-                    {{ form_purchase }}
-                    <input type="submit"name="purchase" value="Submit">
-                  </form>
-
-
+                    <form action="/points/" method="POST">
+                        {% csrf_token %}
+                        {{ form_purchase | crispy}}
+                        <button type="submit" name="purchase" class="btn-block btn-success">Purchase Points</button>
+                        <p class="exchange-rate" id="point-exchange-rate">Purchase Exchange Rate: $1.00 = 100 Points</p>
+                    </form>
                 </div>
             </div>
         </div>
@@ -40,11 +39,12 @@ Points
                     points
                 </p>
                 <div class="purchase-amount">
-                  <form action="/points/" method="POST">
-                    {% csrf_token %}
-                    {{ form_cash_out}}
-                    <input type="submit"name="cash_out" value="Submit">
-                  </form>
+                    <form action="/points/" method="POST">
+                        {% csrf_token %}
+                        {{ form_cash_out | crispy}}
+                        <button type="submit" name="cash_out" class="btn-block btn-success">Cash Out</button>
+                        <p class="exchange-rate" id="point-exchange-rate">Cash Out Exchange Rate: 100 Points = $0.90</p>
+                    </form>
                 </div>
             </div>
         </div>
@@ -54,15 +54,8 @@ Points
                 <div class="purchase-amount">
                     <form method='POST' enctype='multipart/form-data'>
                         {% csrf_token %}
-                        <label>Select Tutor</label>
-                        <div class="select-tutor">
-                            <!-- Replace with form to pay tutor -->
-                            {{form_transfer_points.tutors| as_crispy_field}}
-                            <!-- end replacement -->
-                        </div>
-
-                          {{form_transfer_points.amount_to_transfer| as_crispy_field}}
-                        <button type="submit" name="transfer" class="btn-block btn-success btn-style">Complete Payment</button>
+                        {{form_transfer_points| crispy}}
+                        <button type="submit" name="transfer" class="btn-block btn-success">Complete Payment</button>
                     </form>
                 </div>
             </div>
@@ -70,7 +63,13 @@ Points
     </div>
 </div>
 {{ user.total_points | json_script:"total-points-unformatted" }}
+{{ success_message | json_script:"success-message" }}
 <script>
-    document.getElementById('total-points').innerHTML = `${Intl.NumberFormat('en-US').format(document.getElementById('total-points-unformatted').textContent)}<br>points`;
+    document.getElementById('total-points').innerHTML = `${Intl.NumberFormat('en-US').format(JSON.parse(document.getElementById('total-points-unformatted').textContent))}<br>points`;
+
+    const successMessage = JSON.parse(document.getElementById('success-message').textContent)
+    if (successMessage !== "") {
+        document.getElementById('success-box').classList.toggle('hidden')
+    }
 </script>
 {% endblock %}

@@ -20,6 +20,10 @@
     border-radius:2rem;
 }
 
+.info-container:hover {
+    background-color: #242835;
+}
+
 .profile-pic{
     height:5rem;
     width:5rem;

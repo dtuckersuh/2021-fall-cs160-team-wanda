@@ -16,8 +16,8 @@ Tutors
 </div> -->
 
 {% for tutor in tutors %}
+<div class = "info-container d-flex" id = "tutor-{{tutor.id}}" data-id="{{tutor.id}}">
 
-<div class = "info-container d-flex">
 
     <div>
         <img src = "{{tutor.profile_pic.url}}" class = "profile-pic">
@@ -57,5 +57,11 @@ Tutors
     
 </div>
 {% endfor %}
+
+<script type="text/javascript">
+    document.querySelectorAll('.info-container').forEach(tutorEntry => {
+        tutorEntry.addEventListener('click', event => location.href = `/users/${tutorEntry.dataset.id}`)
+    })
+</script>
 
 {% endblock %}

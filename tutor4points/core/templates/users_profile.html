@@ -54,7 +54,9 @@
         <img src = "{{user.profile_pic.url}}" class = "profile-pic"> <br>
 
         {% if current_user %}
-        <button type ="submit" name="edit" value="edit" class="btn-secondary" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
+            <button type ="submit" name="edit" value="edit" class="btn-secondary" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
+        {% else %}
+            <button type ="submit" name="request-tutor" class="btn-secondary">Request Tutor</button>
         {% endif %}
 
         <div class="modal fade" id = "edit-profile-modal">

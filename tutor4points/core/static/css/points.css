@@ -25,14 +25,21 @@
 }
 
 .purchase-amount {
-  margin-top: 2rem;
+  margin-top: 1rem;
   font-size: 1.5rem;
   text-align: center;
 } 
 
+.exchange-rate {
+  font-size: 1rem;
+  display: inline;
+  text-align: center;
+  margin-top: 2rem;
+}
+
 h2 {
   font-weight: lighter;
-  color: #F4FAFF;
+  color: #f4faff;
   font-family: "Oswald";
   font-size: 2rem;
   text-align: center;
@@ -41,10 +48,11 @@ h2 {
 
 .total-points {
   font-size: 3rem;
-  color: #F4FAFF;
+  color: #f4faff;
   text-align: center;
   font-family: "Tahoma";
   font-weight: bold;
+  margin-top: 2rem;
 }
 
 .main-container {
@@ -72,9 +80,13 @@ h2 {
 }
 
 .margin-bottom {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
-#point-exchange-rate{
-  font-size:1.6rem;
+.invalid-feedback {
+  font-family: "Open Sans";
+}
+
+.hidden {
+  display: none;
 }
