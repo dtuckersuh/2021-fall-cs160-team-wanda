@@ -1,30 +1,26 @@
 .header h1 {
   text-align: center;
-  margin: 35px;
+  margin: 4.375rem 2.188rem 2.188rem 2.188rem;
   font-family: "Oswald", serif;
   font-size: 4rem;
   font-weight: bolder;
-  margin-top:70px;
 }
 
 .main-content {
   background-color: #373F51;
-  /* background-color: white; */
-  /* color: rgb(98, 0, 255); */
   color: #F4FAFF;
   font-family: "Open Sans";
 }
 
 .navbar-custom {
-  /* background-color: rgb(98, 0, 255); */
   background-color: #934DD1;
 }
 
 .btn-success, .btn-success:active, .btn-success:visited {
     background-color: #934DD1 !important;
     border: none;
-    padding:10px;
-    border-radius: 10px;
+    border-radius:0.625rem;
+    padding:0.625rem;
 }
 
 .btn-success:hover {
@@ -37,14 +33,13 @@
 }
 
 .btn-secondary, .btn-secondary:active, .btn-secondary:visited{
-
-  background-color: #88C035 !important;
+  background-color: #934DD1 !important;
   border: none;
-  padding:10px;
-  border-radius: 10px;
+  padding:0.625rem;
+  border-radius: 0.625rem;
 }
 
 .btn-secondary:hover{
-  background-color: #7DB030!important;
+  background-color: #893CCD!important;
   border:none;
 }

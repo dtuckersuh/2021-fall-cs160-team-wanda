@@ -5,58 +5,59 @@
 .profile{
      display: flex;
      flex-direction: row;
-     padding: 48px 120px 48px 120px;
+     margin: 4.375rem 12.5rem 0rem 12.5rem;
+     padding: 3rem 7.5rem 3rem 7.5rem;
      justify-content: center;
+     background-color: #323849;
      border-style:solid;
      border-color:#D6FF79;
-     background-color: #323849;
-     border-width: 2px;
-     margin-left: 200px;
-     margin-right: 200px;
-     margin-top: 70px;
+     border-width: 0.125rem;
      border-radius: 2rem;
 }
 
 .left-column{
-     justify-content: center;
      display:flex;
+     justify-content: center;
+     align-items: center;
      flex-direction: column;
-     padding: 30px;
-     font-size: 30px;
+     padding: 1.875rem;
+     font-size: 1.875rem;
      text-align: center;
      width:50%;
-
+     height:65vh;
 }
 
 .right-column{
-     align-items: center;
      display:flex;
      flex-direction:column;
-     margin-top:50px;
+     justify-content: center;
+     align-items: center;
+     margin-top:3.125rem;
      width:50%;
+     height:65vh;
 }
 
 .name{
-    font-family:Oswald;
-    font-size:80px;
+    font-family:"Oswald";
+    font-size:5rem;
     font-weight:bold;
 }
 
 .school-name{
-     font-family:Oswald;
-     font-size:30px;
+     font-family:"Oswald";
+     font-size:1.875rem;
      font-weight: bold;
-     margin: 10px;
+     margin:0.625rem;
 }
 
 .rating{
-     margin-top:20px;
-     font-size:15px;
+     margin-top:1.25rem;
+     font-size:0.938rem;
 }
 
 .total-points{
-     font-family:Oswald;
-     font-size:25px;
+     font-family:"Oswald";
+     font-size:1.563rem;
      font-weight:bold;
 }
 
@@ -65,7 +66,7 @@
 }
 
 .tutor-info{
-    font-size:16px;
+    font-size:1rem;
 }
 
 .modal-lg {
@@ -73,17 +74,19 @@
  }
 
 .modal-content{
-     margin: 10px;
+     margin:0.625rem;
+     border-radius:2rem;
  }
  
  .modal-flex-container{
-    border-style: outset;
-    border-width: 0.4rem;
-    border-color: rgb(223, 182, 79);
     display: flex;
-    padding: 20px;
+    padding:1.25rem;
     flex-direction: column;
-    background-color: #2b2b2b;
+    background-color: #323849;
+    border-style: solid;
+    border-width: 0.3rem;
+    border-color: #D6FF79;
+    border-radius: 2rem;
  }
  
  .modal-profile-pic{
