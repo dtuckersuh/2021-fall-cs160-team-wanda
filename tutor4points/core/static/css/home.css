@@ -46,9 +46,11 @@
 }
 
 .profile-pic {
-    height:80px;
-    width:80px;
-    padding:5px;
+    height:5rem;
+    width:5rem;
+    padding:0.313rem;
+    object-fit: cover;
+    overflow:hidden;
     border-radius: 50%;
 }
 .name-column{
