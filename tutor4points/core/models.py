@@ -60,12 +60,13 @@ class tutor_request (models.Model):
 
 
 class transaction (models.Model):
-    PAYMENT_METHODS = (
-        ('visa', 'VISA'),
-        ('points', 'POINTS'),
+    METHODS = (
+        ('purchase', 'PURCHASE'),
+        ('transfer', 'TRANSFER'),
+        ('cash_out', 'CASH_OUT'),
     )
     points = models.FloatField()
-    method = models.CharField(max_length=25, choices=PAYMENT_METHODS)
+    method = models.CharField(max_length=25, choices=METHODS)
     sent_to = models.ForeignKey(
         get_user_model(), null=True, on_delete=models.SET_NULL)
     sent_from = models.ForeignKey(
