@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, School
+from .models import User, School, TutorRequest, Transaction, Rating
 
 
 # specifies which info could be seen/edited in Django Admin Dahsboard
@@ -11,7 +11,21 @@ class UserAdmin (BaseUserAdmin):
     fieldsets = BaseUserAdmin.fieldsets + (
         ('Other', {'fields': ('school', 'profile_pic', 'total_points', 'is_tutor', 'classes_taken', 'times_available', 'time_zone', 'rate', 'tutor_avg_rating', 'tutee_avg_rating',)}),)
 
+class SchoolAdmin (admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+class TutorRequestAdmin (admin.ModelAdmin):
+    list_display = ('id', 'date_sent_request', 'tutor', 'tutee', 'tutor_date', 'tutor_time', 'class_name', 'location', 'tutor_comment', 'tutee_comment', 'accepted', 'completed', 'paid')
+
+class TransactionAdmin (admin.ModelAdmin):
+    list_display = ('id', 'sent_from', 'sent_to', 'method', 'points', 'date_transaction_made')
+
+class RatingAdmin (admin.ModelAdmin):
+    list_display = ('id', 'date_rating_given', 'given_by', 'given_to', 'rating_type', 'rating', 'comment')
 
 # Register your models here.
 admin.site.register(User, UserAdmin)
-admin.site.register(School)
+admin.site.register(School, SchoolAdmin)
+admin.site.register(TutorRequest, TutorRequestAdmin)
+admin.site.register(Transaction, TransactionAdmin)
+admin.site.register(Rating, RatingAdmin)
