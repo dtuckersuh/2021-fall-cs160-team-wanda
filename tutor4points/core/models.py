@@ -43,52 +43,53 @@ class User (AbstractUser):  # Custom User Model that inherits from Abstract User
         return f'{self.first_name} {self.last_name}'
 
 
-class tutor_request (models.Model):
-    class_name = models.CharField(max_length=100)
+class TutorRequest (models.Model):
     # automatically set date every time object is saved
-    date_requested = models.DateField(auto_now=True)
-    tutor_date = models.DateField()
-    location = models.CharField(max_length=100)
-    time = models.TimeField()
+    date_sent_request = models.DateTimeField(auto_now=True)
     tutor = models.ForeignKey(
         get_user_model(), null=True, on_delete=models.SET_NULL, related_name='tutor')
     tutee = models.ForeignKey(
         get_user_model(), null=True, on_delete=models.SET_NULL)
+    tutor_date = models.DateField()
+    tutor_time = models.TimeField()
+    class_name = models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    tutor_comment = models.TextField(null=True, blank=True)
+    tutee_comment = models.TextField(null=True, blank=True)
     accepted = models.BooleanField(null=True)  # null by default
     completed = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
-    tutor_comment = models.TextField(null=True)
-    tutee_comment = models.TextField(null=True)
 
 
-class transaction (models.Model):
+class Transaction (models.Model):
     METHODS = (
         ('purchase', 'PURCHASE'),
         ('transfer', 'TRANSFER'),
         ('cash_out', 'CASH_OUT'),
     )
-    points = models.FloatField()
-    method = models.CharField(max_length=25, choices=METHODS)
-    sent_to = models.ForeignKey(
-        get_user_model(), null=True, on_delete=models.SET_NULL)
+    date_transaction_made = models.DateTimeField(auto_now=True)
     sent_from = models.ForeignKey(
         get_user_model(), null=True, on_delete=models.SET_NULL, related_name='sent_from')
+    sent_to = models.ForeignKey(
+        get_user_model(), null=True, on_delete=models.SET_NULL, related_name='sent_to')
+    method = models.CharField(max_length=25, choices=METHODS)
+    points = models.FloatField()
     date = models.DateField()
 
 
-class rating (models.Model):
+class Rating (models.Model):
     RATING_TYPES = (
         ('tutee', 'TUTEE'),
         ('tutor', 'TUTOR')
     )
 
-    type = models.CharField(max_length=5, choices=RATING_TYPES)
-    rating = models.IntegerField(null=True, validators=[
-                                 MinValueValidator(0), MaxValueValidator(5)])
     # automatically set date every time object is saved
-    date = models.DateField(auto_now=True)
+    date_rating_given = models.DateTimeField(auto_now=True)
     given_by = models.ForeignKey(
         get_user_model(), null=True, on_delete=models.SET_NULL, related_name='given_by')
     given_to = models.ForeignKey(
         get_user_model(), null=True, on_delete=models.SET_NULL)
+    rating_type = models.CharField(max_length=5, choices=RATING_TYPES)
+    rating = models.IntegerField(null=True, validators=[
+                                 MinValueValidator(0), MaxValueValidator(5)])
     comment = models.TextField()
