@@ -57,6 +57,8 @@ class tutor_request (models.Model):
     accepted = models.BooleanField(null=True)  # null by default
     completed = models.BooleanField(default=False)
     paid = models.BooleanField(default=False)
+    tutor_comment = models.TextField(null=True)
+    tutee_comment = models.TextField(null=True)
 
 
 class transaction (models.Model):
