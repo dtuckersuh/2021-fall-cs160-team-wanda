@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms.widgets import PasswordInput
-from .models import User, School
+from .models import User, TutorRequest
 from crispy_forms.helper import FormHelper
 from django.contrib.auth import get_user_model
 
@@ -128,7 +128,7 @@ class PurchasePointsForm(forms.Form):
 
     def clean_purchased_points (self): #validate purchased points field
         purchased_points = self.cleaned_data['purchased_points']
-        if (purchased_points == None or purchased_points <= 0):
+        if (purchased_points is None or purchased_points <= 0):
             self.add_error ('purchased_points', 'Please enter a positive value.')
         return purchased_points
 
@@ -148,9 +148,9 @@ class CashOutPointsForm(forms.Form):
 
     def clean_cashed_points (self): #validate cashed points field
         cashed_points = self.cleaned_data['cashed_points']
-        if (cashed_points == None or cashed_points <= 0):
+        if (cashed_points is None or cashed_points <= 0):
             self.add_error ('cashed_points', 'Please enter a positive value.')
-        elif (cashed_points > self.user.total_points): #if user tries to cash out more points than point balance
+        elif cashed_points > self.user.total_points: #if user tries to cash out more points than point balance
             self.add_error ('cashed_points', 'Please enter a value less than or equal to your points balance.')
         return cashed_points
 
@@ -172,15 +172,15 @@ class TransferPointsForm(forms.Form):
 
     def clean_amount_to_transfer (self): #validate amount to transfer field
         amount_to_transfer = self.cleaned_data['amount_to_transfer']
-        if (amount_to_transfer == None or amount_to_transfer <= 0): #if they didnt enter a positive number
+        if (amount_to_transfer is None or amount_to_transfer <= 0): #if they didnt enter a positive number
             self.add_error ('amount_to_transfer', 'Please enter a positive value.')
-        elif (amount_to_transfer > self.user.total_points): #if user tries to transfer more points than point balance
+        elif amount_to_transfer > self.user.total_points: #if user tries to transfer more points than point balance
             self.add_error ('amount_to_transfer', "Please enter a value less than or equal to your current points balance.")
         return amount_to_transfer
 
     def clean_tutors(self): #validate tutors field
         tutor = self.cleaned_data['tutors']
-        if (tutor == None):
+        if tutor is None:
             self.add_error ('tutors', "Please choose a tutor")
         return tutor
 
@@ -191,3 +191,17 @@ class TransferPointsForm(forms.Form):
         self.user.save()
         tutor.total_points += amount_to_transfer
         tutor.save()
+
+class RequestResponseForm (forms.Form):
+    def __init__(self, *args,**kwargs):
+        self.accepted = kwargs.pop('accepted', None)
+        self.request_id = kwargs.pop('request_id', None)
+        super().__init__(*args,**kwargs)
+        self.fields ['comment'] = forms.CharField(label = "Comment (optional)", required=False)
+        self.fields ['comment'].widget = forms.Textarea(attrs={"rows":3})
+
+    def save(self):
+        request_instance = TutorRequest.objects.get(pk=self.request_id)
+        request_instance.accepted = self.accepted
+        request_instance.tutor_comment = self.cleaned_data['comment']
+        request_instance.save()
