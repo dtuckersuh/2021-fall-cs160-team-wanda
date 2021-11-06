@@ -30,16 +30,15 @@ Requests
 </div>
 {% endfor %}
 
-
 <div class="modal" id = "modal-accept-request">
     <div class = "modal-dialog modal-lg">
         <div class = "modal-content">
             <form method = "POST">
-            <p class = "modal-request-status">Accept Tutor Request</p>
-            <input type="hidden" name="request-id" id="requestIdAccept" value="">
-            {% csrf_token %}
-            {{form_request_response | crispy}}
-            <button type ="submit" name="submit-accept-request" class="btn-secondary btn-block">Accept Tutor Request</button>
+                <p class = "modal-request-status">Accept Tutor Request</p>
+                <input type="hidden" name="request-id" id="requestIdAccept" value="">
+                {% csrf_token %}
+                {{form_request_response | crispy}}
+                <button type ="submit" name="submit-accept-request" class="btn-secondary btn-block">Accept Tutor Request</button>
             </form>
         </div>
     </div>
@@ -49,11 +48,11 @@ Requests
     <div class = "modal-dialog modal-lg">
         <div class = "modal-content">
             <form method = "POST">
-            <p class = "modal-request-status">Decline Tutor Request</p>
-            <input type="hidden" name="request-id" id="requestIdDecline" value="">
-            {% csrf_token %}
-            {{form_request_response | crispy}}
-            <button type ="submit" name="submit-decline-request" class="btn-secondary btn-block">Decline Tutor Request</button>
+                <p class = "modal-request-status">Decline Tutor Request</p>
+                <input type="hidden" name="request-id" id="requestIdDecline" value="">
+                {% csrf_token %}
+                {{form_request_response | crispy}}
+                <button type ="submit" name="submit-decline-request" class="btn-secondary btn-block">Decline Tutor Request</button>
             </form>
         </div>
     </div>

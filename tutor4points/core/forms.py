@@ -4,6 +4,8 @@ from django.forms.widgets import PasswordInput
 from .models import User, TutorRequest
 from crispy_forms.helper import FormHelper
 from django.contrib.auth import get_user_model
+from django.db import transaction
+import re
 
 # Form that allows user to create an account
 class RegisterForm(UserCreationForm):
@@ -18,6 +20,18 @@ class RegisterForm(UserCreationForm):
 
         self.fields['password2'].widget = PasswordInput(
             attrs={'placeholder': 'Repeat Password'})
+
+    #make sure times available field contains only days of the week, numbers 0-9, am, pm, -, :, or ,
+    def clean_times_available(self):
+        times_available = self.cleaned_data['times_available']
+        pattern = r'[0-9]|(monday|tuesday|wednesday|thursday|friday|saturday|sunday|am|pm|-|:|,)|\s'
+        str_without_spaces = times_available.replace (' ','')
+        print (str_without_spaces)
+        remaining_str = re.sub (pattern, '', str_without_spaces, flags = re.IGNORECASE).strip()
+        print (remaining_str)
+        if len(remaining_str) > 0:
+            self.add_error ('times_available', "Times Available is not in the correct format!")
+        return times_available
 
     class Meta:
         model = User  # based on User model
@@ -70,6 +84,17 @@ class RegisterForm(UserCreationForm):
 # Form that allows user to update their profile_pic, first_name, last_name, school, email
 # is_tutor, classes_taken, times_available, time_zone, rate
 class UpdateProfileForm(forms.ModelForm):
+
+    #make sure times available field contains only days of the week, numbers 0-9, am, pm, -, :, or ,
+    def clean_times_available(self):
+        times_available = self.cleaned_data['times_available']
+        pattern = r'[0-9]|(monday|tuesday|wednesday|thursday|friday|saturday|sunday|am|pm|-|:|,)|\s'
+        str_without_spaces = times_available.replace (' ','')
+        remaining_str = re.sub (pattern, '', str_without_spaces, flags = re.IGNORECASE).strip()
+        if len(remaining_str) > 0:
+            self.add_error ('times_available', "Times Available is not in the correct format!")
+        return times_available
+
     class Meta:
         model = User
 
@@ -184,14 +209,18 @@ class TransferPointsForm(forms.Form):
             self.add_error ('tutors', "Please choose a tutor")
         return tutor
 
+    @transaction.atomic()
     def save(self):
         amount_to_transfer = self.cleaned_data['amount_to_transfer']
         tutor = self.cleaned_data['tutors']
-        self.user.total_points -= amount_to_transfer
-        self.user.save()
-        tutor.total_points += amount_to_transfer
-        tutor.save()
 
+        with transaction.atomic():
+            self.user.total_points -= amount_to_transfer
+            self.user.save()
+            tutor.total_points += amount_to_transfer
+            tutor.save()
+
+#Form that allows user to accept/decline a tutor request
 class RequestResponseForm (forms.Form):
     def __init__(self, *args,**kwargs):
         self.accepted = kwargs.pop('accepted', None)
