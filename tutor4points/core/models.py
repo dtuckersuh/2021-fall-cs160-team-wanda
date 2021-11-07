@@ -44,8 +44,8 @@ class User (AbstractUser):  # Custom User Model that inherits from Abstract User
 
 
 class TutorRequest (models.Model):
-    # automatically set date every time object is saved
-    date_sent_request = models.DateTimeField(auto_now=True)
+    # automatically set date every time object is created
+    date_sent_request = models.DateTimeField(auto_now_add=True)
     tutor = models.ForeignKey(
         get_user_model(), null=True, on_delete=models.SET_NULL, related_name='tutor')
     tutee = models.ForeignKey(
@@ -67,14 +67,15 @@ class Transaction (models.Model):
         ('transfer', 'TRANSFER'),
         ('cash_out', 'CASH_OUT'),
     )
-    date_transaction_made = models.DateTimeField(auto_now=True)
-    sent_from = models.ForeignKey(
-        get_user_model(), null=True, on_delete=models.SET_NULL, related_name='sent_from')
-    sent_to = models.ForeignKey(
-        get_user_model(), null=True, on_delete=models.SET_NULL, related_name='sent_to')
+    
+    # automatically set date every time object is created
+    date_transaction_made = models.DateTimeField(auto_now_add=True)
     method = models.CharField(max_length=25, choices=METHODS)
     points = models.FloatField()
-    date = models.DateField()
+    sent_from = models.ForeignKey(
+        get_user_model(), null=True, blank = True, on_delete=models.SET_NULL, related_name='sent_from')
+    sent_to = models.ForeignKey(
+        get_user_model(), null=True, blank = True, on_delete=models.SET_NULL, related_name='sent_to')
 
 
 class Rating (models.Model):

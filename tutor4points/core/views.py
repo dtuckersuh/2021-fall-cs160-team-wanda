@@ -105,16 +105,18 @@ def points(request):
             form_purchase.save()
             points_purchase = form_purchase.cleaned_data['purchased_points']
             success_message = f"Success! You have purchased {points_purchase} points for {'${:,.2f}'.format(points_purchase * 0.01)}."
+            form_purchase = PurchasePointsForm(user = request.user) #show empty form (reset fields) after form successfully submitted
     else:
         form_purchase = PurchasePointsForm(user = request.user)
 
-    if request.method == 'POST' and 'cash_out' in request.POST:  #if we get a post and cash out
+    if request.method == 'POST' and 'cash-out' in request.POST:  #if we get a post and cash out
         form_cash_out = CashOutPointsForm(request.POST, user = request.user)
 
         if form_cash_out.is_valid(): #validate data
             form_cash_out.save() #save if positive
             points_cash_out = form_cash_out.cleaned_data['cashed_points']
             success_message = f"Success! You have cashed out {points_cash_out} points for {'${:,.2f}'.format(points_cash_out * 0.009)}."
+            form_cash_out = CashOutPointsForm(user = request.user) #show empty form (reset fields) after form successfully submitted
     else:
         form_cash_out = CashOutPointsForm(user = request.user)
 
@@ -123,6 +125,7 @@ def points(request):
         if form_transfer_points.is_valid(): #validate data
             form_transfer_points.save()
             success_message = f"Success! You have paid {form_transfer_points.cleaned_data['tutors']} {form_transfer_points.cleaned_data['amount_to_transfer']} points."
+            form_transfer_points = TransferPointsForm(user=request.user) #show empty form (reset fields) after form successfully submitted
     else:
         form_transfer_points = TransferPointsForm(user=request.user)
 
