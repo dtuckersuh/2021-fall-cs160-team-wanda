@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.forms.widgets import PasswordInput
+from django.forms.widgets import PasswordInput, SelectDateWidget
 
-from .models import User, Transaction, TutorRequest
+from .models import TutorRequest, User, School, Transaction
 
 from crispy_forms.helper import FormHelper
 from django.contrib.auth import get_user_model
@@ -235,6 +235,51 @@ class TransferPointsForm(forms.Form):
         #create and save transaction instance to Transaction table
         Transaction.objects.create (method = 'transfer', points = self.cleaned_data['amount_to_transfer'], sent_from = self.user, sent_to = tutor)
 
+# Form that allows user to send a tutor request
+class TutorRequestForm(forms.ModelForm):
+
+    # def __init__(self, *args,**kwargs):
+    #     self.user = kwargs.pop('user', None)
+    #     super().__init__(*args,**kwargs)
+
+    class Meta:
+        model = TutorRequest
+
+        # layout where want fields to be, type in order you want it to appear
+        fields = ('class_name', 'tutor_date', 'tutor_time', 'location', 'tutee_comment')
+
+        # customize placeholders
+        widgets = {
+            'class_name':
+            forms.TextInput(attrs={'placeholder': 'Example: CS146'}),
+            'tutor_date':
+            forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}), 
+            'tutor_time':
+            forms.TimeInput(format='%H:%M', attrs={'type': 'time'}), 
+            'location':
+            forms.Textarea(attrs={
+                'placeholder': 'Example: 4th floor of MLK Library',
+                'rows': 2
+                }),
+            'tutee_comment':
+            forms.Textarea(attrs={
+                'placeholder': 'Leave a comment for the tutor',
+                'rows': 5
+            }), 
+        }
+
+        # customize form labels
+        labels = {
+            'class_name': "Class",
+            'tutor_date': "Date",
+            'tutor_time': "Time",
+            'location': "Location",
+            'tutee_comment': "Comment",
+        }
+
+    helper = FormHelper()
+    helper.form_id = 'form'
+   
 #Form that allows user to accept/decline a tutor request
 class RequestResponseForm (forms.Form):
     def __init__(self, *args,**kwargs):
@@ -249,3 +294,4 @@ class RequestResponseForm (forms.Form):
         request_instance.accepted = self.accepted
         request_instance.tutor_comment = self.cleaned_data['comment']
         request_instance.save()
+

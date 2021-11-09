@@ -1,4 +1,4 @@
-from .forms import RegisterForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm, RequestResponseForm
+from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm, RequestResponseForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
@@ -59,14 +59,31 @@ def home(request):
 
 # tutors handles "/tutors" endpoint
 # allows user to view all tutors that attend the same school as them
+# allows user to send a tutor request
 @login_required
 def tutors(request):
-    if request.method == 'GET':
-        current_user = request.user
-        users = get_user_model().objects.all().exclude(pk=current_user.id)
-        tutors = users.filter(is_tutor=True, school=current_user.school)
+    current_user = request.user
+    users = get_user_model().objects.all().exclude(pk=current_user.id)
+    tutors = users.filter(is_tutor=True, school=current_user.school)
+        
+    if request.method == 'POST':
+        form = TutorRequestForm(request.POST)
+        if(form.is_valid()):
+            tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor']) # get tutor object
+            tutor_request = form.save(commit=False)
+            tutor_request.tutee = current_user
+            tutor_request.tutor = tutor_instance
+            tutor_request.save()
+            return redirect('tutors')
+    else:
+        form = TutorRequestForm()
 
-        return render(request, 'tutors.html', {'tutors': tutors})
+    return render(request, 'tutors.html', {
+        'users': users,
+        'user': current_user,
+        'tutors': tutors,
+        'form': form,
+    })
 
 
 # users handles "/users/<int:id>" endpoint
