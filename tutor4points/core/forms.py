@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms.widgets import PasswordInput
-from .models import User, TutorRequest
+
+from .models import User, Transaction, TutorRequest
+
 from crispy_forms.helper import FormHelper
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -158,8 +160,11 @@ class PurchasePointsForm(forms.Form):
         return purchased_points
 
     def save(self):
-        self.user.total_points += self.cleaned_data['purchased_points'] #save if positive
+        self.user.total_points += self.cleaned_data['purchased_points']
         self.user.save()
+
+        #create and save transaction instance to Transaction table
+        Transaction.objects.create (method = 'purchase', points = self.cleaned_data['purchased_points'])
 
 # Form that allows user to cash out points
 class CashOutPointsForm(forms.Form):
@@ -180,8 +185,12 @@ class CashOutPointsForm(forms.Form):
         return cashed_points
 
     def save(self):
+        #subtract points from user's point balance
         self.user.total_points -= self.cleaned_data['cashed_points']
         self.user.save()
+
+        #create and save transaction instance to Transaction table
+        Transaction.objects.create (method = 'cash_out', points = self.cleaned_data['cashed_points'])
 
 # Form that allows user to transfer points from one person to another
 class TransferPointsForm(forms.Form):
@@ -214,11 +223,17 @@ class TransferPointsForm(forms.Form):
         amount_to_transfer = self.cleaned_data['amount_to_transfer']
         tutor = self.cleaned_data['tutors']
 
-        with transaction.atomic():
-            self.user.total_points -= amount_to_transfer
-            self.user.save()
-            tutor.total_points += amount_to_transfer
-            tutor.save()
+
+        #subtract points from user's balance
+        self.user.total_points -= amount_to_transfer
+        self.user.save()
+
+        #add points to tutor's balance
+        tutor.total_points += amount_to_transfer
+        tutor.save()
+
+        #create and save transaction instance to Transaction table
+        Transaction.objects.create (method = 'transfer', points = self.cleaned_data['amount_to_transfer'], sent_from = self.user, sent_to = tutor)
 
 #Form that allows user to accept/decline a tutor request
 class RequestResponseForm (forms.Form):

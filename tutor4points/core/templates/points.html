@@ -42,7 +42,7 @@ Points
                     <form action="/points/" method="POST">
                         {% csrf_token %}
                         {{ form_cash_out | crispy}}
-                        <button type="submit" name="cash_out" class="btn-block btn-success">Cash Out</button>
+                        <button type="submit" name="cash-out" class="btn-block btn-success">Cash Out</button>
                         <p class="exchange-rate" id="point-exchange-rate">Cash Out Exchange Rate: 100 Points = $0.90</p>
                     </form>
                 </div>
