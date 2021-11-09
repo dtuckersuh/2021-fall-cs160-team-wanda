@@ -14,9 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from core import views as views
-from django.shortcuts import redirect
 from django.conf import settings
 from django.contrib.auth.views import LogoutView
 from django.conf.urls.static import static
@@ -29,5 +28,6 @@ urlpatterns = [
     path('points/', views.points, name="points"),
     path('logout/', LogoutView.as_view(), name="logout"),
     path('tutors/', views.tutors, name="tutors"),
-    path('users/<int:id>', views.users, name="user")  ## User Profile Page
+    path('users/<int:id>', views.users, name="user"),  ## User Profile Page
+    path ('users/<int:id>/requests', views.requests, name = "requests"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
