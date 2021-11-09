@@ -54,15 +54,27 @@ def home(request):
         tutors = users.filter(is_tutor=True, school=current_user.school)
         requests_received = TutorRequest.objects.all().filter(tutor=current_user)
         sent_requests = TutorRequest.objects.all().filter(tutee=current_user)
+        if request.method == 'POST':
+            form = TutorRequestForm(request.POST)
+            if form.is_valid():
+                tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor']) # get tutor object
+                tutor_request = form.save(commit=False)
+                tutor_request.tutee = current_user
+                tutor_request.tutor = tutor_instance
+                tutor_request.save()
+                return redirect("home")
+        else:
+            form = TutorRequestForm()
         return render(request, "home.html", 
-            {
-                'tutors': tutors, 
-                'requests_received': requests_received,
-                'sent_requests': sent_requests
-            }
+                {
+                    'tutors': tutors, 
+                    'requests_received': requests_received,
+                    'sent_requests': sent_requests,
+                    'form': form
+                }
         )
     else:
-        return redirect ("")
+        return redirect ("home")
 
 
 # tutors handles "/tutors" endpoint

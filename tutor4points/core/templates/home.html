@@ -6,6 +6,8 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/home.css' %}" />
 {% endblock%}
 
+{% load crispy_forms_tags %}
+
 {% block heading %}
 Dashboard
 {% endblock %}
@@ -61,7 +63,7 @@ Dashboard
                     <h2>Suggested Sessions</h2>
                         <!-- TODO: Refactor repeated code -->
                         {% for tutor in tutors|slice:":3" %}
-                            <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-id="{{tutor.id}}">
+                            <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
                                 <div>
                                     <img src="{{tutor.profile_pic.url}}" class="profile-pic">
                                 </div>
@@ -79,7 +81,10 @@ Dashboard
                                     {% endif %}
                                 </div>
                                 <div>
-                                    <button type="submit" name="request" value="request" class="request-button">Request</button>
+                                    <button type ="submit" name="request" value="request" class="request-button" 
+                                       data-toggle= "modal" data-target="#tutor-request-modal">
+                                            Request
+                                    </button>
                                 </div>
                                 <div class="tutor-rating-column">
                                     {% if tutor.tutor_avg_rating %}
@@ -100,7 +105,7 @@ Dashboard
                     <h2>Sent Requests</h2>
                     {% for sent_request in sent_requests|slice:":3" %}
                         {% with tutor=sent_request.tutor %}
-                        <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-id="{{tutor.id}}" >
+                        <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
                             <div>
                                 <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
                             </div>
@@ -128,10 +133,55 @@ Dashboard
     </div>
 </div>
 
-<script type="text/javascript">
-    // Change location to request page
-    document.querySelectorAll('.info-container').forEach(tutorEntry => {
-        tutorEntry.addEventListener('click', event => location.href = `/users/${tutorEntry.dataset.id}`)
+{% if form.errors %}
+<script>
+    $(document).ready (function(){
+        $("#tutor-request-modal").modal('show')
+    })
+</script>
+{% endif %}
+
+
+<div class = "modal fade" id = "tutor-request-modal">
+    <div class = "modal-dialog model-lg">
+        <div class= "modal-content">
+           <div class = "modal-flex-container">
+               <div class = "form-container">
+                    <form method="POST" class="form-group" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
+                        
+                        <div class="form-row">
+                            {{form.class_name | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form.tutor_date | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form.tutor_time | as_crispy_field}} 
+                        </div>
+                        <div class="form-row">
+                            {{form.location | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form.tutee_comment | as_crispy_field}}
+                        </div>
+
+                        <button type="submit" class="btn-block btn-secondary btn-style">Send Request</button>
+                    </form>
+               </div>
+           </div> 
+        </div>
+    </div>
+</div>
+
+<script type = "text/javascript">
+    const tutor = document.getElementById('requestedTutor')
+    document.querySelector('body').addEventListener('click', event => {
+        const infoContainer = event.target.closest('.info-container')
+        if (!infoContainer) return
+        const tutorId = infoContainer.dataset.tutorid
+        tutor.value = tutorId
     })
 </script>
 
