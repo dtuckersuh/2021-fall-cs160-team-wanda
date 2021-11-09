@@ -1,4 +1,4 @@
-from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm
+from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm, RequestResponseForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
@@ -95,15 +95,15 @@ def users(request, id):
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
     if request.method == 'POST':
-        form = UpdateProfileForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            form.save()
+        form_update_profile = UpdateProfileForm(request.POST, request.FILES, instance=user)
+        if form_update_profile.is_valid():
+            form_update_profile.save()
     else:
-        form = UpdateProfileForm(instance=user)
+        form_update_profile = UpdateProfileForm(instance=user)
 
     return render(request, 'users_profile.html', {
         'user': user,
-        'form': form,
+        'form_update_profile': form_update_profile,
         'current_user': request.user.id == id
     })
 
@@ -123,16 +123,18 @@ def points(request):
             form_purchase.save()
             points_purchase = form_purchase.cleaned_data['purchased_points']
             success_message = f"Success! You have purchased {points_purchase} points for {'${:,.2f}'.format(points_purchase * 0.01)}."
+            form_purchase = PurchasePointsForm(user = request.user) #show empty form (reset fields) after form successfully submitted
     else:
         form_purchase = PurchasePointsForm(user = request.user)
 
-    if request.method == 'POST' and 'cash_out' in request.POST:  #if we get a post and cash out
+    if request.method == 'POST' and 'cash-out' in request.POST:  #if we get a post and cash out
         form_cash_out = CashOutPointsForm(request.POST, user = request.user)
 
         if form_cash_out.is_valid(): #validate data
             form_cash_out.save() #save if positive
             points_cash_out = form_cash_out.cleaned_data['cashed_points']
             success_message = f"Success! You have cashed out {points_cash_out} points for {'${:,.2f}'.format(points_cash_out * 0.009)}."
+            form_cash_out = CashOutPointsForm(user = request.user) #show empty form (reset fields) after form successfully submitted
     else:
         form_cash_out = CashOutPointsForm(user = request.user)
 
@@ -141,6 +143,7 @@ def points(request):
         if form_transfer_points.is_valid(): #validate data
             form_transfer_points.save()
             success_message = f"Success! You have paid {form_transfer_points.cleaned_data['tutors']} {form_transfer_points.cleaned_data['amount_to_transfer']} points."
+            form_transfer_points = TransferPointsForm(user=request.user) #show empty form (reset fields) after form successfully submitted
     else:
         form_transfer_points = TransferPointsForm(user=request.user)
 
@@ -153,3 +156,22 @@ def points(request):
             'form_transfer_points': form_transfer_points,
             'success_message': success_message,}
         )
+
+# requests handles "users/<int:id>/requests" endpoint
+# allows users to view requests sent and received as well as accept/decline received requests
+@login_required
+def requests(request, id):
+    current_user = request.user
+    requests_received = TutorRequest.objects.all().filter(tutor = current_user) # get all user's tutor requests
+    if request.method == 'POST' and 'submit-accept-request' in request.POST:
+        form_request_response = RequestResponseForm (request.POST, accepted = True, request_id = request.POST['request-id'])
+        if form_request_response.is_valid():
+            form_request_response.save()
+    elif request.method == 'POST' and 'submit-decline-request' in request.POST:
+        form_request_response = RequestResponseForm (request.POST, accepted = False, request_id = request.POST['request-id'])
+        if form_request_response.is_valid():
+            form_request_response.save()
+    else: 
+        form_request_response = RequestResponseForm ()
+    return render(request, 'requests.html', {'form_request_response': form_request_response, 'requests_received': requests_received})
+    
