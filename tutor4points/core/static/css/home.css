@@ -88,3 +88,24 @@
     width: 20%;
     font-size:30px;
 }
+
+.modal-lg {
+    max-width: 40%;
+ }
+
+.modal-content {
+     margin:4rem;
+     border-radius:2rem;
+     background-color: #323849;
+}
+
+.modal-flex-container {
+    display: flex;
+    padding:1.25rem 3.5rem 1.25rem 3.5rem;
+    flex-direction: column;
+    background-color: #323849;
+    border-style: solid;
+    border-width: 0.3rem;
+    border-color: #D6FF79;
+    border-radius: 2rem;
+}
