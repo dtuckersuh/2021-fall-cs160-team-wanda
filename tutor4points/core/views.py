@@ -52,7 +52,15 @@ def home(request):
     if current_user.is_authenticated:
         users = get_user_model().objects.all().exclude(pk=current_user.id)
         tutors = users.filter(is_tutor=True, school=current_user.school)
-        return render(request, "home.html", {"tutors": tutors})
+        requests_received = TutorRequest.objects.all().filter(tutor=current_user)
+        sent_requests = TutorRequest.objects.all().filter(tutee=current_user)
+        return render(request, "home.html", 
+            {
+                'tutors': tutors, 
+                'requests_received': requests_received,
+                'sent_requests': sent_requests
+            }
+        )
     else:
         return redirect ("")
 
