@@ -42,7 +42,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/points">Points</a> {# TODO: Change to points page when finished #}
+                    <a id = "points-link" class="nav-link" href="/points">Points</a> {# TODO: Change to points page when finished #}
                 </li>
             </ul>
             <ul class="navbar-nav">
@@ -51,7 +51,7 @@
                 </li>
                 <form method="POST" class="form-inline">
                     {% csrf_token %}
-                    <a class="btn btn-success my-2 my-sm-0" href="{% url 'logout' %}">Logout</a>
+                    <a id = "logout-btn" class="btn btn-success my-2 my-sm-0" href="{% url 'logout' %}">Logout</a>
                 </form>
             </ul>
         </nav>
