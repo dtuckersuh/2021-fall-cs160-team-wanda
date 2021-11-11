@@ -110,19 +110,26 @@ Dashboard
                                 <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
                             </div>
                             <div class="name-column">
-                                {{ tutor }} <br>
+                                {{ tutor }}
                                 <div class="classes-column">
-                                    {{ sent_request.class_name }} @ {{ sent_request.location }} <br/>
+                                    {{ sent_request.class_name }} @ {{ sent_request.location }}
                                 </div>
                             </div>
                             <div class="times-column">
-                                {{sent_request.tutor_date}} @ {{sent_request.tutor_time}} <br/>
-                            </div>
+                                {{sent_request.tutor_date}} @ {{sent_request.tutor_time}} </div>
                             {% if sent_request.tutee_comment %}
-                                Comment: {{sent_request.tutee_comment}} <br> <br>
+                                Comment: {{sent_request.tutee_comment}}
                             {% else %}
-                                No comment <br> <br>
+                                No comment
                             {% endif %}
+                            <div class="status">
+                                Status: 
+                                {% if sent_request.accepted %}
+                                    <p class="status-confirmed">Confirmed</p>
+                                {% else %}
+                                    <p class="status-pending">Pending</p>
+                                {% endif %}
+                            </div>
                         </div>
                         {% endwith %}
                     {% endfor %}
