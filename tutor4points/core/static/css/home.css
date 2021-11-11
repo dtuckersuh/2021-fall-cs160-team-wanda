@@ -109,3 +109,12 @@
     border-color: #D6FF79;
     border-radius: 2rem;
 }
+
+.status-confirmed {
+    color: green;
+    margin: 0;
+}
+
+.status-pending {
+    margin: 0;
+}
