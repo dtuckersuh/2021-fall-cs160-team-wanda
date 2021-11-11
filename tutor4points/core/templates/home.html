@@ -26,25 +26,28 @@ Dashboard
                         <h2>Tutor Requests</h2>
                         {% for tutor_request in requests_received|slice:":3" %}
                             {% with tutee=tutor_request.tutee %}
-                            <div class="info-container d-flex" id="tutor-{{tutee.id}}" data-id="{{tutee.id}}">
-                                <div>
-                                    <img src="{{tutee.profile_pic.url}}" class="profile-pic">
-                                </div>
-                                <div class="name-column">
-                                    {{ tutee }} <br>
-                                    <div class="classes-column">
-                                        {{ tutor_request.class_name }} @ {{ tutor_request.location }} <br/>
+                            <a href="/users/{{user.id}}/requests">
+                                <div class="info-container d-flex" id="tutor-{{tutee.id}}" data-id="{{tutee.id}}"
+                                    >
+                                    <div>
+                                        <img src="{{tutee.profile_pic.url}}" class="profile-pic">
                                     </div>
+                                    <div class="name-column">
+                                        {{ tutee }} <br>
+                                        <div class="classes-column">
+                                            {{ tutor_request.class_name }} @ {{ tutor_request.location }} <br/>
+                                        </div>
+                                    </div>
+                                    <div class="times-column">
+                                        {{tutor_request.tutor_date}} @ {{tutor_request.tutor_time}} <br/>
+                                    </div>
+                                    {% if tutor_request.tutee_comment %}
+                                        Comment: {{tutor_request.tutee_comment}} <br> <br>
+                                    {% else %}
+                                        No comment <br> <br>
+                                    {% endif %}
                                 </div>
-                                <div class="times-column">
-                                    {{tutor_request.tutor_date}} @ {{tutor_request.tutor_time}} <br/>
-                                </div>
-                                {% if tutor_request.tutee_comment %}
-                                    Comment: {{tutor_request.tutee_comment}} <br> <br>
-                                {% else %}
-                                    No comment <br> <br>
-                                {% endif %}
-                            </div>
+                            </a>
                             {% endwith %}
                         {% endfor %}
                     </div>
@@ -63,40 +66,42 @@ Dashboard
                     <h2>Suggested Sessions</h2>
                         <!-- TODO: Refactor repeated code -->
                         {% for tutor in tutors|slice:":3" %}
-                            <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
-                                <div>
-                                    <img src="{{tutor.profile_pic.url}}" class="profile-pic">
-                                </div>
-                                <div class="name-column">
-                                    {{tutor.first_name}} {{tutor.last_name}} <br/>
-                                    <div class="classes-column">
-                                        {{tutor.classes_taken}}  <br/>
+                            <a href="/tutors">
+                                <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
+                                    <div>
+                                        <img src="{{tutor.profile_pic.url}}" class="profile-pic">
+                                    </div>
+                                    <div class="name-column">
+                                        {{tutor.first_name}} {{tutor.last_name}} <br/>
+                                        <div class="classes-column">
+                                            {{tutor.classes_taken}}  <br/>
+                                        </div>
+                                    </div>
+                                    <div class="times-column">
+                                        {% if tutor.times_available %}
+                                            {{tutor.times_available}}  <br/>
+                                        {% else %}
+                                            TBD <br/>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <button type ="submit" name="request" value="request" class="request-button" 
+                                        data-toggle= "modal" data-target="#tutor-request-modal">
+                                                Request
+                                        </button>
+                                    </div>
+                                    <div class="tutor-rating-column">
+                                        {% if tutor.tutor_avg_rating %}
+                                            {{tutor.tutor_avg_rating}} ★<br/>
+                                        {% else %}
+                                        N/A
+                                        {% endif %}
+                                        <div class="tutor-rate-column">
+                                            {{tutor.rate}} pts/hr<br/>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="times-column">
-                                    {% if tutor.times_available %}
-                                        {{tutor.times_available}}  <br/>
-                                    {% else %}
-                                        TBD <br/>
-                                    {% endif %}
-                                </div>
-                                <div>
-                                    <button type ="submit" name="request" value="request" class="request-button" 
-                                       data-toggle= "modal" data-target="#tutor-request-modal">
-                                            Request
-                                    </button>
-                                </div>
-                                <div class="tutor-rating-column">
-                                    {% if tutor.tutor_avg_rating %}
-                                        {{tutor.tutor_avg_rating}} ★<br/>
-                                    {% else %}
-                                       N/A
-                                    {% endif %}
-                                    <div class="tutor-rate-column">
-                                        {{tutor.rate}} pts/hr<br/>
-                                    </div>
-                                </div>
-                            </div>
+                            </a>
                         {% endfor %}
                 </div>
             </div>
@@ -105,32 +110,34 @@ Dashboard
                     <h2>Sent Requests</h2>
                     {% for sent_request in sent_requests|slice:":3" %}
                         {% with tutor=sent_request.tutor %}
-                        <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
-                            <div>
-                                <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
-                            </div>
-                            <div class="name-column">
-                                {{ tutor }}
-                                <div class="classes-column">
-                                    {{ sent_request.class_name }} @ {{ sent_request.location }}
+                        <a href="/sent_requests">
+                            <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
+                                <div>
+                                    <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
+                                </div>
+                                <div class="name-column">
+                                    {{ tutor }}
+                                    <div class="classes-column">
+                                        {{ sent_request.class_name }} @ {{ sent_request.location }}
+                                    </div>
+                                </div>
+                                <div class="times-column">
+                                    {{sent_request.tutor_date}} @ {{sent_request.tutor_time}} </div>
+                                {% if sent_request.tutee_comment %}
+                                    Comment: {{sent_request.tutee_comment}}
+                                {% else %}
+                                    No comment
+                                {% endif %}
+                                <div class="status">
+                                    Status: 
+                                    {% if sent_request.accepted %}
+                                        <p class="status-confirmed">Confirmed</p>
+                                    {% else %}
+                                        <p class="status-pending">Pending</p>
+                                    {% endif %}
                                 </div>
                             </div>
-                            <div class="times-column">
-                                {{sent_request.tutor_date}} @ {{sent_request.tutor_time}} </div>
-                            {% if sent_request.tutee_comment %}
-                                Comment: {{sent_request.tutee_comment}}
-                            {% else %}
-                                No comment
-                            {% endif %}
-                            <div class="status">
-                                Status: 
-                                {% if sent_request.accepted %}
-                                    <p class="status-confirmed">Confirmed</p>
-                                {% else %}
-                                    <p class="status-pending">Pending</p>
-                                {% endif %}
-                            </div>
-                        </div>
+                        </a>
                         {% endwith %}
                     {% endfor %}
                 </div>
@@ -194,4 +201,3 @@ Dashboard
 
 {% endwith %}
 {% endblock %}
-
