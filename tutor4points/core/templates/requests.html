@@ -13,52 +13,73 @@ Requests
 
 {% block content %}
 
-{% for request in requests_received %}
+<div class="scroll-box">
+    {% for request in requests_received %}
 
-<div class = "request-container" id = "request-{{request.id}}" data-requestid="{{request.id}}">
-    {{request.tutee.id}}
-    {{request.date_sent_request}} <br>
-    {{request.tutor_date}}  <br>
-    {{request.tutor_time}}  <br>
-    {{request.class_name}}  <br>
-    {{request.location}}  <br>
-    {{request.tutee_comment}} <br> <br>
-    <div>
-        <button type ="submit" name="btn-accept-request" class="btn-secondary" data-toggle= "modal" data-target="#modal-accept-request">Accept</button>
-        <button type ="submit" name="btn-reject-request" class="btn-secondary" data-toggle= "modal" data-target="#modal-decline-request">Decline</button>
+    <div class="info-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}">
+        <div>
+            <img src="{{request.tutee.profile_pic.url}}" class="profile-pic">
+        </div>
+
+        <div class="name">
+            {{request.tutee.first_name | title}} {{request.tutee.last_name | title}} <br />
+            <div class="sent-date">
+                {{request.date_sent_request}}
+            </div>
+        </div>
+
+
+        <div class="tutor-class">
+            {{request.class_name}}
+        </div>
+
+        <div class="times">
+            {{request.location}}, <br>
+            {{request.tutor_date}}, {{request.tutor_time}}
+        </div>
+
+
+        <div class="respond-buttons">
+            <button type="submit" name="btn-accept-request" class="btn-secondary" data-toggle="modal"
+                data-target="#modal-accept-request">Accept</button>
+            <button type="submit" name="btn-reject-request" class="btn-secondary" data-toggle="modal"
+                data-target="#modal-decline-request">Decline</button>
+        </div>
     </div>
+    {% endfor %}
 </div>
-{% endfor %}
 
-<div class="modal" id = "modal-accept-request">
-    <div class = "modal-dialog modal-lg">
-        <div class = "modal-content">
-            <form method = "POST">
-                <p class = "modal-request-status">Accept Tutor Request</p>
+<div class="modal" id="modal-accept-request">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST">
+                <p class="modal-request-status">Accept Tutor Request</p>
                 <input type="hidden" name="request-id" id="requestIdAccept" value="">
                 {% csrf_token %}
                 {{form_request_response | crispy}}
-                <button type ="submit" name="submit-accept-request" class="btn-secondary btn-block">Accept Tutor Request</button>
+                <button type="submit" name="submit-accept-request" class="btn-secondary btn-block">Accept Tutor
+                    Request</button>
             </form>
         </div>
     </div>
 </div>
 
-<div class="modal" id = "modal-decline-request">
-    <div class = "modal-dialog modal-lg">
-        <div class = "modal-content">
-            <form method = "POST">
-                <p class = "modal-request-status">Decline Tutor Request</p>
+<div class="modal" id="modal-decline-request">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST">
+                <p class="modal-request-status">Decline Tutor Request</p>
                 <input type="hidden" name="request-id" id="requestIdDecline" value="">
                 {% csrf_token %}
                 {{form_request_response | crispy}}
-                <button type ="submit" name="submit-decline-request" class="btn-secondary btn-block">Decline Tutor Request</button>
+                <button type="submit" name="submit-decline-request" class="btn-secondary btn-block">Decline Tutor
+                    Request</button>
             </form>
         </div>
     </div>
 </div>
 
-<script type = "text/javascript">
+<script type="text/javascript">
     const acceptId = document.getElementById('requestIdAccept')
     const declineId = document.getElementById('requestIdDecline')
     document.querySelector('body').addEventListener('click', event => {
@@ -67,6 +88,6 @@ Requests
         const tuteeVal = requestContainer.dataset.requestid
         acceptId.value = tuteeVal
         declineId.value = tuteeVal
-        })
+    })
 </script>
 {% endblock %}

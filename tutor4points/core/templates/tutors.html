@@ -18,66 +18,67 @@ Tutors
 </div> -->
 
 {% for tutor in tutors %}
-<div class = "info-container d-flex" id = "tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
+<div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
 
 
     <div>
-        <img src = "{{tutor.profile_pic.url}}" class = "profile-pic">
+        <img src="{{tutor.profile_pic.url}}" class="profile-pic">
     </div>
 
-    <div class = "name">
-        {{tutor.first_name}} {{tutor.last_name}} <br/>
-        <div class = "classes">
-            {{tutor.classes_taken}}  <br/>
+    <div class="name">
+        {{tutor.first_name | title}} {{tutor.last_name | title}} <br />
+        <div class="classes">
+            {{tutor.classes_taken}} <br />
         </div>
     </div>
 
 
 
-    <div class = "times">
+    <div class="times">
         {% if tutor.times_available %}
-            {{tutor.times_available}}  <br/>
+        {{tutor.times_available}} <br />
         {% else %}
-            TBD <br/>
+        TBD <br />
         {% endif %}
     </div>
 
 
     <div>
-        <button type ="submit" name="request" value="request" class="request-button" data-toggle= "modal" data-target="#tutor-request-modal">Request</button>
+        <button type="submit" name="request" value="request" class="request-button" data-toggle="modal"
+            data-target="#tutor-request-modal">Request</button>
     </div>
 
-    
+
 
     <div class="tutor-rating">
-        {{tutor.tutor_avg_rating}} ★<br/>
+        {{tutor.tutor_avg_rating}} ★<br />
 
-        <div class = "tutor-rate">
-            {{tutor.rate}} pts/hr<br/>
+        <div class="tutor-rate">
+            {{tutor.rate}} pts/hr<br />
         </div>
     </div>
 
-    
+
 </div>
 {% endfor %}
 
 {% if form.errors %}
 <script>
-    $(document).ready (function(){
+    $(document).ready(function () {
         $("#tutor-request-modal").modal('show')
     })
 </script>
 {% endif %}
 
-<div class = "modal fade" id = "tutor-request-modal">
-    <div class = "modal-dialog model-lg">
-        <div class= "modal-content">
-           <div class = "modal-flex-container">
-               <div class = "form-container">
+<div class="modal fade" id="tutor-request-modal">
+    <div class="modal-dialog model-lg">
+        <div class="modal-content">
+            <div class="modal-flex-container">
+                <div class="form-container">
                     <form method="POST" class="form-group" enctype='multipart/form-data'>
                         {% csrf_token %}
                         <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
-                        
+
                         <div class="form-row">
                             {{form.class_name | as_crispy_field}}
                         </div>
@@ -85,7 +86,7 @@ Tutors
                             {{form.tutor_date | as_crispy_field}}
                         </div>
                         <div class="form-row">
-                            {{form.tutor_time | as_crispy_field}} 
+                            {{form.tutor_time | as_crispy_field}}
                         </div>
                         <div class="form-row">
                             {{form.location | as_crispy_field}}
@@ -96,8 +97,8 @@ Tutors
 
                         <button type="submit" class="btn-block btn-secondary btn-style">Send Request</button>
                     </form>
-               </div>
-           </div> 
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -110,14 +111,14 @@ Tutors
     })
 </script> -->
 
-<script type = "text/javascript">
+<script type="text/javascript">
     const tutor = document.getElementById('requestedTutor')
     document.querySelector('body').addEventListener('click', event => {
         const infoContainer = event.target.closest('.info-container')
         if (!infoContainer) return
         const tutorId = infoContainer.dataset.tutorid
         tutor.value = tutorId
-        })
+    })
 </script>
 
 {% endblock %}
