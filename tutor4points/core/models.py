@@ -11,7 +11,7 @@ class School(models.Model):  # Model storing all school names
         max_length=50, unique=True)  # fields must be unique
 
     def __str__(self):
-        return self.name
+        return f"{self.name}"
 
 
 class User (AbstractUser):  # Custom User Model that inherits from Abstract User class
