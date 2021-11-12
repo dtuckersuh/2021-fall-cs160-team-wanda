@@ -15,7 +15,7 @@
 }
 
 .request-container {
-  height: 9rem;
+  height: fit-content;
   margin-bottom: 1.875rem;
   margin-left: 14.375rem;
   margin-right: 14.375rem;
@@ -29,6 +29,11 @@
   border-radius: 2rem;
 }
 
+.row {
+  flex-direction: row;
+  padding: 0%;
+}
+
 .scroll-box {
   /* max-height: 50vh; */
   overflow-y: auto;
@@ -36,6 +41,10 @@
 
 .request-container:hover {
   background-color: #242835;
+}
+
+.profile-container {
+  width: 12%;
 }
 
 .profile-pic {
@@ -47,9 +56,14 @@
   border-radius: 50%;
 }
 
+.request-content {
+  width: 73%;
+  flex-direction: column;
+}
+
 .name {
   font-size: 1.563rem;
-  width: 30%;
+  width: 40%;
 }
 
 .sent-date {
@@ -60,13 +74,13 @@
 }
 
 .tutor-class {
-  width: 10%;
+  width: 20%;
   font-size: 2rem;
 }
 
 .times {
   font-size: 1.125rem;
-  width: 30%;
+  width: 40%;
 }
 
 .modal-lg {
@@ -98,6 +112,12 @@
   display: inline-block;
   white-space: nowrap;
   width: 15%;
+}
+
+.comment {
+  padding-top: 1rem;
+  color: #c5cadb;
+  font-size: 0.8rem;
 }
 
 h2 {

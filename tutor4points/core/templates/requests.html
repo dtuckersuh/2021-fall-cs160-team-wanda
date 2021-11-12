@@ -18,28 +18,34 @@ Requests
 
     <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
         data-tuteeid="{{request.tutee.id}}">
-        <div>
+        <div class="profile-container">
             <img src="{{request.tutee.profile_pic.url}}" class="profile-pic">
         </div>
+        <div class="request-content">
+            <div class="container-fluid row">
 
-        <div class="name">
-            {{request.tutee.first_name | title}} {{request.tutee.last_name | title}} <br />
-            <div class="sent-date">
-                {{request.date_sent_request}}
+                <div class="name">
+                    {{request.tutee.first_name | title}} {{request.tutee.last_name | title}} <br />
+                    <div class="sent-date">
+                        {{request.date_sent_request}}
+                    </div>
+                </div>
+
+
+                <div class="tutor-class">
+                    {{request.class_name}}
+                </div>
+
+                <div class="times">
+                    {{request.location}}, <br>
+                    {{request.tutor_date}}, {{request.tutor_time}}
+                </div>
+
+            </div>
+            <div class="container-fluid row comment">
+                Comments: {{request.tutee_comment}}
             </div>
         </div>
-
-
-        <div class="tutor-class">
-            {{request.class_name}}
-        </div>
-
-        <div class="times">
-            {{request.location}}, <br>
-            {{request.tutor_date}}, {{request.tutor_time}}
-        </div>
-
-
         <div class="respond-buttons">
             <button type="submit" name="btn-accept-request" class="btn-secondary respond-button" data-toggle="modal"
                 data-target="#modal-accept-request">Accept</button>
