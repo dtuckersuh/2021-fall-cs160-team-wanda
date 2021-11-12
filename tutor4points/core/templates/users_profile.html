@@ -57,9 +57,11 @@
             <button type ="submit" name="edit" value="edit" class="btn-secondary" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
         {% else %}
             <button type ="submit" name="request-tutor" class="btn-secondary">Request Tutor</button>
-        {% endif %}
+        {% endif %}       
+    </div>
+</div>
 
-        <div class="modal fade" id = "edit-profile-modal">
+<div class="modal fade" id = "edit-profile-modal">
             <div class = "modal-dialog modal-lg">
                 <div class = "modal-content">
                     <div class = "modal-flex-container">
@@ -73,51 +75,57 @@
                                 {% csrf_token %}
 
                                 <div class="col">
-                                    {{form.profile_pic | as_crispy_field}}
+                                    {{form_update_profile.profile_pic | as_crispy_field}}
                                 </div>
 
                                 <div class="form-row">
                                     <div class="col-6">
-                                        {{form.first_name | as_crispy_field}}
+                                        {{form_update_profile.first_name | as_crispy_field}}
                                     </div>
                                     <div class="col-6">
-                                        {{form.last_name | as_crispy_field}}
+                                        {{form_update_profile.last_name | as_crispy_field}}
                                     </div>
                                     <div class="col-6">
-                                        {{form.email| as_crispy_field}}
+                                        {{form_update_profile.email| as_crispy_field}}
                                     </div>
                                     <div class="col-6">
-                                        {{form.school | as_crispy_field}}
+                                        {{form_update_profile.school | as_crispy_field}}
                                     </div>
                                 </div>
 
-                                {{form.is_tutor | as_crispy_field}}
+                                {{form_update_profile.is_tutor | as_crispy_field}}
 
                                 <div class = "form-row" id = "tutor-form">
                                     <div class="col-6">
-                                        {{form.classes_taken | as_crispy_field}}
+                                        {{form_update_profile.classes_taken | as_crispy_field}}
                                     </div>
                                     <div class="col-6">
-                                        {{form.times_available | as_crispy_field}}
+                                        {{form_update_profile.times_available | as_crispy_field}}
                                     </div>
                                     <div class="col-6">
-                                        {{form.time_zone | as_crispy_field}}
+                                        {{form_update_profile.time_zone | as_crispy_field}}
                                     </div>
                                     <div class="col-6">
-                                        {{form.rate | as_crispy_field}}
+                                        {{form_update_profile.rate | as_crispy_field}}
                                     </div>
                                 </div>
                               
-                                <button type="submit" class="btn-block btn-secondary btn-style">Update</button>
+                                <button type="submit" class="btn-block btn-secondary">Update</button>
                               
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>          
-    </div>
-</div>
+        </div>   
+
+{% if form_update_profile.errors %}
+<script>
+    $(document).ready (function(){
+        $("#edit-profile-modal").modal('show')
+    })
+</script>
+{% endif %}
 
 <script>
     const tutorChk = document.getElementById("id_is_tutor")

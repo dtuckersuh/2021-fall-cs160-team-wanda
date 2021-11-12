@@ -5,6 +5,8 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/tutors.css' %}" />
 {% endblock%}
 
+{% load crispy_forms_tags %}
+
 {% block heading %}
 Tutors
 {% endblock %}
@@ -16,7 +18,7 @@ Tutors
 </div> -->
 
 {% for tutor in tutors %}
-<div class = "info-container d-flex" id = "tutor-{{tutor.id}}" data-id="{{tutor.id}}">
+<div class = "info-container d-flex" id = "tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
 
 
     <div>
@@ -42,8 +44,9 @@ Tutors
 
 
     <div>
-        <button type ="submit" name="request" value="request" class="request-button">Request</button>
+        <button type ="submit" name="request" value="request" class="request-button" data-toggle= "modal" data-target="#tutor-request-modal">Request</button>
     </div>
+
     
 
     <div class="tutor-rating">
@@ -58,10 +61,63 @@ Tutors
 </div>
 {% endfor %}
 
-<script type="text/javascript">
+{% if form.errors %}
+<script>
+    $(document).ready (function(){
+        $("#tutor-request-modal").modal('show')
+    })
+</script>
+{% endif %}
+
+<div class = "modal fade" id = "tutor-request-modal">
+    <div class = "modal-dialog model-lg">
+        <div class= "modal-content">
+           <div class = "modal-flex-container">
+               <div class = "form-container">
+                    <form method="POST" class="form-group" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
+                        
+                        <div class="form-row">
+                            {{form.class_name | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form.tutor_date | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form.tutor_time | as_crispy_field}} 
+                        </div>
+                        <div class="form-row">
+                            {{form.location | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form.tutee_comment | as_crispy_field}}
+                        </div>
+
+                        <button type="submit" class="btn-block btn-secondary btn-style">Send Request</button>
+                    </form>
+               </div>
+           </div> 
+        </div>
+    </div>
+</div>
+
+
+<!-- need to fix because cannot access request pop-up if used
+    <script type="text/javascript">
     document.querySelectorAll('.info-container').forEach(tutorEntry => {
         tutorEntry.addEventListener('click', event => location.href = `/users/${tutorEntry.dataset.id}`)
     })
+</script> -->
+
+<script type = "text/javascript">
+    const tutor = document.getElementById('requestedTutor')
+    document.querySelector('body').addEventListener('click', event => {
+        const infoContainer = event.target.closest('.info-container')
+        if (!infoContainer) return
+        const tutorId = infoContainer.dataset.tutorid
+        tutor.value = tutorId
+        })
 </script>
 
 {% endblock %}

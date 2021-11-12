@@ -1,0 +1,20 @@
+.modal-content{
+    background-color: #323849;
+    padding:1.25rem;
+    border-style:solid;
+    border-color:#D6FF79;
+    border-width: 0.125rem;
+    border-radius: 2rem;
+}
+
+.modal-request-status {
+text-align: center;
+  font-family: "Oswald", serif;
+  font-size: 2rem;
+  font-weight: bolder;
+}
+
+.request-container {
+    background-color: green;
+    margin: 20px;
+}

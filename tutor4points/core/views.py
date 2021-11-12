@@ -1,8 +1,9 @@
-from .forms import RegisterForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm
+from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm, RequestResponseForm
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
+from .models import TutorRequest
 
 # loginUser handles "/login" endpoint
 # logs in the user that has the specified login credentials from the login form
@@ -58,14 +59,31 @@ def home(request):
 
 # tutors handles "/tutors" endpoint
 # allows user to view all tutors that attend the same school as them
+# allows user to send a tutor request
 @login_required
 def tutors(request):
-    if request.method == 'GET':
-        current_user = request.user
-        users = get_user_model().objects.all().exclude(pk=current_user.id)
-        tutors = users.filter(is_tutor=True, school=current_user.school)
+    current_user = request.user
+    users = get_user_model().objects.all().exclude(pk=current_user.id)
+    tutors = users.filter(is_tutor=True, school=current_user.school)
+        
+    if request.method == 'POST':
+        form = TutorRequestForm(request.POST)
+        if(form.is_valid()):
+            tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor']) # get tutor object
+            tutor_request = form.save(commit=False)
+            tutor_request.tutee = current_user
+            tutor_request.tutor = tutor_instance
+            tutor_request.save()
+            return redirect('tutors')
+    else:
+        form = TutorRequestForm()
 
-        return render(request, 'tutors.html', {'tutors': tutors})
+    return render(request, 'tutors.html', {
+        'users': users,
+        'user': current_user,
+        'tutors': tutors,
+        'form': form,
+    })
 
 
 # users handles "/users/<int:id>" endpoint
@@ -77,15 +95,15 @@ def users(request, id):
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
     if request.method == 'POST':
-        form = UpdateProfileForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            form.save()
+        form_update_profile = UpdateProfileForm(request.POST, request.FILES, instance=user)
+        if form_update_profile.is_valid():
+            form_update_profile.save()
     else:
-        form = UpdateProfileForm(instance=user)
+        form_update_profile = UpdateProfileForm(instance=user)
 
     return render(request, 'users_profile.html', {
         'user': user,
-        'form': form,
+        'form_update_profile': form_update_profile,
         'current_user': request.user.id == id
     })
 
@@ -138,3 +156,22 @@ def points(request):
             'form_transfer_points': form_transfer_points,
             'success_message': success_message,}
         )
+
+# requests handles "users/<int:id>/requests" endpoint
+# allows users to view requests sent and received as well as accept/decline received requests
+@login_required
+def requests(request, id):
+    current_user = request.user
+    requests_received = TutorRequest.objects.all().filter(tutor = current_user) # get all user's tutor requests
+    if request.method == 'POST' and 'submit-accept-request' in request.POST:
+        form_request_response = RequestResponseForm (request.POST, accepted = True, request_id = request.POST['request-id'])
+        if form_request_response.is_valid():
+            form_request_response.save()
+    elif request.method == 'POST' and 'submit-decline-request' in request.POST:
+        form_request_response = RequestResponseForm (request.POST, accepted = False, request_id = request.POST['request-id'])
+        if form_request_response.is_valid():
+            form_request_response.save()
+    else: 
+        form_request_response = RequestResponseForm ()
+    return render(request, 'requests.html', {'form_request_response': form_request_response, 'requests_received': requests_received})
+    

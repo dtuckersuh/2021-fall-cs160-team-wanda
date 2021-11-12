@@ -1,9 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.forms.widgets import PasswordInput
-from .models import User, Transaction
+from django.forms.widgets import PasswordInput, SelectDateWidget
+from .models import TutorRequest, User, School, Transaction
 from crispy_forms.helper import FormHelper
 from django.contrib.auth import get_user_model
+from django.db import transaction
+import re
 
 # Form that allows user to create an account
 class RegisterForm(UserCreationForm):
@@ -18,6 +20,18 @@ class RegisterForm(UserCreationForm):
 
         self.fields['password2'].widget = PasswordInput(
             attrs={'placeholder': 'Repeat Password'})
+
+    #make sure times available field contains only days of the week, numbers 0-9, am, pm, -, :, or ,
+    def clean_times_available(self):
+        times_available = self.cleaned_data['times_available']
+        pattern = r'[0-9]|(monday|tuesday|wednesday|thursday|friday|saturday|sunday|am|pm|-|:|,)|\s'
+        str_without_spaces = times_available.replace (' ','')
+        print (str_without_spaces)
+        remaining_str = re.sub (pattern, '', str_without_spaces, flags = re.IGNORECASE).strip()
+        print (remaining_str)
+        if len(remaining_str) > 0:
+            self.add_error ('times_available', "Times Available is not in the correct format!")
+        return times_available
 
     class Meta:
         model = User  # based on User model
@@ -70,6 +84,17 @@ class RegisterForm(UserCreationForm):
 # Form that allows user to update their profile_pic, first_name, last_name, school, email
 # is_tutor, classes_taken, times_available, time_zone, rate
 class UpdateProfileForm(forms.ModelForm):
+
+    #make sure times available field contains only days of the week, numbers 0-9, am, pm, -, :, or ,
+    def clean_times_available(self):
+        times_available = self.cleaned_data['times_available']
+        pattern = r'[0-9]|(monday|tuesday|wednesday|thursday|friday|saturday|sunday|am|pm|-|:|,)|\s'
+        str_without_spaces = times_available.replace (' ','')
+        remaining_str = re.sub (pattern, '', str_without_spaces, flags = re.IGNORECASE).strip()
+        if len(remaining_str) > 0:
+            self.add_error ('times_available', "Times Available is not in the correct format!")
+        return times_available
+
     class Meta:
         model = User
 
@@ -128,7 +153,7 @@ class PurchasePointsForm(forms.Form):
 
     def clean_purchased_points (self): #validate purchased points field
         purchased_points = self.cleaned_data['purchased_points']
-        if (purchased_points == None or purchased_points <= 0):
+        if (purchased_points is None or purchased_points <= 0):
             self.add_error ('purchased_points', 'Please enter a positive value.')
         return purchased_points
 
@@ -151,9 +176,9 @@ class CashOutPointsForm(forms.Form):
 
     def clean_cashed_points (self): #validate cashed points field
         cashed_points = self.cleaned_data['cashed_points']
-        if (cashed_points == None or cashed_points <= 0):
+        if (cashed_points is None or cashed_points <= 0):
             self.add_error ('cashed_points', 'Please enter a positive value.')
-        elif (cashed_points > self.user.total_points): #if user tries to cash out more points than point balance
+        elif cashed_points > self.user.total_points: #if user tries to cash out more points than point balance
             self.add_error ('cashed_points', 'Please enter a value less than or equal to your points balance.')
         return cashed_points
 
@@ -179,22 +204,23 @@ class TransferPointsForm(forms.Form):
 
     def clean_amount_to_transfer (self): #validate amount to transfer field
         amount_to_transfer = self.cleaned_data['amount_to_transfer']
-        if (amount_to_transfer == None or amount_to_transfer <= 0): #if they didnt enter a positive number
+        if (amount_to_transfer is None or amount_to_transfer <= 0): #if they didnt enter a positive number
             self.add_error ('amount_to_transfer', 'Please enter a positive value.')
-        elif (amount_to_transfer > self.user.total_points): #if user tries to transfer more points than point balance
+        elif amount_to_transfer > self.user.total_points: #if user tries to transfer more points than point balance
             self.add_error ('amount_to_transfer', "Please enter a value less than or equal to your current points balance.")
         return amount_to_transfer
 
     def clean_tutors(self): #validate tutors field
         tutor = self.cleaned_data['tutors']
-        if (tutor == None):
+        if tutor is None:
             self.add_error ('tutors', "Please choose a tutor")
         return tutor
 
+    @transaction.atomic()
     def save(self):
         amount_to_transfer = self.cleaned_data['amount_to_transfer']
         tutor = self.cleaned_data['tutors']
-
+        
         #subtract points from user's balance
         self.user.total_points -= amount_to_transfer
         self.user.save()
@@ -205,3 +231,64 @@ class TransferPointsForm(forms.Form):
 
         #create and save transaction instance to Transaction table
         Transaction.objects.create (method = 'transfer', points = self.cleaned_data['amount_to_transfer'], sent_from = self.user, sent_to = tutor)
+
+# Form that allows user to send a tutor request
+class TutorRequestForm(forms.ModelForm):
+
+    # def __init__(self, *args,**kwargs):
+    #     self.user = kwargs.pop('user', None)
+    #     super().__init__(*args,**kwargs)
+
+    class Meta:
+        model = TutorRequest
+
+        # layout where want fields to be, type in order you want it to appear
+        fields = ('class_name', 'tutor_date', 'tutor_time', 'location', 'tutee_comment')
+
+        # customize placeholders
+        widgets = {
+            'class_name':
+            forms.TextInput(attrs={'placeholder': 'Example: CS146'}),
+            'tutor_date':
+            forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}), 
+            'tutor_time':
+            forms.TimeInput(format='%H:%M', attrs={'type': 'time'}), 
+            'location':
+            forms.Textarea(attrs={
+                'placeholder': 'Example: 4th floor of MLK Library',
+                'rows': 2
+                }),
+            'tutee_comment':
+            forms.Textarea(attrs={
+                'placeholder': 'Leave a comment for the tutor',
+                'rows': 5
+            }), 
+        }
+
+        # customize form labels
+        labels = {
+            'class_name': "Class",
+            'tutor_date': "Date",
+            'tutor_time': "Time",
+            'location': "Location",
+            'tutee_comment': "Comment",
+        }
+
+    helper = FormHelper()
+    helper.form_id = 'form'
+   
+#Form that allows user to accept/decline a tutor request
+class RequestResponseForm (forms.Form):
+    def __init__(self, *args,**kwargs):
+        self.accepted = kwargs.pop('accepted', None)
+        self.request_id = kwargs.pop('request_id', None)
+        super().__init__(*args,**kwargs)
+        self.fields ['comment'] = forms.CharField(label = "Comment (optional)", required=False)
+        self.fields ['comment'].widget = forms.Textarea(attrs={"rows":3})
+
+    def save(self):
+        request_instance = TutorRequest.objects.get(pk=self.request_id)
+        request_instance.accepted = self.accepted
+        request_instance.tutor_comment = self.cleaned_data['comment']
+        request_instance.save()
+
