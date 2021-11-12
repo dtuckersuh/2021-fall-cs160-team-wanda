@@ -153,9 +153,9 @@ class RateTutorForm(forms.ModelForm):
         # customize placeholders
         widgets = {
             'rating':
-            forms.NumberInput(attrs={'placeholder': '3'}),
+            forms.NumberInput(attrs={'placeholder': '1-5'}),
             'comment':
-            forms.TextInput(attrs={'placeholder': 'comment'}),
+            forms.TextInput(attrs={'placeholder': 'comment here'}),
             'Type of rating (tutor or tutee)':
             forms.TextInput(attrs={'placeholder': 'comment'}),
 
