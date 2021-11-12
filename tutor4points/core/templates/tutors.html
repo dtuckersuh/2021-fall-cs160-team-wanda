@@ -103,14 +103,6 @@ Tutors
     </div>
 </div>
 
-
-<!-- need to fix because cannot access request pop-up if used
-    <script type="text/javascript">
-    document.querySelectorAll('.info-container').forEach(tutorEntry => {
-        tutorEntry.addEventListener('click', event => location.href = `/users/${tutorEntry.dataset.id}`)
-    })
-</script> -->
-
 <script type="text/javascript">
     const tutor = document.getElementById('requestedTutor')
     document.querySelector('body').addEventListener('click', event => {
@@ -118,6 +110,9 @@ Tutors
         if (!infoContainer) return
         const tutorId = infoContainer.dataset.tutorid
         tutor.value = tutorId
+        if (!event.target.matches('.request-button')) {
+            location.href = `/users/${infoContainer.dataset.tutorid}`
+        }
     })
 </script>
 

@@ -16,7 +16,8 @@ Requests
 <div class="scroll-box">
     {% for request in requests_received %}
 
-    <div class="info-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}">
+    <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
+        data-tuteeid="{{request.tutee.id}}">
         <div>
             <img src="{{request.tutee.profile_pic.url}}" class="profile-pic">
         </div>
@@ -40,9 +41,9 @@ Requests
 
 
         <div class="respond-buttons">
-            <button type="submit" name="btn-accept-request" class="btn-secondary" data-toggle="modal"
+            <button type="submit" name="btn-accept-request" class="btn-secondary respond-button" data-toggle="modal"
                 data-target="#modal-accept-request">Accept</button>
-            <button type="submit" name="btn-reject-request" class="btn-secondary" data-toggle="modal"
+            <button type="submit" name="btn-reject-request" class="btn-secondary respond-button" data-toggle="modal"
                 data-target="#modal-decline-request">Decline</button>
         </div>
     </div>
@@ -88,6 +89,9 @@ Requests
         const tuteeVal = requestContainer.dataset.requestid
         acceptId.value = tuteeVal
         declineId.value = tuteeVal
+        if (!event.target.matches('.respond-button')) {
+            location.href = `/users/${requestContainer.dataset.tuteeid}`
+        }
     })
 </script>
 {% endblock %}

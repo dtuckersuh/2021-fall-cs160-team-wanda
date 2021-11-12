@@ -15,11 +15,6 @@
 }
 
 .request-container {
-  background-color: green;
-  margin: 20px;
-}
-
-.info-container {
   height: 9rem;
   margin-bottom: 1.875rem;
   margin-left: 14.375rem;
@@ -39,7 +34,7 @@
   overflow-y: auto;
 }
 
-.info-container:hover {
+.request-container:hover {
   background-color: #242835;
 }
 
@@ -100,7 +95,8 @@
 }
 
 .respond-buttons {
-  display: inline-flexbox;
+  display: inline-block;
+  white-space: nowrap;
   width: 15%;
 }
 
