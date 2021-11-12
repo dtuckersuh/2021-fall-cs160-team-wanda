@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import TutorRequest
+from .models import TutorRequest, Rating
 
 # loginUser handles "/login" endpoint
 # logs in the user that has the specified login credentials from the login form
@@ -108,10 +108,27 @@ def users(request, id):
             rating.given_to = user
             rating.given_by = request.user
             rating.save()
-            #type = form_rating.cleaned_data['rating_type']
-            #print(type)
 
+            # calcute new rating, and update the database
+            type = form_rating.cleaned_data['rating_type']
 
+            if type == 'tutor':#for tutors
+                tutor_ratings = Rating.objects.filter(given_to = user).filter(rating_type = 'tutor')
+                count = 0
+                sum = 0
+                for i in tutor_ratings:
+                    count += 1
+                    sum += i.rating
+                user.tutor_avg_rating = sum/count
+            else: #otherwise tutee
+                tutor_ratings = Rating.objects.filter(given_to = user).filter(rating_type = 'tutee')
+                count = 0
+                sum = 0
+                for i in tutor_ratings:
+                    count += 1
+                    sum += i.rating
+                user.tutee_avg_rating = sum/count
+            user.save()
 
     else:
         form_rating = RateTutorForm()
