@@ -57,7 +57,9 @@
             <button type ="submit" name="edit" value="edit" class="btn-secondary" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
         {% else %}
             <button type ="submit" name="request-tutor" class="btn-secondary">Request Tutor</button>
-        {% endif %}       
+
+            <button type ="submit" name="rate" value="rate" class="btn-secondary" data-toggle= "modal" data-target="#rate-modal">Rate Tutor</button>
+        {% endif %}
     </div>
 </div>
 
@@ -109,15 +111,43 @@
                                         {{form_update_profile.rate | as_crispy_field}}
                                     </div>
                                 </div>
-                              
+
                                 <button type="submit" class="btn-block btn-secondary">Update</button>
-                              
+
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>   
+        </div>
+        <!--Code for user rating: move to 'paid and done' once that is complete -->
+        <div class="modal fade" id = "rate-modal">
+                    <div class = "modal-dialog modal-lg">
+                        <div class = "modal-content">
+                            <div class = "modal-flex-container">
+
+
+                                <div class = "form-container">
+                                    <form method="POST" class="form-group" enctype='multipart/form-data'>
+                                        {% csrf_token %}
+                                      <div>
+                                        {{form_rating.rating |as_crispy_field}}
+                                      <div>
+                                      <div>
+                                        {{form_rating.comment |as_crispy_field}}
+                                      <div>
+                                      <div>
+                                        {{form_rating.rating_type|as_crispy_field}}
+
+                                        <button type="submit" class="btn-block btn-secondary">submit</button>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
 
 {% if form_update_profile.errors %}
 <script>
