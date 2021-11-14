@@ -14,46 +14,54 @@ Requests
 {% block content %}
 
 <div class="scroll-box">
-    {% for request in requests_received %}
+    <h2>Inbox</h2>
+    {% if requests_received %}
+    <div class="requests-items">
+        {% for request in requests_received %}
 
-    <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
-        data-tuteeid="{{request.tutee.id}}">
-        <div class="profile-container">
-            <img src="{{request.tutee.profile_pic.url}}" class="profile-pic">
-        </div>
-        <div class="request-content">
-            <div class="container-fluid row">
+        <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
+            data-tuteeid="{{request.tutee.id}}">
+            <div class="profile-container">
+                <img src="{{request.tutee.profile_pic.url}}" class="profile-pic">
+            </div>
+            <div class="request-content">
+                <div class="container-fluid row">
 
-                <div class="name">
-                    {{request.tutee.first_name | title}} {{request.tutee.last_name | title}} <br />
-                    <div class="sent-date">
-                        {{request.date_sent_request}}
+                    <div class="name">
+                        {{request.tutee.first_name | title}} {{request.tutee.last_name | title}} <br />
+                        <div class="sent-date">
+                            {{request.date_sent_request}}
+                        </div>
                     </div>
+
+
+                    <div class="tutor-class">
+                        {{request.class_name}}
+                    </div>
+
+                    <div class="times">
+                        {{request.location}}, <br>
+                        {{request.tutor_date}}, {{request.tutor_time}}
+                    </div>
+
                 </div>
-
-
-                <div class="tutor-class">
-                    {{request.class_name}}
+                <div class="container-fluid row comment">
+                    Comments: {{request.tutee_comment}}
                 </div>
-
-                <div class="times">
-                    {{request.location}}, <br>
-                    {{request.tutor_date}}, {{request.tutor_time}}
-                </div>
-
             </div>
-            <div class="container-fluid row comment">
-                Comments: {{request.tutee_comment}}
+            <div class="respond-buttons">
+                <button type="submit" name="btn-accept-request" class="btn-secondary respond-button" data-toggle="modal"
+                    data-target="#modal-accept-request">Accept</button>
+                <button type="submit" name="btn-reject-request" class="btn-secondary respond-button" data-toggle="modal"
+                    data-target="#modal-decline-request">Decline</button>
             </div>
         </div>
-        <div class="respond-buttons">
-            <button type="submit" name="btn-accept-request" class="btn-secondary respond-button" data-toggle="modal"
-                data-target="#modal-accept-request">Accept</button>
-            <button type="submit" name="btn-reject-request" class="btn-secondary respond-button" data-toggle="modal"
-                data-target="#modal-decline-request">Decline</button>
-        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
+
+    {% else %}
+    <h3>Inbox Empty</h3>
+    {% endif %}
 </div>
 
 <div class="modal" id="modal-accept-request">
@@ -84,6 +92,60 @@ Requests
             </form>
         </div>
     </div>
+</div>
+
+<div class="scroll-box">
+    <h2>Sent</h2>
+    {% if requests_sent %}
+    <div class="requests-items container-fluid">
+        {% for request in requests_sent %}
+
+        <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
+            data-tuteeid="{{request.tutee.id}}">
+            <div class="profile-container">
+                <img src="{{request.tutor.profile_pic.url}}" class="profile-pic">
+            </div>
+            <div class="request-content">
+                <div class="container-fluid row">
+
+                    <div class="name">
+                        {{request.tutor.first_name | title}} {{request.tutor.last_name | title}} <br />
+                        <div class="sent-date">
+                            {{request.date_sent_request}}
+                        </div>
+                    </div>
+
+
+                    <div class="tutor-class">
+                        {{request.class_name}}
+                    </div>
+
+                    <div class="times">
+                        {{request.location}}, <br>
+                        {{request.tutor_date}}, {{request.tutor_time}}
+                    </div>
+
+                </div>
+                <div class="container-fluid row comment">
+                    Comments: {{request.tutee_comment}}
+                </div>
+            </div>
+            <div class="respond-buttons">
+                {% if request.accepted %}
+                Accepted
+                {% elif request.status is None %}
+                Awaiting Response
+                {% else %}
+                Declined
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <h3>No Requests Sent</h3>
+    {% endif %}
 </div>
 
 <script type="text/javascript">

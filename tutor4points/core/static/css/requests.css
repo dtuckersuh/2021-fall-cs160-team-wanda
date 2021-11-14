@@ -16,9 +16,7 @@
 
 .request-container {
   height: fit-content;
-  margin-bottom: 1.875rem;
-  margin-left: 14.375rem;
-  margin-right: 14.375rem;
+  margin-bottom: 1.5rem;
   padding: 1.563rem;
   align-items: center;
   gap: 1.563rem;
@@ -35,12 +33,21 @@
 }
 
 .scroll-box {
-  /* max-height: 50vh; */
-  overflow-y: auto;
+  max-height: 50vh;
+  overflow-y: scroll;
+  border-radius: 2rem;
+  background-color: #2a2f3b;
+  margin-inline: 2rem;
+  padding: 0rem 0rem 1rem 0rem;
+  margin: 2rem;
 }
 
 .request-container:hover {
   background-color: #242835;
+}
+
+.request-items {
+  margin: 1rem;
 }
 
 .profile-container {
@@ -122,6 +129,23 @@
 
 h2 {
   padding: 1rem;
+  margin-bottom: 1.6rem;
   text-align: center;
   font-weight: bold;
+  font-size: 2rem;
+  position: sticky;
+  top: 0;
+  background-color: #37425f;
+  border-radius: 1.9rem;
+  border-color: #2a2f3b;
+  border-style: solid;
+  border-width: 1rem;
+  margin-top: 0rem;
+}
+
+h3 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.7rem;
+  color: #545c70;
 }
