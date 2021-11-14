@@ -47,13 +47,27 @@ Tutors
         <button type ="submit" name="request" value="request" class="request-button" data-toggle= "modal" data-target="#tutor-request-modal">Request</button>
     </div>
 
+
+
+    <div class="tutor-rating">
+        {{tutor.tutor_avg_rating}} ★<br/>
+
+        <div class = "tutor-rate">
+            {{tutor.rate}} pts/hr<br/>
+        </div>
+    </div>
+
+    
+</div>
+{% endfor %}
+
     <!-- insert request form here -->
     <div class = "modal fade" id = "tutor-request-modal">
         <div class = "modal-dialog model-lg">
             <div class= "modal-content">
                <div class = "modal-flex-container">
                    <div class = "form-container">
-                       <h2>Request {{tutor.first_name}} {{tutor.last_name}}</h2>
+                       <h2>Request</h2>
                         <form method="POST" class="form-group" enctype='multipart/form-data'>
                             {% csrf_token %}
                             <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
@@ -65,7 +79,10 @@ Tutors
                                 {{form.tutor_date | as_crispy_field}}
                             </div>
                             <div class="form-row">
-                                {{form.tutor_time | as_crispy_field}}
+                                {{form.tutor_start_time | as_crispy_field}}
+                            </div>
+                            <div class="form-row">
+                                {{form.tutor_end_time | as_crispy_field}}
                             </div>
                             <div class="form-row">
                                 {{form.location | as_crispy_field}}
@@ -81,18 +98,6 @@ Tutors
             </div>
         </div>
     </div>
-
-    <div class="tutor-rating">
-        {{tutor.tutor_avg_rating}} ★<br/>
-
-        <div class = "tutor-rate">
-            {{tutor.rate}} pts/hr<br/>
-        </div>
-    </div>
-
-    
-</div>
-{% endfor %}
 
 {% if form.errors %}
 <script>
