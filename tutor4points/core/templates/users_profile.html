@@ -56,9 +56,11 @@
         {% if current_user %}
         <button type="submit" name="edit" value="edit" class="btn-secondary" data-toggle="modal"
             data-target="#edit-profile-modal">Edit Profile</button>
-        {% else %}
+        {% elif not current_user and user.is_tutor %}
         <button type="submit" name="request-tutor" class="btn-secondary" data-toggle="modal"
             data-target="#tutor-request-modal">Request Tutor</button>
+        {% else %}
+            <!-- no button -->
         {% endif %}
     </div>
 </div>
