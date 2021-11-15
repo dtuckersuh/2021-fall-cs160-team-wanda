@@ -1,45 +1,49 @@
 .header h1 {
   text-align: center;
-  margin: 4.375rem 2.188rem 2.188rem 2.188rem;
+  margin: 2.188rem 2.188rem 2.188rem 2.188rem;
   font-family: "Oswald", serif;
   font-size: 4rem;
   font-weight: bolder;
 }
 
 .main-content {
-  background-color: #373F51;
-  color: #F4FAFF;
+  background-color: #373f51;
+  color: #f4faff;
   font-family: "Open Sans";
 }
 
 .navbar-custom {
-  background-color: #934DD1;
+  background-color: #934dd1;
 }
 
-.btn-success, .btn-success:active, .btn-success:visited {
-    background-color: #934DD1 !important;
-    border: none;
-    border-radius:0.625rem;
-    padding:0.625rem;
+.btn-success,
+.btn-success:active,
+.btn-success:visited {
+  background-color: #934dd1 !important;
+  border: none;
+  border-radius: 0.625rem;
+  padding: 0.625rem;
 }
 
 .btn-success:hover {
-    background-color: #893CCD!important;
-    border: none;
-}
-
-.link-primary{
-   color: #8fc93a !important;
-}
-
-.btn-secondary, .btn-secondary:active, .btn-secondary:visited{
-  background-color: #934DD1 !important;
+  background-color: #893ccd !important;
   border: none;
-  padding:0.625rem;
+}
+
+.link-primary {
+  color: #8fc93a !important;
+}
+
+.btn-secondary,
+.btn-secondary:active,
+.btn-secondary:visited {
+  background-color: #934dd1 !important;
+  border: none;
+  padding: 0.625rem;
   border-radius: 0.625rem;
 }
 
-.btn-secondary:hover{
-  background-color: #893CCD!important;
-  border:none;
+.btn-secondary:hover {
+  background-color: #893ccd !important;
+  border: none;
 }
