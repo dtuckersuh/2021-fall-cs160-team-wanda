@@ -286,8 +286,8 @@ class RequestResponseForm (forms.Form):
         self.accepted = kwargs.pop('accepted', None)
         self.request_id = kwargs.pop('request_id', None)
         super().__init__(*args,**kwargs)
-        self.fields ['comment'] = forms.CharField(label = "Comment (optional)", required=False)
-        self.fields ['comment'].widget = forms.Textarea(attrs={"rows":3})
+        self.fields['comment'] = forms.CharField(label = "Comment (optional)", required=False)
+        self.fields['comment'].widget = forms.Textarea(attrs={"rows":3})
 
     def save(self):
         request_instance = TutorRequest.objects.get(pk=self.request_id)
