@@ -74,7 +74,7 @@ def tutors(request):
             tutor_request.tutee = current_user
             tutor_request.tutor = tutor_instance
             tutor_request.save()
-            return redirect('tutors')
+            return redirect('requests', id=current_user.id)
     else:
         form = TutorRequestForm()
 
@@ -104,6 +104,7 @@ def users(request, id):
             tutor_request.tutee = request.user
             tutor_request.tutor = user
             tutor_request.save()
+            return redirect('requests', id=user.id)
     else:
         form_update_profile = UpdateProfileForm(instance=user)
         form_tutor_request = TutorRequestForm()
