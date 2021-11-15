@@ -55,6 +55,15 @@ def home(request):
         requests_received = TutorRequest.objects.all().filter(tutor=current_user)
         sent_requests = TutorRequest.objects.all().filter(tutee=current_user)
         if request.method == 'POST':
+            if 'submit-accept-request' in request.POST:
+                form_request_response = RequestResponseForm(request.POST, accepted = True, request_id = request.POST['request-id'])
+                if form_request_response.is_valid():
+                    form_request_response.save()
+            elif 'submit-decline-request' in request.POST:
+                form_request_response = RequestResponseForm(request.POST, accepted = False, request_id = request.POST['request-id'])
+                if form_request_response.is_valid():
+                    form_request_response.save()
+            form_request_response = RequestResponseForm()
             form = TutorRequestForm(request.POST)
             if form.is_valid():
                 tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor']) # get tutor object
@@ -65,12 +74,14 @@ def home(request):
                 return redirect("home")
         else:
             form = TutorRequestForm()
+            form_request_response = RequestResponseForm()
         return render(request, "home.html", 
                 {
                     'tutors': tutors, 
                     'requests_received': requests_received,
                     'sent_requests': sent_requests,
-                    'form': form
+                    'form': form,
+                    'form_request_response': form_request_response
                 }
         )
     else:

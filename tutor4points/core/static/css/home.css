@@ -94,6 +94,11 @@ a {
     font-size:30px;
 }
 
+.respond-buttons {
+  display: inline-block;
+  white-space: nowrap;
+  width: 15%;
+} 
 .modal-lg {
     max-width: 40%;
  }
@@ -104,6 +109,15 @@ a {
      background-color: #323849;
 }
 
+.request-modal-content{
+    background-color: #323849;
+    padding:1.25rem;
+    border-style:solid;
+    border-color:#D6FF79;
+    border-width: 0.125rem;
+    border-radius: 2rem;
+    pointer-events: auto;
+}
 .modal-flex-container {
     display: flex;
     padding:1.25rem 3.5rem 1.25rem 3.5rem;
@@ -115,11 +129,22 @@ a {
     border-radius: 2rem;
 }
 
+.modal-request-status {
+    text-align: center;
+    font-family: "Oswald", serif;
+    font-size: 2rem;
+    font-weight: bolder;
+}
 .status-confirmed {
     color: green;
     margin: 0;
 }
 
 .status-pending {
+    margin: 0;
+}
+
+.status-declined {
+    color: red;
     margin: 0;
 }
