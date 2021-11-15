@@ -53,15 +53,19 @@ def home(request):
     if current_user.is_authenticated:
         users = get_user_model().objects.all().exclude(pk=current_user.id)
         tutors = users.filter(is_tutor=True, school=current_user.school)
-        requests_received = TutorRequest.objects.all().filter(tutor=current_user)
+        requests_received = TutorRequest.objects.all().filter(tutor=current_user, accepted=None)
         sent_requests = TutorRequest.objects.all().filter(tutee=current_user)
         if request.method == 'POST':
             if 'submit-accept-request' in request.POST:
-                form_request_response = RequestResponseForm(request.POST, accepted = True, request_id = request.POST['request-id'])
+                form_request_response = RequestResponseForm(request.POST, 
+                                        accepted = True, 
+                                        request_id = request.POST['request-id'])
                 if form_request_response.is_valid():
                     form_request_response.save()
             elif 'submit-decline-request' in request.POST:
-                form_request_response = RequestResponseForm(request.POST, accepted = False, request_id = request.POST['request-id'])
+                form_request_response = RequestResponseForm(request.POST, 
+                                        accepted = False, 
+                                        request_id = request.POST['request-id'])
                 if form_request_response.is_valid():
                     form_request_response.save()
             form_request_response = RequestResponseForm()
