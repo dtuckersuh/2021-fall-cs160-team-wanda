@@ -66,42 +66,40 @@ Dashboard
                     <h2>Suggested Sessions</h2>
                         <!-- TODO: Refactor repeated code -->
                         {% for tutor in tutors|slice:":3" %}
-                            <a href="/tutors">
-                                <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
-                                    <div>
-                                        <img src="{{tutor.profile_pic.url}}" class="profile-pic">
-                                    </div>
-                                    <div class="name-column">
-                                        {{tutor.first_name}} {{tutor.last_name}} <br/>
-                                        <div class="classes-column">
-                                            {{tutor.classes_taken}}  <br/>
-                                        </div>
-                                    </div>
-                                    <div class="times-column">
-                                        {% if tutor.times_available %}
-                                            {{tutor.times_available}}  <br/>
-                                        {% else %}
-                                            TBD <br/>
-                                        {% endif %}
-                                    </div>
-                                    <div>
-                                        <button type ="submit" name="request" value="request" class="request-button" 
-                                        data-toggle= "modal" data-target="#tutor-request-modal">
-                                                Request
-                                        </button>
-                                    </div>
-                                    <div class="tutor-rating-column">
-                                        {% if tutor.tutor_avg_rating %}
-                                            {{tutor.tutor_avg_rating}} ★<br/>
-                                        {% else %}
-                                        N/A
-                                        {% endif %}
-                                        <div class="tutor-rate-column">
-                                            {{tutor.rate}} pts/hr<br/>
-                                        </div>
+                            <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
+                                <div>
+                                    <img src="{{tutor.profile_pic.url}}" class="profile-pic">
+                                </div>
+                                <div class="name-column">
+                                    {{tutor.first_name}} {{tutor.last_name}} <br/>
+                                    <div class="classes-column">
+                                        {{tutor.classes_taken}}  <br/>
                                     </div>
                                 </div>
-                            </a>
+                                <div class="times-column">
+                                    {% if tutor.times_available %}
+                                        {{tutor.times_available}}  <br/>
+                                    {% else %}
+                                        TBD <br/>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <button type ="submit" name="request" value="request" class="request-button" 
+                                    data-toggle= "modal" data-target="#tutor-request-modal">
+                                            Request
+                                    </button>
+                                </div>
+                                <div class="tutor-rating-column">
+                                    {% if tutor.tutor_avg_rating %}
+                                        {{tutor.tutor_avg_rating}} ★<br/>
+                                    {% else %}
+                                    N/A
+                                    {% endif %}
+                                    <div class="tutor-rate-column">
+                                        {{tutor.rate}} pts/hr<br/>
+                                    </div>
+                                </div>
+                            </div>
                         {% endfor %}
                 </div>
             </div>
@@ -156,15 +154,14 @@ Dashboard
 {% endif %}
 
 
-<div class = "modal fade" id = "tutor-request-modal">
-    <div class = "modal-dialog model-lg">
-        <div class= "modal-content">
-           <div class = "modal-flex-container">
-               <div class = "form-container">
+<div class="modal fade" id="tutor-request-modal">
+    <div class="modal-dialog model-lg">
+        <div class="modal-content">
+           <div class="modal-flex-container">
+               <div class="form-container">
                     <form method="POST" class="form-group" enctype='multipart/form-data'>
                         {% csrf_token %}
                         <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
-                        
                         <div class="form-row">
                             {{form.class_name | as_crispy_field}}
                         </div>
@@ -180,7 +177,6 @@ Dashboard
                         <div class="form-row">
                             {{form.tutee_comment | as_crispy_field}}
                         </div>
-
                         <button type="submit" class="btn-block btn-secondary btn-style">Send Request</button>
                     </form>
                </div>
