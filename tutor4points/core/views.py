@@ -96,14 +96,22 @@ def users(request, id):
     user = get_user_model().objects.get(pk=id)
     if request.method == 'POST':
         form_update_profile = UpdateProfileForm(request.POST, request.FILES, instance=user)
+        form_tutor_request = TutorRequestForm(request.POST)
         if form_update_profile.is_valid():
             form_update_profile.save()
+        elif form_tutor_request.is_valid():
+            tutor_request = form_tutor_request.save(commit=False)
+            tutor_request.tutee = request.user
+            tutor_request.tutor = user
+            tutor_request.save()
     else:
         form_update_profile = UpdateProfileForm(instance=user)
+        form_tutor_request = TutorRequestForm()
 
     return render(request, 'users_profile.html', {
         'user': user,
         'form_update_profile': form_update_profile,
+        'form_tutor_request': form_tutor_request,
         'current_user': request.user.id == id
     })
 
