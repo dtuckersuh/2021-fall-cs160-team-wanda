@@ -269,8 +269,8 @@ class TutorRequestForm(forms.ModelForm):
         labels = {
             'class_name': "Class",
             'tutor_date': "Date",
-            'tutor_start_time': "Start Time",
-            'tutor_end_time': "End Time",
+            'tutor_start_time': "Start Time (local time)",
+            'tutor_end_time': "End Time (local time)",
             'location': "Location",
             'tutee_comment': "Comment",
         }
