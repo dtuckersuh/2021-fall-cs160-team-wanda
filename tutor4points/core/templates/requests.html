@@ -13,17 +13,18 @@ Requests
 
 {% block content %}
 
-<form method="post">
-{% csrf_token %}
-    <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted"
-            onChange="this.form.submit()" {{accept_filter}}>
-        <label class="form-check-label" for="show-accepted">
-            Show Accepted
-        </label>
-    </div>
-</form>
-
+<div class="show-accepted">
+    <form method="post">
+    {% csrf_token %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted"
+                onChange="this.form.submit()" {{accept_filter}}>
+            <label class="form-check-label" for="show-accepted">
+                Show Accepted
+            </label>
+        </div>
+    </form>
+</div>
 <div class="scroll-box">
     <h2>Inbox</h2>
     {% if requests_received %}
