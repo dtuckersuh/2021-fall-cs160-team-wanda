@@ -58,8 +58,7 @@ def home(request):
 
 
 # tutors handles "/tutors" endpoint
-# allows user to view all tutors that attend the same school as them
-# allows user to send a tutor request
+# allows user to view all tutors that attend the same school as them and send tutor requests
 @login_required
 def tutors(request):
     current_user = request.user
@@ -87,19 +86,19 @@ def tutors(request):
 
 
 # users handles "/users/<int:id>" endpoint
-# allows users to view profile of user specified by user id
-# allows users to edit their profile
+# allows users to view profile of user specified by user id, edit their profile, and send request to tutors
 @login_required
 def users(request, id):
 
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
-    if request.method == 'POST':
+    if request.method == 'POST' and 'email' in request.POST:
         form_update_profile = UpdateProfileForm(request.POST, request.FILES, instance=user)
-        form_tutor_request = TutorRequestForm(request.POST)
         if form_update_profile.is_valid():
             form_update_profile.save()
-        elif form_tutor_request.is_valid():
+    elif request.method == 'POST' and 'class' in request.POST:
+        form_tutor_request = TutorRequestForm(request.POST)
+        if form_tutor_request.is_valid():
             tutor_request = form_tutor_request.save(commit=False)
             tutor_request.tutee = request.user
             tutor_request.tutor = user
@@ -107,7 +106,7 @@ def users(request, id):
             return redirect('requests', id=user.id)
     else:
         form_update_profile = UpdateProfileForm(instance=user)
-        form_tutor_request = TutorRequestForm()
+        form_tutor_request = TutorRequestForm()    
 
     return render(request, 'users_profile.html', {
         'user': user,
