@@ -108,7 +108,7 @@ Dashboard
                     <h2>Sent Requests</h2>
                     {% for sent_request in sent_requests|slice:":3" %}
                         {% with tutor=sent_request.tutor %}
-                        <a href="/sent_requests">
+                        <a href="{% url 'requests' user.id%}">
                             <div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
                                 <div>
                                     <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
