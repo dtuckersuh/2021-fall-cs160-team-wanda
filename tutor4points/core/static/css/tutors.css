@@ -6,15 +6,11 @@
     color: white;
 } */
 
-.content-container{
-    margin-left: 14.375rem;
-    margin-right: 14.375rem;
-
-}
-
-.tutor-info-container{
+.info-container {
     height:9rem;
     margin-bottom: 1.875rem;
+    margin-left: 14.375rem;
+    margin-right: 14.375rem;
     padding: 1.563rem;
     align-items: center;
     gap:1.563rem;
@@ -25,7 +21,7 @@
     border-radius:2rem;
 }
 
-.tutor-info-container:hover {
+.info-container:hover {
     background-color: #242835;
     cursor: pointer;
 }
@@ -105,9 +101,3 @@ h2{
     text-align:center;
     font-weight:bold
 }
-
-.hidden {
-    display: none;
-}
-
-
