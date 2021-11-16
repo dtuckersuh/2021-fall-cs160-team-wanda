@@ -64,6 +64,7 @@ def tutors(request):
     current_user = request.user
     users = get_user_model().objects.all().exclude(pk=current_user.id)
     tutors = users.filter(is_tutor=True, school=current_user.school)
+    success_message = ""
         
     if request.method == 'POST':
         form = TutorRequestForm(request.POST)
@@ -73,7 +74,8 @@ def tutors(request):
             tutor_request.tutee = current_user
             tutor_request.tutor = tutor_instance
             tutor_request.save()
-            return redirect('requests', id=current_user.id)
+            success_message = "Success! You have sent a request to " + tutor_instance.first_name + " " + tutor_instance.last_name + "."
+            form = TutorRequestForm()
     else:
         form = TutorRequestForm()
 
@@ -82,6 +84,7 @@ def tutors(request):
         'user': current_user,
         'tutors': tutors,
         'form': form,
+        'success_message': success_message,
     })
 
 

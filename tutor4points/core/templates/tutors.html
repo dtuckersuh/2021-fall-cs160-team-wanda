@@ -17,61 +17,65 @@ Tutors
     <button type ="submit" name="filter" value="filter" class="filter-button" >Filter</button>
 </div> -->
 
-{% for tutor in tutors %}
-<div class = "info-container d-flex" id = "tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
-
-
-    <div>
-        <img src = "{{tutor.profile_pic.url}}" class = "profile-pic">
+<div class="content-container">
+    <div class="alert alert-success hidden" id="success-box" role="alert">
+        {{success_message}} Click <a href="{% url 'requests' id=user.id %}">here</a> to view all requests
     </div>
 
-    <div class = "name">
-        {{tutor.first_name}} {{tutor.last_name}} <br/>
-        <div class = "classes">
-            {{tutor.classes_taken}}  <br/>
+    {% for tutor in tutors %}
+    <div class="tutor-info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
+
+
+        <div>
+            <img src="{{tutor.profile_pic.url}}" class="profile-pic">
         </div>
-    </div>
 
-
-
-    <div class = "times">
-        {% if tutor.times_available %}
-            {{tutor.times_available}}  <br/>
-        {% else %}
-            TBD <br/>
-        {% endif %}
-    </div>
-
-
-    <div>
-        <button type ="submit" name="request" value="request" class="request-button" data-toggle= "modal" data-target="#tutor-request-modal">Request</button>
-    </div>
-
-
-
-    <div class="tutor-rating">
-        {{tutor.tutor_avg_rating}} ★<br/>
-
-        <div class = "tutor-rate">
-            {{tutor.rate}} pts/hr<br/>
+        <div class="name">
+            {{tutor.first_name}} {{tutor.last_name}} <br />
+            <div class="classes">
+                {{tutor.classes_taken}} <br />
+            </div>
         </div>
-    </div>
 
-    
-</div>
-{% endfor %}
+        <div class="times">
+            {% if tutor.times_available %}
+            {{tutor.times_available}} <br />
+            {% else %}
+            TBD <br />
+            {% endif %}
+        </div>
+
+
+        <div>
+            <button type="submit" name="request" value="request" class="request-button" data-toggle="modal"
+                data-target="#tutor-request-modal">Request</button>
+        </div>
+
+
+
+        <div class="tutor-rating">
+            {{tutor.tutor_avg_rating}} ★<br />
+
+            <div class="tutor-rate">
+                {{tutor.rate}} pts/hr<br />
+            </div>
+        </div>
+
+
+    </div>
+    {% endfor %}
 
     <!-- insert request form here -->
-    <div class = "modal fade" id = "tutor-request-modal">
-        <div class = "modal-dialog model-lg">
-            <div class= "modal-content">
-               <div class = "modal-flex-container">
-                   <div class = "form-container">
-                       <h2>Request</h2>
+    <div class="modal fade" id="tutor-request-modal">
+        <div class="modal-dialog model-lg">
+            <div class="modal-content">
+                <div class="modal-flex-container">
+                    <div class="form-container">
+                        <h2>Request</h2>
                         <form action="" method="POST" class="form-group" enctype='multipart/form-data'>
                             {% csrf_token %}
                             <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
-                            
+
                             <div class="form-row">
                                 {{form.class_name | as_crispy_field}}
                             </div>
@@ -93,36 +97,42 @@ Tutors
 
                             <button type="submit" class="btn-block btn-secondary btn-style">Send Request</button>
                         </form>
-                   </div>
-               </div> 
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
+</div>
 {% if form.errors %}
 <script>
-    $(document).ready (function(){
+    $(document).ready(function () {
         $("#tutor-request-modal").modal('show')
     })
 </script>
 {% endif %}
 
-
+{{ success_message | json_script:"success-message" }}
+<script>
+    const successMessage = JSON.parse(document.getElementById('success-message').textContent)
+    if (successMessage !== "") {
+        document.getElementById('success-box').classList.toggle('hidden')
+    }
+</script>
 <!-- need to fix because cannot access request pop-up if used
     <script type="text/javascript">
-    document.querySelectorAll('.info-container').forEach(tutorEntry => {
+    document.querySelectorAll('.tutor-info-container').forEach(tutorEntry => {
         tutorEntry.addEventListener('click', event => location.href = `/users/${tutorEntry.dataset.id}`)
     })
 </script> -->
 
-<script type = "text/javascript">
+<script type="text/javascript">
     const tutor = document.getElementById('requestedTutor')
     document.querySelector('body').addEventListener('click', event => {
-        const infoContainer = event.target.closest('.info-container')
+        const infoContainer = event.target.closest('.tutor-info-container')
         if (!infoContainer) return
         const tutorId = infoContainer.dataset.tutorid
         tutor.value = tutorId
-        })
+    })
 </script>
 
 {% endblock %}

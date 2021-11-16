@@ -237,11 +237,6 @@ class TransferPointsForm(forms.Form):
 
 # Form that allows user to send a tutor request
 class TutorRequestForm(forms.ModelForm):
-
-    # def __init__(self, *args,**kwargs):
-    #     self.user = kwargs.pop('user', None)
-    #     super().__init__(*args,**kwargs)
-
     class Meta:
         model = TutorRequest
 
