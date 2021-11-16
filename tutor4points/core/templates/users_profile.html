@@ -18,111 +18,161 @@
         <div class="name">{{user.first_name | title}} {{user.last_name | title}}</div>
         <div class="school-name">{{user.school}} </div>
         {% if current_user %}
-            <div class="total-points">Total Points: {{user.total_points}}</div>
+        <div class="total-points">Total Points: {{user.total_points}}</div>
         {% endif %}
         <div class="rating">
             {% if user.tutor_avg_rating %}
-                <b>Tutor rating:</b>
-                {{user.tutor_avg_rating}}<br>
+            <b>Tutor rating:</b>
+            {{user.tutor_avg_rating}}<br>
             {% else %}
-                <i>No tutoring history</i>
+            <i>No tutoring history</i>
             {% endif %} <br>
 
             {% if user.tutee_avg_rating %}
-                Tutee rating:
-                {{user.tutee_avg_rating}}
+            Tutee rating:
+            {{user.tutee_avg_rating}}
             {% else %}
-                <i>No tutee history</i>
+            <i>No tutee history</i>
             {% endif %}
         </div>
         <div class="tutor-info">
             <br>
             {% if user.is_tutor %}
-                <b>Times available:</b> <br>{{user.times_available}} <br><br>
+            <b>Times available:</b> <br>{{user.times_available}} <br><br>
 
-                <b>Time zone: </b>
-                <div class="time-zone">
-                    {{user.time_zone}}</div>
-                <br>
-                <b>Currently tutoring for:</b><br> {{user.classes_taken}}<br><br>
-                <b>Rate:</b> {{user.rate}} pts/hr<br>
+            <b>Time zone: </b>
+            <div class="time-zone">
+                {{user.time_zone}}</div>
+            <br>
+            <b>Currently tutoring for:</b><br> {{user.classes_taken}}<br><br>
+            <b>Rate:</b> {{user.rate}} pts/hr<br>
             {% endif %}
         </div>
     </div>
 
     <div class="right-column">
-        <img src = "{{user.profile_pic.url}}" class = "profile-pic"> <br>
+        <img src="{{user.profile_pic.url}}" class="profile-pic"> <br>
 
         {% if current_user %}
-            <button type ="submit" name="edit" value="edit" class="btn-secondary" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
+        <button type="submit" name="edit" value="edit" class="btn-secondary" data-toggle="modal"
+            data-target="#edit-profile-modal">Edit Profile</button>
+        {% elif not current_user and user.is_tutor %}
+        <button type="submit" name="request-tutor" class="btn-secondary" data-toggle="modal"
+            data-target="#tutor-request-modal">Request Tutor</button>
         {% else %}
-            <button type ="submit" name="request-tutor" class="btn-secondary">Request Tutor</button>
-        {% endif %}       
+            <!-- no button -->
+        {% endif %}
     </div>
 </div>
 
-<div class="modal fade" id = "edit-profile-modal">
-            <div class = "modal-dialog modal-lg">
-                <div class = "modal-content">
-                    <div class = "modal-flex-container">
+<div class="modal fade" id="edit-profile-modal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-flex-container">
 
-                        <div class = "profile-pic-container">
-                            <img id = "profile-img" src = "{{user.profile_pic.url}}" class="modal-profile-pic">
+                <div class="profile-pic-container">
+                    <img id="profile-img" src="{{user.profile_pic.url}}" class="modal-profile-pic">
+                </div>
+
+                <div class="form-container">
+                    <form method="POST" class="form-group" enctype='multipart/form-data'>
+                        {% csrf_token %}
+
+                        <div class="col">
+                            {{form_update_profile.profile_pic | as_crispy_field}}
                         </div>
 
-                        <div class = "form-container">
-                            <form method="POST" class="form-group" enctype='multipart/form-data'>
-                                {% csrf_token %}
-
-                                <div class="col">
-                                    {{form_update_profile.profile_pic | as_crispy_field}}
-                                </div>
-
-                                <div class="form-row">
-                                    <div class="col-6">
-                                        {{form_update_profile.first_name | as_crispy_field}}
-                                    </div>
-                                    <div class="col-6">
-                                        {{form_update_profile.last_name | as_crispy_field}}
-                                    </div>
-                                    <div class="col-6">
-                                        {{form_update_profile.email| as_crispy_field}}
-                                    </div>
-                                    <div class="col-6">
-                                        {{form_update_profile.school | as_crispy_field}}
-                                    </div>
-                                </div>
-
-                                {{form_update_profile.is_tutor | as_crispy_field}}
-
-                                <div class = "form-row" id = "tutor-form">
-                                    <div class="col-6">
-                                        {{form_update_profile.classes_taken | as_crispy_field}}
-                                    </div>
-                                    <div class="col-6">
-                                        {{form_update_profile.times_available | as_crispy_field}}
-                                    </div>
-                                    <div class="col-6">
-                                        {{form_update_profile.time_zone | as_crispy_field}}
-                                    </div>
-                                    <div class="col-6">
-                                        {{form_update_profile.rate | as_crispy_field}}
-                                    </div>
-                                </div>
-                              
-                                <button type="submit" class="btn-block btn-secondary">Update</button>
-                              
-                            </form>
+                        <div class="form-row">
+                            <div class="col-6">
+                                {{form_update_profile.first_name | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form_update_profile.last_name | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form_update_profile.email| as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form_update_profile.school | as_crispy_field}}
+                            </div>
                         </div>
-                    </div>
+
+                        {{form_update_profile.is_tutor | as_crispy_field}}
+
+                        <div class="form-row" id="tutor-form">
+                            <div class="col-6">
+                                {{form_update_profile.classes_taken | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form_update_profile.times_available | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form_update_profile.time_zone | as_crispy_field}}
+                            </div>
+                            <div class="col-6">
+                                {{form_update_profile.rate | as_crispy_field}}
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-block btn-secondary">Update</button>
+
+                    </form>
                 </div>
             </div>
-        </div>   
+        </div>
+    </div>
+</div>
 
-{% if form_update_profile.errors %}
+{% if current_user and form_update_profile.errors %}
 <script>
-    $(document).ready (function(){
+    $(document).ready(function () {
         $("#edit-profile-modal").modal('show')
+    })
+</script>
+{% endif %}
+
+<!-- insert request form here -->
+<div class="modal fade" id="tutor-request-modal">
+    <div class="modal-dialog model-lg">
+        <div class="modal-content">
+            <div class="modal-flex-container">
+                <div class="form-container">
+                    <h2>Request</h2>
+                    <form method="POST" class="form-group" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <input type="hidden" name="requestedTutor" id="requestedTutor" value={{user.id}}>
+
+                        <div class="form-row">
+                            {{form_tutor_request.class_name | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form_tutor_request.tutor_date | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form_tutor_request.tutor_start_time | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form_tutor_request.tutor_end_time | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form_tutor_request.location | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form_tutor_request.tutee_comment | as_crispy_field}}
+                        </div>
+
+                        <button type="submit" class="btn-block btn-secondary btn-style">Send Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if form_tutor_request.errors and not current_user %}
+<script>
+    $(document).ready(function () {
+        $("#tutor-request-modal").modal('show')
     })
 </script>
 {% endif %}
@@ -132,16 +182,16 @@
     document.getElementById("tutor-form").querySelectorAll('.col-6').forEach(row => row.classList.add(!tutorChk.checked && 'd-none'))
 
     tutorChk.addEventListener('change', function () {
-      document.getElementById("tutor-form").querySelectorAll('.col-6').forEach(row => row.classList.toggle('d-none'))
+        document.getElementById("tutor-form").querySelectorAll('.col-6').forEach(row => row.classList.toggle('d-none'))
     })
 
     document.getElementById('id_profile_pic').onchange = function (event) {
-      const [file] = this.files
-      if (file) {
-        document.getElementById('profile-img').src = URL.createObjectURL(file)
+        const [file] = this.files
+        if (file) {
+            document.getElementById('profile-img').src = URL.createObjectURL(file)
 
-        this.parentNode.querySelector('.custom-file-label').textContent = file.name
-      }
+            this.parentNode.querySelector('.custom-file-label').textContent = file.name
+        }
     }
 </script>
 

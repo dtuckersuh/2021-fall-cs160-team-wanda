@@ -1,4 +1,5 @@
 from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm, TransferPointsForm, RequestResponseForm
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
@@ -101,24 +102,24 @@ def home(request):
 
 
 # tutors handles "/tutors" endpoint
-# allows user to view all tutors that attend the same school as them
-# allows user to send a tutor request
+# allows user to view all tutors that attend the same school as them and send tutor requests
 @login_required
 def tutors(request):
     current_user = request.user
     users = get_user_model().objects.all().exclude(pk=current_user.id)
     tutors = users.filter(is_tutor=True, school=current_user.school)
-
+    success_message = ""
+        
     if request.method == 'POST':
         form = TutorRequestForm(request.POST)
-        if (form.is_valid()):
-            tutor_instance = get_user_model().objects.get(
-                pk=request.POST['requestedTutor'])  # get tutor object
+        if(form.is_valid()):
+            tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor']) # get tutor object
             tutor_request = form.save(commit=False)
             tutor_request.tutee = current_user
             tutor_request.tutor = tutor_instance
             tutor_request.save()
-            return redirect('tutors')
+            success_message = "Success! You have sent a request to " + tutor_instance.first_name + " " + tutor_instance.last_name + "."
+            form = TutorRequestForm()
     else:
         form = TutorRequestForm()
 
@@ -127,32 +128,38 @@ def tutors(request):
         'user': current_user,
         'tutors': tutors,
         'form': form,
+        'success_message': success_message,
     })
 
 
 # users handles "/users/<int:id>" endpoint
-# allows users to view profile of user specified by user id
-# allows users to edit their profile
+# allows users to view profile of user specified by user id, edit their profile, and send request to tutors
 @login_required
 def users(request, id):
 
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
     if request.method == 'POST':
-        form_update_profile = UpdateProfileForm(request.POST,
-                                                request.FILES,
-                                                instance=user)
+        form_update_profile = UpdateProfileForm(request.POST, request.FILES, instance=user)
+        form_tutor_request = TutorRequestForm(request.POST)
         if form_update_profile.is_valid():
             form_update_profile.save()
+        elif form_tutor_request.is_valid():
+            tutor_request = form_tutor_request.save(commit=False)
+            tutor_request.tutee = request.user
+            tutor_request.tutor = user
+            tutor_request.save()
+            return redirect('requests', id=user.id)
     else:
         form_update_profile = UpdateProfileForm(instance=user)
+        form_tutor_request = TutorRequestForm()    
 
-    return render(
-        request, 'users_profile.html', {
-            'user': user,
-            'form_update_profile': form_update_profile,
-            'current_user': request.user.id == id
-        })
+    return render(request, 'users_profile.html', {
+        'user': user,
+        'form_update_profile': form_update_profile,
+        'form_tutor_request': form_tutor_request,
+        'current_user': request.user.id == id
+    })
 
 
 # home handles "/points" endpoint

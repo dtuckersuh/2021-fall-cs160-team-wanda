@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.RenameField(
             model_name='tutorrequest',
             old_name='time',
-            new_name='tutor_time',
+            new_name='tutor_start_time',
         ),
         migrations.RemoveField(
             model_name='rating',

@@ -234,16 +234,11 @@ class TransferPointsForm(forms.Form):
 
 # Form that allows user to send a tutor request
 class TutorRequestForm(forms.ModelForm):
-
-    # def __init__(self, *args,**kwargs):
-    #     self.user = kwargs.pop('user', None)
-    #     super().__init__(*args,**kwargs)
-
     class Meta:
         model = TutorRequest
 
         # layout where want fields to be, type in order you want it to appear
-        fields = ('class_name', 'tutor_date', 'tutor_time', 'location', 'tutee_comment')
+        fields = ('class_name', 'tutor_date', 'tutor_start_time', 'tutor_end_time', 'location', 'tutee_comment')
 
         # customize placeholders
         widgets = {
@@ -251,7 +246,9 @@ class TutorRequestForm(forms.ModelForm):
             forms.TextInput(attrs={'placeholder': 'Example: CS146'}),
             'tutor_date':
             forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}), 
-            'tutor_time':
+            'tutor_start_time':
+            forms.TimeInput(format='%H:%M', attrs={'type': 'time'}), 
+            'tutor_end_time':
             forms.TimeInput(format='%H:%M', attrs={'type': 'time'}), 
             'location':
             forms.Textarea(attrs={
@@ -269,7 +266,8 @@ class TutorRequestForm(forms.ModelForm):
         labels = {
             'class_name': "Class",
             'tutor_date': "Date",
-            'tutor_time': "Time",
+            'tutor_start_time': "Start Time (local time)",
+            'tutor_end_time': "End Time (local time)",
             'location': "Location",
             'tutee_comment': "Comment",
         }
