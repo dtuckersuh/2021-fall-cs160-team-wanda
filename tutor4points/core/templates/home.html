@@ -154,6 +154,7 @@ Dashboard
         <div class="modal-content">
            <div class="modal-flex-container">
                <div class="form-container">
+                    <center><h2>Request</h2></center>
                     <form method="POST" class="form-group" enctype='multipart/form-data'>
                         {% csrf_token %}
                         <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
@@ -165,6 +166,9 @@ Dashboard
                         </div>
                         <div class="form-row">
                             {{form_request_tutor.tutor_start_time | as_crispy_field}} 
+                        </div>
+                        <div class="form-row">
+                            {{form_request_tutor.tutor_end_time | as_crispy_field}} 
                         </div>
                         <div class="form-row">
                             {{form_request_tutor.location | as_crispy_field}}
