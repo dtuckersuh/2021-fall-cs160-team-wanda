@@ -123,7 +123,7 @@
     </div>
 </div>
 
-{% if form_update_profile.errors %}
+{% if current_user and form_update_profile.errors %}
 <script>
     $(document).ready(function () {
         $("#edit-profile-modal").modal('show')
@@ -169,7 +169,7 @@
     </div>
 </div>
 
-{% if form_tutor_request.errors %}
+{% if form_tutor_request.errors and not current_user %}
 <script>
     $(document).ready(function () {
         $("#tutor-request-modal").modal('show')

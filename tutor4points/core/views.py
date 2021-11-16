@@ -92,13 +92,12 @@ def users(request, id):
 
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
-    if request.method == 'POST' and 'email' in request.POST:
+    if request.method == 'POST':
         form_update_profile = UpdateProfileForm(request.POST, request.FILES, instance=user)
+        form_tutor_request = TutorRequestForm(request.POST)
         if form_update_profile.is_valid():
             form_update_profile.save()
-    elif request.method == 'POST' and 'class' in request.POST:
-        form_tutor_request = TutorRequestForm(request.POST)
-        if form_tutor_request.is_valid():
+        elif form_tutor_request.is_valid():
             tutor_request = form_tutor_request.save(commit=False)
             tutor_request.tutee = request.user
             tutor_request.tutor = user
