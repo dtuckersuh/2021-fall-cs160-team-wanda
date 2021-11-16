@@ -1,9 +1,11 @@
-from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm, TransferPointsForm, RequestResponseForm
+
+from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm, RequestResponseForm, RateTutorForm
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import TutorRequest
+from .models import TutorRequest, Rating
 
 
 # loginUser handles "/login" endpoint
@@ -138,21 +140,55 @@ def users(request, id):
 
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
-    if request.method == 'POST':
-        form_update_profile = UpdateProfileForm(request.POST,
-                                                request.FILES,
-                                                instance=user)
+
+    if request.method == 'POST' and 'email' in request.POST:
+        form_update_profile = UpdateProfileForm(request.POST, request.FILES, instance=user)
+
         if form_update_profile.is_valid():
             form_update_profile.save()
     else:
         form_update_profile = UpdateProfileForm(instance=user)
 
-    return render(
-        request, 'users_profile.html', {
-            'user': user,
-            'form_update_profile': form_update_profile,
-            'current_user': request.user.id == id
-        })
+
+    if request.method == 'POST' and 'rating' in request.POST:#code for rating, move once 'paid and done' functionality is added.
+        form_rating = RateTutorForm(request.POST)
+        if form_rating.is_valid():
+            rating = form_rating.save(commit=False)
+            rating.given_to = user
+            rating.given_by = request.user
+            rating.save()
+
+            # calcute new rating, and update the database
+            type = form_rating.cleaned_data['rating_type']
+
+            if type == 'tutor':#for tutors
+                tutor_ratings = Rating.objects.filter(given_to = user).filter(rating_type = 'tutor')
+                count = 0
+                sum = 0
+                for i in tutor_ratings:
+                    count += 1
+                    sum += i.rating
+                user.tutor_avg_rating = sum/count
+            else: #otherwise tutee
+                tutor_ratings = Rating.objects.filter(given_to = user).filter(rating_type = 'tutee')
+                count = 0
+                sum = 0
+                for i in tutor_ratings:
+                    count += 1
+                    sum += i.rating
+                user.tutee_avg_rating = sum/count
+            user.save()
+
+    else:
+        form_rating = RateTutorForm()
+
+    return render(request, 'users_profile.html', {
+        'user': user,
+        'form_update_profile': form_update_profile,
+        'form_rating': form_rating, # remove when moving rating
+        'current_user': request.user.id == id
+    })
+
 
 
 # home handles "/points" endpoint
@@ -235,6 +271,7 @@ def requests(request, id):
         if form_request_response.is_valid():
             form_request_response.save()
     else:
+
         form_request_response = RequestResponseForm()
     return render(
         request, 'requests.html', {
