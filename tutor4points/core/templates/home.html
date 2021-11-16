@@ -84,7 +84,7 @@ Dashboard
                                     {% endif %}
                                 </div>
                                 <div>
-                                    <button type ="submit" name="request" value="request" class="request-button" 
+                                    <button type ="submit" name="request-tutor" value="request" class="request-button" 
                                     data-toggle= "modal" data-target="#tutor-request-modal">
                                             Request
                                     </button>
@@ -158,19 +158,19 @@ Dashboard
                         {% csrf_token %}
                         <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
                         <div class="form-row">
-                            {{form.class_name | as_crispy_field}}
+                            {{form_request_tutor.class_name | as_crispy_field}}
                         </div>
                         <div class="form-row">
-                            {{form.tutor_date | as_crispy_field}}
+                            {{form_request_tutor.tutor_date | as_crispy_field}}
                         </div>
                         <div class="form-row">
-                            {{form.tutor_time | as_crispy_field}} 
+                            {{form_request_tutor.tutor_time | as_crispy_field}} 
                         </div>
                         <div class="form-row">
-                            {{form.location | as_crispy_field}}
+                            {{form_request_tutor.location | as_crispy_field}}
                         </div>
                         <div class="form-row">
-                            {{form.tutee_comment | as_crispy_field}}
+                            {{form_request_tutor.tutee_comment | as_crispy_field}}
                         </div>
                         <button type="submit" class="btn-block btn-secondary btn-style">Send Request</button>
                     </form>

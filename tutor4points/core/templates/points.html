@@ -25,7 +25,7 @@ Points
                     <form action="/points/" method="POST">
                         {% csrf_token %}
                         {{ form_purchase | crispy}}
-                        <button type="submit" name="purchase" class="btn-block btn-success">Purchase Points</button>
+                        <button id = "purchase-btn" type="submit" name="purchase" class="btn-block btn-success">Purchase Points</button>
                         <p class="exchange-rate" id="point-exchange-rate">Purchase Exchange Rate: $1.00 = 100 Points</p>
                     </form>
                 </div>
@@ -55,7 +55,7 @@ Points
                     <form method='POST' enctype='multipart/form-data'>
                         {% csrf_token %}
                         {{form_transfer_points| crispy}}
-                        <button type="submit" name="transfer" class="btn-block btn-success">Complete Payment</button>
+                        <button id = "transfer-btn" type="submit" name="transfer" class="btn-block btn-success">Complete Payment</button>
                     </form>
                 </div>
             </div>
