@@ -40,7 +40,7 @@ class User (AbstractUser):  # Custom User Model that inherits from Abstract User
     tutee_avg_rating = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.first_name.title()} {self.last_name.title()}'
 
 
 class TutorRequest (models.Model):
