@@ -17,17 +17,18 @@ Tutors
     <button type ="submit" name="filter" value="filter" class="filter-button" >Filter</button>
 </div> -->
 
+
 <div class="content-container">
     <div class="alert alert-success hidden" id="success-box" role="alert">
         {{success_message}} Click <a href="{% url 'requests' id=user.id %}">here</a> to view all requests
     </div>
 
+
     {% for tutor in tutors %}
     <div class="tutor-info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
-
-
         <div>
             <img src="{{tutor.profile_pic.url}}" class="profile-pic">
+
         </div>
 
         <div class="name">
@@ -45,12 +46,10 @@ Tutors
             {% endif %}
         </div>
 
-
         <div>
             <button type="submit" name="request" value="request" class="request-button" data-toggle="modal"
                 data-target="#tutor-request-modal">Request</button>
         </div>
-
 
 
         <div class="tutor-rating">
@@ -60,7 +59,6 @@ Tutors
                 {{tutor.rate}} pts/hr<br />
             </div>
         </div>
-
 
     </div>
     {% endfor %}
@@ -102,6 +100,7 @@ Tutors
             </div>
         </div>
     </div>
+
 </div>
 {% if form.errors %}
 <script>
@@ -113,10 +112,52 @@ Tutors
 
 
 
+{% if form.errors %}
+<script>
+    $(document).ready(function () {
+        $("#tutor-request-modal").modal('show')
+    })
+</script>
+{% endif %}
+
+<div class="modal fade" id="tutor-request-modal">
+    <div class="modal-dialog model-lg">
+        <div class="modal-content">
+            <div class="modal-flex-container">
+                <div class="form-container">
+                    <form method="POST" class="form-group" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
+
+                        <div class="form-row">
+                            {{form.class_name | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form.tutor_date | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form.tutor_time | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form.location | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form.tutee_comment | as_crispy_field}}
+                        </div>
+
+                        <button type="submit" class="btn-block btn-secondary btn-style">Send Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
     const tutor = document.getElementById('requestedTutor')
     document.querySelector('body').addEventListener('click', event => {
         const infoContainer = event.target.closest('.tutor-info-container')
+
         if (!infoContainer) return
         const tutorId = infoContainer.dataset.tutorid
         tutor.value = tutorId

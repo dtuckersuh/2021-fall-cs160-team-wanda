@@ -1,15 +1,17 @@
-from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm, RequestResponseForm
+from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm, TransferPointsForm, RequestResponseForm
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import TutorRequest
 
+
 # loginUser handles "/login" endpoint
 # logs in the user that has the specified login credentials from the login form
 def loginUser(request):
     if request.user.is_authenticated:
-        return redirect ("home")
+        return redirect("home")
     elif request.method == "POST":
         form = forms.AuthenticationForm(request, request.POST)
         if form.is_valid():
@@ -52,9 +54,51 @@ def home(request):
     if current_user.is_authenticated:
         users = get_user_model().objects.all().exclude(pk=current_user.id)
         tutors = users.filter(is_tutor=True, school=current_user.school)
-        return render(request, "home.html", {"tutors": tutors})
+        requests_received = TutorRequest.objects.all().filter(tutor=current_user, accepted=None)
+        sent_requests = TutorRequest.objects.all().filter(tutee=current_user)
+        if request.method == 'POST' and 'submit-accept-request' in request.POST:
+            form_request_response = RequestResponseForm(request.POST, 
+                                    accepted = True, 
+                                    request_id = request.POST['request-id'])
+            if form_request_response.is_valid():
+                form_request_response.save()
+                form_request_response = RequestResponseForm() #reset form after submission
+        else:
+            form_request_response = RequestResponseForm()
+
+        if request.method == 'POST' and 'submit-decline-request' in request.POST:
+            form_request_response = RequestResponseForm(request.POST, 
+                                    accepted = False, 
+                                    request_id = request.POST['request-id'])
+            if form_request_response.is_valid():
+                form_request_response.save()
+                form_request_response = RequestResponseForm() #reset form after submission
+        else:
+            form_request_response = RequestResponseForm()
+
+        if request.method == 'POST' and 'request-tutor' in request.POST:
+            form_request_tutor = TutorRequestForm(request.POST)
+            if form_request_tutor.is_valid():
+                tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor']) # get tutor object
+                tutor_request = form_request_tutor.save(commit=False)
+                tutor_request.tutee = current_user
+                tutor_request.tutor = tutor_instance
+                tutor_request.save()
+                form_request_tutor = TutorRequestForm() #reset form after submission
+        else:
+            form_request_tutor = TutorRequestForm()
+            
+        return render(request, "home.html", 
+                {
+                    'tutors': tutors, 
+                    'requests_received': requests_received,
+                    'sent_requests': sent_requests,
+                    'form_request_tutor': form_request_tutor,
+                    'form_request_response': form_request_response
+                }
+        )
     else:
-        return redirect ("")
+        return redirect("")
 
 
 # tutors handles "/tutors" endpoint
@@ -122,38 +166,46 @@ def users(request, id):
 # allows users to view current points, purchase points, or transfer points to tutors
 @login_required
 def points(request):
-    current_user = request.user #the user
-    users = get_user_model().objects.all() #list of users to display
+    current_user = request.user  #the user
+    users = get_user_model().objects.all()  #list of users to display
     tutors = users.filter(is_tutor=True, school=current_user.school)
     success_message = ""
 
-    if request.method == 'POST' and 'purchase' in request.POST: #if we get a post and got a purchase
-        form_purchase = PurchasePointsForm(request.POST, user = request.user) #create the forms
-        if form_purchase.is_valid(): #validate data
+    if request.method == 'POST' and 'purchase' in request.POST:  #if we get a post and got a purchase
+        form_purchase = PurchasePointsForm(
+            request.POST, user=request.user)  #create the forms
+        if form_purchase.is_valid():  #validate data
             form_purchase.save()
             points_purchase = form_purchase.cleaned_data['purchased_points']
             success_message = f"Success! You have purchased {points_purchase} points for {'${:,.2f}'.format(points_purchase * 0.01)}."
-            form_purchase = PurchasePointsForm(user = request.user) #show empty form (reset fields) after form successfully submitted
+            form_purchase = PurchasePointsForm(
+                user=request.user
+            )  #show empty form (reset fields) after form successfully submitted
     else:
-        form_purchase = PurchasePointsForm(user = request.user)
+        form_purchase = PurchasePointsForm(user=request.user)
 
     if request.method == 'POST' and 'cash-out' in request.POST:  #if we get a post and cash out
-        form_cash_out = CashOutPointsForm(request.POST, user = request.user)
+        form_cash_out = CashOutPointsForm(request.POST, user=request.user)
 
-        if form_cash_out.is_valid(): #validate data
-            form_cash_out.save() #save if positive
+        if form_cash_out.is_valid():  #validate data
+            form_cash_out.save()  #save if positive
             points_cash_out = form_cash_out.cleaned_data['cashed_points']
             success_message = f"Success! You have cashed out {points_cash_out} points for {'${:,.2f}'.format(points_cash_out * 0.009)}."
-            form_cash_out = CashOutPointsForm(user = request.user) #show empty form (reset fields) after form successfully submitted
+            form_cash_out = CashOutPointsForm(
+                user=request.user
+            )  #show empty form (reset fields) after form successfully submitted
     else:
-        form_cash_out = CashOutPointsForm(user = request.user)
+        form_cash_out = CashOutPointsForm(user=request.user)
 
-    if request.method == 'POST' and 'transfer' in request.POST: #if we get a post and cash out
-        form_transfer_points = TransferPointsForm(request.POST, user = request.user)
-        if form_transfer_points.is_valid(): #validate data
+    if request.method == 'POST' and 'transfer' in request.POST:  #if we get a post and cash out
+        form_transfer_points = TransferPointsForm(request.POST,
+                                                  user=request.user)
+        if form_transfer_points.is_valid():  #validate data
             form_transfer_points.save()
             success_message = f"Success! You have paid {form_transfer_points.cleaned_data['tutors']} {form_transfer_points.cleaned_data['amount_to_transfer']} points."
-            form_transfer_points = TransferPointsForm(user=request.user) #show empty form (reset fields) after form successfully submitted
+            form_transfer_points = TransferPointsForm(
+                user=request.user
+            )  #show empty form (reset fields) after form successfully submitted
     else:
         form_transfer_points = TransferPointsForm(user=request.user)
 
@@ -164,24 +216,36 @@ def points(request):
             'form_cash_out': form_cash_out,
             'tutors': tutors,
             'form_transfer_points': form_transfer_points,
-            'success_message': success_message,}
-        )
+            'success_message': success_message,
+        })
+
 
 # requests handles "users/<int:id>/requests" endpoint
 # allows users to view requests sent and received as well as accept/decline received requests
 @login_required
 def requests(request, id):
     current_user = request.user
-    requests_received = TutorRequest.objects.all().filter(tutor = current_user) # get all user's tutor requests
+    requests_received = TutorRequest.objects.all().filter(
+        tutor=current_user, accepted=None)  # get all user's tutor requests
+    requests_sent = TutorRequest.objects.all().filter(
+        tutee=current_user)  # get all user's tutor requests
     if request.method == 'POST' and 'submit-accept-request' in request.POST:
-        form_request_response = RequestResponseForm (request.POST, accepted = True, request_id = request.POST['request-id'])
+        form_request_response = RequestResponseForm(
+            request.POST, accepted=True, request_id=request.POST['request-id'])
         if form_request_response.is_valid():
             form_request_response.save()
     elif request.method == 'POST' and 'submit-decline-request' in request.POST:
-        form_request_response = RequestResponseForm (request.POST, accepted = False, request_id = request.POST['request-id'])
+        form_request_response = RequestResponseForm(
+            request.POST,
+            accepted=False,
+            request_id=request.POST['request-id'])
         if form_request_response.is_valid():
             form_request_response.save()
-    else: 
-        form_request_response = RequestResponseForm ()
-    return render(request, 'requests.html', {'form_request_response': form_request_response, 'requests_received': requests_received})
-    
+    else:
+        form_request_response = RequestResponseForm()
+    return render(
+        request, 'requests.html', {
+            'form_request_response': form_request_response,
+            'requests_received': requests_received,
+            'requests_sent': requests_sent
+        })

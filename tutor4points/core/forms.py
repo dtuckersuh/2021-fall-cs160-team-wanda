@@ -1,9 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms.widgets import PasswordInput, SelectDateWidget
-
 from .models import TutorRequest, User, School, Transaction
-
 from crispy_forms.helper import FormHelper
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -222,8 +220,7 @@ class TransferPointsForm(forms.Form):
     def save(self):
         amount_to_transfer = self.cleaned_data['amount_to_transfer']
         tutor = self.cleaned_data['tutors']
-
-
+        
         #subtract points from user's balance
         self.user.total_points -= amount_to_transfer
         self.user.save()
@@ -284,8 +281,8 @@ class RequestResponseForm (forms.Form):
         self.accepted = kwargs.pop('accepted', None)
         self.request_id = kwargs.pop('request_id', None)
         super().__init__(*args,**kwargs)
-        self.fields ['comment'] = forms.CharField(label = "Comment (optional)", required=False)
-        self.fields ['comment'].widget = forms.Textarea(attrs={"rows":3})
+        self.fields['comment'] = forms.CharField(label = "Comment (optional)", required=False)
+        self.fields['comment'].widget = forms.Textarea(attrs={"rows":3})
 
     def save(self):
         request_instance = TutorRequest.objects.get(pk=self.request_id)

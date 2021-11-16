@@ -15,7 +15,7 @@
 
 <div class="profile">
     <div class="left-column">
-        <div class="name">{{user.first_name}} {{user.last_name}}</div>
+        <div class="name">{{user.first_name | title}} {{user.last_name | title}}</div>
         <div class="school-name">{{user.school}} </div>
         {% if current_user %}
         <div class="total-points">Total Points: {{user.total_points}}</div>
