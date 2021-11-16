@@ -13,12 +13,16 @@ Requests
 
 {% block content %}
 
-<div class="form-check">
-    <input class="form-check-input" type="checkbox" value="" id="show-accepted">
-    <label class="form-check-label" for="flexCheckDefault">
-        Show Accepted
-    </label>
-</div>
+<form method="post">
+{% csrf_token %}
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted"
+            onChange="this.form.submit()" {{accept_filter}}>
+        <label class="form-check-label" for="show-accepted">
+            Show Accepted
+        </label>
+    </div>
+</form>
 
 <div class="scroll-box">
     <h2>Inbox</h2>
@@ -168,11 +172,5 @@ Requests
             location.href = `/users/${requestContainer.dataset.tuteeid}`
         }
     })
-    const checkBox = document.getElementById('show-accepted')
-    if (checkBox.checked == true) {
-        checkBox.value = 'true'
-    } else {
-        checkBox.value = 'false'
-    }
 </script>
 {% endblock %}

@@ -215,6 +215,7 @@ def requests(request, id):
         tutor=current_user, accepted=None)  # get all user's tutor requests
     requests_sent = TutorRequest.objects.all().filter(
         tutee=current_user)  # get all user's tutor requests
+    accept_filter = "" 
     if request.method == 'POST' and 'submit-accept-request' in request.POST:
         form_request_response = RequestResponseForm(
             request.POST, accepted=True, request_id=request.POST['request-id'])
@@ -229,9 +230,14 @@ def requests(request, id):
             form_request_response.save()
     else:
         form_request_response = RequestResponseForm()
+    if request.method == "POST" and 'show-accepted' in request.POST:
+        requests_received = requests_received.filter(accepted=True)
+        requests_sent= requests_sent.filter(accepted=True)
+        accept_filter = "checked" 
     return render(
         request, 'requests.html', {
             'form_request_response': form_request_response,
             'requests_received': requests_received,
-            'requests_sent': requests_sent
+            'requests_sent': requests_sent,
+            'accept_filter': accept_filter,
         })
