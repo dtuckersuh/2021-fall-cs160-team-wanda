@@ -17,100 +17,50 @@ Tutors
     <button type ="submit" name="filter" value="filter" class="filter-button" >Filter</button>
 </div> -->
 
+{% for tutor in tutors %}
+<div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
 
-<div class="content-container">
-    <div class="alert alert-success hidden" id="success-box" role="alert">
-        {{success_message}} Click <a href="{% url 'requests' id=user.id %}">here</a> to view all requests
+
+    <div>
+        <img src="{{tutor.profile_pic.url}}" class="profile-pic">
+    </div>
+
+    <div class="name">
+        {{tutor.first_name | title}} {{tutor.last_name | title}} <br />
+        <div class="classes">
+            {{tutor.classes_taken}} <br />
+        </div>
     </div>
 
 
-    {% for tutor in tutors %}
-    <div class="tutor-info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
-        <div>
-            <img src="{{tutor.profile_pic.url}}" class="profile-pic">
 
-        </div>
-
-        <div class="name">
-            {{tutor.first_name}} {{tutor.last_name}} <br />
-            <div class="classes">
-                {{tutor.classes_taken}} <br />
-            </div>
-        </div>
-
-        <div class="times">
-            {% if tutor.times_available %}
-            {{tutor.times_available}} <br />
-            {% else %}
-            TBD <br />
-            {% endif %}
-        </div>
-
-        <div>
-            <button type="submit" name="request" value="request" class="request-button" data-toggle="modal"
-                data-target="#tutor-request-modal">Request</button>
-        </div>
-
-
-        <div class="tutor-rating">
-            {{tutor.tutor_avg_rating}} ★<br />
-
-            <div class="tutor-rate">
-                {{tutor.rate}} pts/hr<br />
-            </div>
-        </div>
-
+    <div class="times">
+        {% if tutor.times_available %}
+        {{tutor.times_available}} <br />
+        {% else %}
+        TBD <br />
+        {% endif %}
     </div>
-    {% endfor %}
 
-    <!-- insert request form here -->
-    <div class="modal fade" id="tutor-request-modal">
-        <div class="modal-dialog model-lg">
-            <div class="modal-content">
-                <div class="modal-flex-container">
-                    <div class="form-container">
-                        <h2>Request</h2>
-                        <form action="" method="POST" class="form-group" enctype='multipart/form-data'>
-                            {% csrf_token %}
-                            <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
 
-                            <div class="form-row">
-                                {{form.class_name | as_crispy_field}}
-                            </div>
-                            <div class="form-row">
-                                {{form.tutor_date | as_crispy_field}}
-                            </div>
-                            <div class="form-row">
-                                {{form.tutor_start_time | as_crispy_field}}
-                            </div>
-                            <div class="form-row">
-                                {{form.tutor_end_time | as_crispy_field}}
-                            </div>
-                            <div class="form-row">
-                                {{form.location | as_crispy_field}}
-                            </div>
-                            <div class="form-row">
-                                {{form.tutee_comment | as_crispy_field}}
-                            </div>
+    <div>
+        <button type="submit" name="request" value="request" class="request-button" data-toggle="modal"
+            data-target="#tutor-request-modal">Request</button>
+    </div>
 
-                            <button type="submit" class="btn-block btn-secondary btn-style">Send Request</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+
+
+    <div class="tutor-rating">
+        {{tutor.tutor_avg_rating}} ★<br />
+
+        <div class="tutor-rate">
+            {{tutor.rate}} pts/hr<br />
         </div>
     </div>
+
 
 </div>
-{% if form.errors %}
-<script>
-    $(document).ready(function () {
-        $("#tutor-request-modal").modal('show')
-    })
-</script>
-{% endif %}
-
-
+{% endfor %}
 
 {% if form.errors %}
 <script>
@@ -156,8 +106,7 @@ Tutors
 <script type="text/javascript">
     const tutor = document.getElementById('requestedTutor')
     document.querySelector('body').addEventListener('click', event => {
-        const infoContainer = event.target.closest('.tutor-info-container')
-
+        const infoContainer = event.target.closest('.info-container')
         if (!infoContainer) return
         const tutorId = infoContainer.dataset.tutorid
         tutor.value = tutorId
@@ -165,14 +114,6 @@ Tutors
             location.href = `/users/${infoContainer.dataset.tutorid}`
         }
     })
-</script>
-
-{{ success_message | json_script:"success-message" }}
-<script>
-    const successMessage = JSON.parse(document.getElementById('success-message').textContent)
-    if (successMessage !== "") {
-        document.getElementById('success-box').classList.toggle('hidden')
-    }
 </script>
 
 {% endblock %}
