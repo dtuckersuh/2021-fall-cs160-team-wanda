@@ -111,19 +111,7 @@ Tutors
 </script>
 {% endif %}
 
-{{ success_message | json_script:"success-message" }}
-<script>
-    const successMessage = JSON.parse(document.getElementById('success-message').textContent)
-    if (successMessage !== "") {
-        document.getElementById('success-box').classList.toggle('hidden')
-    }
-</script>
-<!-- need to fix because cannot access request pop-up if used
-    <script type="text/javascript">
-    document.querySelectorAll('.tutor-info-container').forEach(tutorEntry => {
-        tutorEntry.addEventListener('click', event => location.href = `/users/${tutorEntry.dataset.id}`)
-    })
-</script> -->
+
 
 <script type="text/javascript">
     const tutor = document.getElementById('requestedTutor')
@@ -132,7 +120,18 @@ Tutors
         if (!infoContainer) return
         const tutorId = infoContainer.dataset.tutorid
         tutor.value = tutorId
+        if (!event.target.matches('.request-button')) {
+            location.href = `/users/${infoContainer.dataset.tutorid}`
+        }
     })
+</script>
+
+{{ success_message | json_script:"success-message" }}
+<script>
+    const successMessage = JSON.parse(document.getElementById('success-message').textContent)
+    if (successMessage !== "") {
+        document.getElementById('success-box').classList.toggle('hidden')
+    }
 </script>
 
 {% endblock %}
