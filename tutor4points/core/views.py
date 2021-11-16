@@ -55,37 +55,44 @@ def home(request):
         tutors = users.filter(is_tutor=True, school=current_user.school)
         requests_received = TutorRequest.objects.all().filter(tutor=current_user, accepted=None)
         sent_requests = TutorRequest.objects.all().filter(tutee=current_user)
-        if request.method == 'POST':
-            if 'submit-accept-request' in request.POST:
-                form_request_response = RequestResponseForm(request.POST, 
-                                        accepted = True, 
-                                        request_id = request.POST['request-id'])
-                if form_request_response.is_valid():
-                    form_request_response.save()
-            elif 'submit-decline-request' in request.POST:
-                form_request_response = RequestResponseForm(request.POST, 
-                                        accepted = False, 
-                                        request_id = request.POST['request-id'])
-                if form_request_response.is_valid():
-                    form_request_response.save()
+        if request.method == 'POST' and 'submit-accept-request' in request.POST:
+            form_request_response = RequestResponseForm(request.POST, 
+                                    accepted = True, 
+                                    request_id = request.POST['request-id'])
+            if form_request_response.is_valid():
+                form_request_response.save()
+                form_request_response = RequestResponseForm() #reset form after submission
+        else:
             form_request_response = RequestResponseForm()
-            form = TutorRequestForm(request.POST)
-            if form.is_valid():
+
+        if request.method == 'POST' and 'submit-decline-request' in request.POST:
+            form_request_response = RequestResponseForm(request.POST, 
+                                    accepted = False, 
+                                    request_id = request.POST['request-id'])
+            if form_request_response.is_valid():
+                form_request_response.save()
+                form_request_response = RequestResponseForm() #reset form after submission
+        else:
+            form_request_response = RequestResponseForm()
+
+        if request.method == 'POST' and 'request-tutor' in request.POST:
+            form_request_tutor = TutorRequestForm(request.POST)
+            if form_request_tutor.is_valid():
                 tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor']) # get tutor object
-                tutor_request = form.save(commit=False)
+                tutor_request = form_request_tutor.save(commit=False)
                 tutor_request.tutee = current_user
                 tutor_request.tutor = tutor_instance
                 tutor_request.save()
-                return redirect("home")
+                form_request_tutor = TutorRequestForm() #reset form after submission
         else:
-            form = TutorRequestForm()
-            form_request_response = RequestResponseForm()
+            form_request_tutor = TutorRequestForm()
+            
         return render(request, "home.html", 
                 {
                     'tutors': tutors, 
                     'requests_received': requests_received,
                     'sent_requests': sent_requests,
-                    'form': form,
+                    'form_request_tutor': form_request_tutor,
                     'form_request_response': form_request_response
                 }
         )
