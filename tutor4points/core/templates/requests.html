@@ -23,7 +23,7 @@ Requests
 <div class="scroll-box">
     <h2>Inbox</h2>
     {% if requests_received %}
-    <div class="requests-items">
+    <div class="requests-items container-fluid">
         {% for request in requests_received %}
 
         <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
