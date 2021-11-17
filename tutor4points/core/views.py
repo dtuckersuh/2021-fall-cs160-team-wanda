@@ -55,8 +55,8 @@ def home(request):
     if current_user.is_authenticated:
         users = get_user_model().objects.all().exclude(pk=current_user.id)
         tutors = users.filter(is_tutor=True, school=current_user.school)
-        requests_received = TutorRequest.objects.all().filter(tutor=current_user, accepted=None)
-        sent_requests = TutorRequest.objects.all().filter(tutee=current_user)
+        requests_received = TutorRequest.objects.all().filter(tutor=current_user, accepted=None, completed=False)
+        sent_requests = TutorRequest.objects.all().filter(tutee=current_user, completed=False)
         if request.method == 'POST' and 'submit-accept-request' in request.POST:
             form_request_response = RequestResponseForm(request.POST, 
                                     accepted = True, 
@@ -324,6 +324,10 @@ def requests(request, id):
                     sum += i.rating
                 userGivenTo.tutee_avg_rating = sum/count
             userGivenTo.save()
+
+            currentRequest = TutorRequest.objects.get(pk=request.POST['request-id'])
+            currentRequest.completed = True
+            currentRequest.save()
     else:
         form_rating = RateTutorForm()
 

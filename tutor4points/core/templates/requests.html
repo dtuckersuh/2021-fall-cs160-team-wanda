@@ -119,6 +119,7 @@ Requests
             <form method="POST">
                 <p class="modal-request-status">Complete Tutor Request</p>
                 <input type="hidden" name="request-tutor" id="requestGivenTo" value="">
+                <input type="hidden" name="request-id" id="completedRequestId" value="">
                 {% csrf_token %}
                 {{ form_rating | crispy }}
                 <button type="submit" name="submit-rating" class="btn-secondary btn-block">
@@ -187,16 +188,18 @@ Requests
     const acceptId = document.getElementById('requestIdAccept')
     const declineId = document.getElementById('requestIdDecline')
     const requestGivenTo = document.getElementById('requestGivenTo')
+    const completedRequestId = document.getElementById('completedRequestId')
     document.querySelector('body').addEventListener('click', event => {
         const requestContainer = event.target.closest('.request-container')
         if (!requestContainer) return
         const requestIdVal = requestContainer.dataset.requestid
         acceptId.value = requestIdVal
         declineId.value = requestIdVal
+        completedRequestId.value = requestIdVal
         requestGivenTo.value = requestContainer.dataset.givento
-        if (!event.target.matches('.respond-button')) {
-            location.href = `/users/${requestContainer.dataset.tuteeid}`
-        }
+        //if (!event.target.matches('.respond-button')) {
+        //    location.href = `/users/${requestContainer.dataset.tuteeid}`
+        //}
     })
 </script>
 {% endblock %}
