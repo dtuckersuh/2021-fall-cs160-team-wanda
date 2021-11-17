@@ -23,7 +23,6 @@ Tutors
         {{success_message}} Click <a href="{% url 'requests' id=user.id %}">here</a> to view all requests
     </div>
 
-
     {% for tutor in tutors %}
     <div class="tutor-info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
         <div>
@@ -63,7 +62,7 @@ Tutors
     </div>
     {% endfor %}
 
-    <!-- insert request form here -->
+    <!-- request module -->
     <div class="modal fade" id="tutor-request-modal">
         <div class="modal-dialog model-lg">
             <div class="modal-content">
