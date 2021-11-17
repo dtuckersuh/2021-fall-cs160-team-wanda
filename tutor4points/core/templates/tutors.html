@@ -60,7 +60,11 @@ Tutors
             </div>
         </div>
 
+        <div class="tutor-rate">
+            {{tutor.rate}} pts/hr<br />
+        </div>
     </div>
+
     {% endfor %}
 
     <!-- insert request form here -->
@@ -96,10 +100,12 @@ Tutors
                             <button type="submit" class="btn-block btn-secondary btn-style">Send Request</button>
                         </form>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 </div>
 {% if form.errors %}
