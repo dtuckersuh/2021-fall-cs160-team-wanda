@@ -32,7 +32,7 @@ Requests
         {% for request in requests_received %}
 
         <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
-            data-tuteeid="{{request.tutee.id}}">
+            data-givenTo="{{request.tutee}}">
             <div class="profile-container">
                 <img src="{{request.tutee.profile_pic.url}}" class="profile-pic">
             </div>
@@ -64,7 +64,7 @@ Requests
 
             <div class="respond-buttons">
             {% if request.accepted %}
-                <button type="submit" name="submit-rating" cless="btn-secondary"
+                <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
                 data-toggle="modal" data-target="#modal-complete-request">Complete</button>
             {% else %}
                 <button type="submit" name="btn-accept-request" class="btn-secondary respond-button" data-toggle="modal"
@@ -111,13 +111,14 @@ Requests
         </div>
     </div>
 </div>
+
 <!--Complete Request Modal-->
 <div class="modal" id="modal-complete-request">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form method="POST">
                 <p class="modal-request-status">Complete Tutor Request</p>
-                <input type="hidden" name="request-id" id="requestIdCompleted" value="">
+                <input type="hidden" name="request-tutor" id="requestGivenTo" value="">
                 {% csrf_token %}
                 {{ form_rating | crispy }}
                 <button type="submit" name="submit-rating" class="btn-secondary btn-block">
@@ -133,9 +134,8 @@ Requests
     {% if requests_sent %}
     <div class="requests-items container-fluid">
         {% for request in requests_sent %}
-
         <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
-            data-tuteeid="{{request.tutee.id}}">
+            data-tuteeid="{{request.tutee.id}}" data-givenTo="{{request.tutor.id}}">
             <div class="profile-container">
                 <img src="{{request.tutor.profile_pic.url}}" class="profile-pic">
             </div>
@@ -166,14 +166,12 @@ Requests
             </div>
             <div class="respond-buttons">
                 {% if request.accepted %}
-                    <button type="submit" name="btn-accept-request" cless="btn-secondary"
-                    data-toggle="modal" data-target="#modal-complete-request">
-                        Complete 
-                    </button>
-                {% elif request.status is None %}
-                Awaiting Response
+                    <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
+                    data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+                {% elif request.accepted is None %}
+                    Awaiting Response
                 {% else %}
-                Declined
+                    Declined
                 {% endif %}
             </div>
         </div>
@@ -188,12 +186,14 @@ Requests
 <script type="text/javascript">
     const acceptId = document.getElementById('requestIdAccept')
     const declineId = document.getElementById('requestIdDecline')
+    const requestGivenTo = document.getElementById('requestGivenTo')
     document.querySelector('body').addEventListener('click', event => {
         const requestContainer = event.target.closest('.request-container')
         if (!requestContainer) return
         const tuteeVal = requestContainer.dataset.requestid
         acceptId.value = tuteeVal
         declineId.value = tuteeVal
+        requestGivenTo.value = requestContainer.dataset.givento
         //if (!event.target.matches('.respond-button')) {
         //    location.href = `/users/${requestContainer.dataset.tuteeid}`
         //}
