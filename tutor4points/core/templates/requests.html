@@ -61,11 +61,17 @@ Requests
                     Comments: {{request.tutee_comment}}
                 </div>
             </div>
+
             <div class="respond-buttons">
+            {% if request.accepted %}
+                <button type="submit" name="submit-rating" cless="btn-secondary"
+                data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+            {% else %}
                 <button type="submit" name="btn-accept-request" class="btn-secondary respond-button" data-toggle="modal"
                     data-target="#modal-accept-request">Accept</button>
                 <button type="submit" name="btn-reject-request" class="btn-secondary respond-button" data-toggle="modal"
                     data-target="#modal-decline-request">Decline</button>
+            {% endif %}
             </div>
         </div>
         {% endfor %}
@@ -101,6 +107,22 @@ Requests
                 {{form_request_response | crispy}}
                 <button type="submit" name="submit-decline-request" class="btn-secondary btn-block">Decline Tutor
                     Request</button>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Complete Request Modal-->
+<div class="modal" id="modal-complete-request">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST">
+                <p class="modal-request-status">Complete Tutor Request</p>
+                <input type="hidden" name="request-id" id="requestIdCompleted" value="">
+                {% csrf_token %}
+                {{ form_rating | crispy }}
+                <button type="submit" name="submit-rating" class="btn-secondary btn-block">
+                    Complete Tutor Request
+                </button>
             </form>
         </div>
     </div>
@@ -144,7 +166,10 @@ Requests
             </div>
             <div class="respond-buttons">
                 {% if request.accepted %}
-                Accepted
+                    <button type="submit" name="btn-accept-request" cless="btn-secondary"
+                    data-toggle="modal" data-target="#modal-complete-request">
+                        Complete 
+                    </button>
                 {% elif request.status is None %}
                 Awaiting Response
                 {% else %}
@@ -169,9 +194,9 @@ Requests
         const tuteeVal = requestContainer.dataset.requestid
         acceptId.value = tuteeVal
         declineId.value = tuteeVal
-        if (!event.target.matches('.respond-button')) {
-            location.href = `/users/${requestContainer.dataset.tuteeid}`
-        }
+        //if (!event.target.matches('.respond-button')) {
+        //    location.href = `/users/${requestContainer.dataset.tuteeid}`
+        //}
     })
 </script>
 {% endblock %}

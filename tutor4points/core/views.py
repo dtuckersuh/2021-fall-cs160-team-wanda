@@ -278,10 +278,43 @@ def requests(request, id):
         requests_received = requests_received.filter(accepted=True)
         requests_sent= requests_sent.filter(accepted=True)
         accept_filter = "checked" 
+
+    if request.method == 'POST' and 'submit-rating' in request.POST:#code for rating, move once 'paid and done' functionality is added.
+        form_rating = RateTutorForm(request.POST)
+        if form_rating.is_valid():
+            rating = form_rating.save(commit=False)
+            rating.given_to = user
+            rating.given_by = request.user
+            rating.save()
+
+            # calcute new rating, and update the database
+            type = form_rating.cleaned_data['rating_type']
+
+            if type == 'tutor':#for tutors
+                tutor_ratings = Rating.objects.filter(given_to = user).filter(rating_type = 'tutor')
+                count = 0
+                sum = 0
+                for i in tutor_ratings:
+                    count += 1
+                    sum += i.rating
+                user.tutor_avg_rating = sum/count
+            else: #otherwise tutee
+                tutor_ratings = Rating.objects.filter(given_to = user).filter(rating_type = 'tutee')
+                count = 0
+                sum = 0
+                for i in tutor_ratings:
+                    count += 1
+                    sum += i.rating
+                user.tutee_avg_rating = sum/count
+            user.save()
+    else:
+        form_rating = RateTutorForm()
+
     return render(
         request, 'requests.html', {
             'form_request_response': form_request_response,
             'requests_received': requests_received,
             'requests_sent': requests_sent,
             'accept_filter': accept_filter,
+            'form_rating': form_rating
         })

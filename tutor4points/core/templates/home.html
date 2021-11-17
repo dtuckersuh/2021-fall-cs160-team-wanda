@@ -46,14 +46,21 @@ Dashboard
                                 {% else %}
                                     No comment <br> <br>
                                 {% endif %}
-                                <button type="submit" name="btn-accept-request" class="btn-secondary" 
-                                data-toggle= "modal" data-target="#modal-accept-request">
-                                    Accept
-                                </button>
-                                <button type="submit" name="btn-reject-request" class="btn-secondary" 
-                                data-toggle= "modal" data-target="#modal-decline-request">
-                                    Decline
-                                </button>
+                                {% if tutor_request.accepted %}
+                                    <button type="submit" name="btn-accept-request" cless="btn-secondary"
+                                        data-toggle="modal" data-target="#modal-complete-request">
+                                        Complete 
+                                    </button>
+                                {% else %}
+                                    <button type="submit" name="btn-accept-request" class="btn-secondary" 
+                                    data-toggle= "modal" data-target="#modal-accept-request">
+                                        Accept
+                                    </button>
+                                    <button type="submit" name="btn-reject-request" class="btn-secondary" 
+                                    data-toggle= "modal" data-target="#modal-decline-request">
+                                        Decline
+                                    </button>
+                                {% endif %}
                             </div>
                             {% endwith %}
                         {% endfor %}
@@ -210,11 +217,26 @@ Dashboard
         </div>
     </div>
 </div>
-
+<div class="modal" id="modal-complete-request">
+    <div class="modal-dialog modal-lg">
+        <div class="request-modal-content">
+            <form method="POST">
+                <p class="modal-request-status">Complete Tutor Request</p>
+                <input type="hidden" name="request-id" id="requestIdCompleted" value="">
+                {% csrf_token %}
+                {{ form_rating | crispy }}
+                <button type="submit" name="submit-complete-request" class="btn-secondary btn-block">
+                    Complete Tutor Request
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 <script type = "text/javascript">
     const tutor = document.getElementById('requestedTutor')
     const acceptId = document.getElementById('requestIdAccept')
     const declineId = document.getElementById('requestIdDecline')
+    const completeId = document.getElementById('requestIdCompleted')
     document.querySelector('body').addEventListener('click', event => {
         const infoContainer = event.target.closest('.info-container')
         if (!infoContainer) return
@@ -227,6 +249,9 @@ Dashboard
             } 
             if (declineId) {
                 declineId.value = infoContainer.dataset.requestid
+            }
+            if (completeId) {
+                completeId.value = infoContainer.dataset.requestid
             }
         }
     })
