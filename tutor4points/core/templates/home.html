@@ -164,7 +164,10 @@ Dashboard
                             {{form_request_tutor.tutor_date | as_crispy_field}}
                         </div>
                         <div class="form-row">
-                            {{form_request_tutor.tutor_time | as_crispy_field}} 
+                            {{form_request_tutor.tutor_start_time | as_crispy_field}} 
+                        </div>
+                        <div class="form-row">
+                            {{form_request_tutor.tutor_end_time | as_crispy_field}} 
                         </div>
                         <div class="form-row">
                             {{form_request_tutor.location | as_crispy_field}}
