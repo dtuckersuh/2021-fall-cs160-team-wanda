@@ -44,14 +44,21 @@ Dashboard
                                         {{tutor_request.tutor_date}} @<br>{{tutor_request.tutor_time}} <br/>
                                     </div>
                                     <div class = "respond-btns d-flex">
-                                        <button type="submit" name="accept-request" class="btn-secondary respond-button" 
-                                            data-toggle= "modal" data-target="#modal-accept-request">
-                                            Accept
-                                        </button>
-                                        <button type="submit" name="decline-request" class="btn-secondary respond-button" 
-                                        data-toggle= "modal" data-target="#modal-decline-request">
-                                            Decline
-                                        </button>
+                                        {% if tutor_request.accepted %}
+                                            <button type="submit" name="btn-accept-request" cless="btn-secondary"
+                                                data-toggle="modal" data-target="#modal-complete-request">
+                                                Complete 
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" name="accept-request" class="btn-secondary respond-button" 
+                                                data-toggle= "modal" data-target="#modal-accept-request">
+                                                Accept
+                                            </button>
+                                            <button type="submit" name="decline-request" class="btn-secondary respond-button" 
+                                            data-toggle= "modal" data-target="#modal-decline-request">
+                                                Decline
+                                            </button>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class = "comment-container">
@@ -61,29 +68,6 @@ Dashboard
                                         No comment <br>
                                     {% endif %}
                                 </div>
-<<<<<<< HEAD
-                                {% if tutor_request.tutee_comment %}
-                                    Comment: {{tutor_request.tutee_comment}} <br> <br>
-                                {% else %}
-                                    No comment <br> <br>
-                                {% endif %}
-                                {% if tutor_request.accepted %}
-                                    <button type="submit" name="btn-accept-request" cless="btn-secondary"
-                                        data-toggle="modal" data-target="#modal-complete-request">
-                                        Complete 
-                                    </button>
-                                {% else %}
-                                    <button type="submit" name="btn-accept-request" class="btn-secondary" 
-                                    data-toggle= "modal" data-target="#modal-accept-request">
-                                        Accept
-                                    </button>
-                                    <button type="submit" name="btn-reject-request" class="btn-secondary" 
-                                    data-toggle= "modal" data-target="#modal-decline-request">
-                                        Decline
-                                    </button>
-                                {% endif %}
-=======
->>>>>>> 527b4ff8fbcd546c0c181fa3f5677f17372b8f1c
                             </div>
                             {% endwith %}
                         {% endfor %}

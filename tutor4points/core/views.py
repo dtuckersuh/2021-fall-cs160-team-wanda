@@ -270,9 +270,9 @@ def points(request):
 def requests(request, id):
     current_user = request.user
     requests_received = TutorRequest.objects.all().filter(
-        tutor=current_user, accepted=None)  # get all user's tutor requests
+        tutor=current_user, accepted=None, completed=False)  # get all user's tutor requests
     requests_sent = TutorRequest.objects.all().filter(
-        tutee=current_user)  # get all user's tutor requests
+        tutee=current_user, completed=False)  # get all user's tutor requests
     accept_filter = "" 
     if request.method == 'POST' and 'submit-accept-request' in request.POST:
         form_request_response = RequestResponseForm(
