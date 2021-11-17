@@ -6,6 +6,7 @@
 {% endblock%}
 
 {% load crispy_forms_tags %}
+{% load tz %}
 
 {% block heading %}
 Requests
@@ -45,7 +46,6 @@ Requests
                             {{request.date_sent_request}}
                         </div>
                     </div>
-
 
                     <div class="tutor-class">
                         {{request.class_name}}
@@ -190,13 +190,13 @@ Requests
     document.querySelector('body').addEventListener('click', event => {
         const requestContainer = event.target.closest('.request-container')
         if (!requestContainer) return
-        const tuteeVal = requestContainer.dataset.requestid
-        acceptId.value = tuteeVal
-        declineId.value = tuteeVal
+        const requestIdVal = requestContainer.dataset.requestid
+        acceptId.value = requestIdVal
+        declineId.value = requestIdVal
         requestGivenTo.value = requestContainer.dataset.givento
-        //if (!event.target.matches('.respond-button')) {
-        //    location.href = `/users/${requestContainer.dataset.tuteeid}`
-        //}
+        if (!event.target.matches('.respond-button')) {
+            location.href = `/users/${requestContainer.dataset.tuteeid}`
+        }
     })
 </script>
 {% endblock %}

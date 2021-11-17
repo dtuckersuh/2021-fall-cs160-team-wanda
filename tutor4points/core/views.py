@@ -68,6 +68,7 @@ def home(request):
             form_request_response = RequestResponseForm()
 
         if request.method == 'POST' and 'submit-decline-request' in request.POST:
+            print ("DECLINE")
             form_request_response = RequestResponseForm(request.POST, 
                                     accepted = False, 
                                     request_id = request.POST['request-id'])
@@ -77,7 +78,7 @@ def home(request):
         else:
             form_request_response = RequestResponseForm()
 
-        if request.method == 'POST' and 'request-tutor' in request.POST:
+        if request.method == 'POST' and 'submit-tutor-request' in request.POST:
             form_request_tutor = TutorRequestForm(request.POST)
             if form_request_tutor.is_valid():
                 tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor']) # get tutor object
@@ -278,6 +279,7 @@ def requests(request, id):
             request.POST, accepted=True, request_id=request.POST['request-id'])
         if form_request_response.is_valid():
             form_request_response.save()
+            form_request_response = RequestResponseForm()
     elif request.method == 'POST' and 'submit-decline-request' in request.POST:
         form_request_response = RequestResponseForm(
             request.POST,
@@ -285,8 +287,8 @@ def requests(request, id):
             request_id=request.POST['request-id'])
         if form_request_response.is_valid():
             form_request_response.save()
+            form_request_response = RequestResponseForm()
     else:
-
         form_request_response = RequestResponseForm()
     if request.method == "POST" and 'show-accepted' in request.POST:
         requests_received = requests_received.filter(accepted=True)
