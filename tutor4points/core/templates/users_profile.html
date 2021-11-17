@@ -14,7 +14,7 @@
 {% block content %}
 
 <div class="alert alert-success hidden" id="success-box" role="alert">
-    {{success_message}}{{user.first_name | title}} {{user.last_name | title}} Click <a href="{% url 'requests' id=user.id %}">here</a> to view all requests.
+    {{success_message}}{{user.first_name | title}} {{user.last_name | title}}. Click <a href="{% url 'requests' id=user.id %}">here</a> to view all requests.
 </div>
 <div class="profile">
     <div class="left-column">

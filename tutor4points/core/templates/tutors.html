@@ -34,7 +34,11 @@ Tutors
         <div class="name">
             {{tutor.first_name | title}} {{tutor.last_name | title}} <br />
             <div class="classes">
+                {% if tutor.classes_taken %}
                 {{tutor.classes_taken}} <br />
+                {% else %}
+                No classes listed
+                {% endif %}
             </div>
         </div>
 
@@ -42,7 +46,7 @@ Tutors
             {% if tutor.times_available %}
             {{tutor.times_available}} <br />
             {% else %}
-            TBD <br />
+            Times Available: TBD <br />
             {% endif %}
         </div>
 
@@ -53,16 +57,18 @@ Tutors
 
 
         <div class="tutor-rating">
-            {{tutor.tutor_avg_rating}} ★<br />
+            {% if tutor.tutor_avg_rating %}
+            {{tutor.tutor_avg_rating}}★
+            {% else %}
+            N/A ★
+            {% endif %}
+            <br />
 
             <div class="tutor-rate">
                 {{tutor.rate}} pts/hr<br />
             </div>
         </div>
 
-        <div class="tutor-rate">
-            {{tutor.rate}} pts/hr<br />
-        </div>
     </div>
 
     {% endfor %}

@@ -269,12 +269,7 @@ class TutorRequestForm(forms.ModelForm):
     # make sure start time is possible if it is today
     def clean_tutor_start_time(self):
         tutor_start_time = self.cleaned_data['tutor_start_time']
-        tutor_date = self.cleaned_data['tutor_date']
-        if tutor_start_time < datetime.now().time():
-            print("it's less")
-        if tutor_date is date.today():
-            print("todayy")
-        
+        tutor_date = self.cleaned_data['tutor_date']    
         if tutor_date == date.today() and tutor_start_time < datetime.now().time():
             self.add_error('tutor_start_time', "Start time must be now or later")
         return tutor_start_time
