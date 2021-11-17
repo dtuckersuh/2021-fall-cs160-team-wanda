@@ -17,10 +17,12 @@ Tutors
     <button type ="submit" name="filter" value="filter" class="filter-button" >Filter</button>
 </div> -->
 
+{% for tutor in tutors %}
+<div class="info-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}">
 
-<div class="content-container">
-    <div class="alert alert-success hidden" id="success-box" role="alert">
-        {{success_message}} Click <a href="{% url 'requests' id=user.id %}">here</a> to view all requests
+
+    <div>
+        <img src="{{tutor.profile_pic.url}}" class="profile-pic">
     </div>
 
     {% for tutor in tutors %}
@@ -28,36 +30,24 @@ Tutors
         <div>
             <img src="{{tutor.profile_pic.url}}" class="profile-pic">
 
-        </div>
-
-        <div class="name">
-            {{tutor.first_name}} {{tutor.last_name}} <br />
-            <div class="classes">
-                {{tutor.classes_taken}} <br />
-            </div>
-        </div>
-
-        <div class="times">
-            {% if tutor.times_available %}
-            {{tutor.times_available}} <br />
-            {% else %}
-            TBD <br />
-            {% endif %}
-        </div>
-
-        <div>
-            <button type="submit" name="request" value="request" class="request-button" data-toggle="modal"
-                data-target="#tutor-request-modal">Request</button>
-        </div>
+    <div class="times">
+        {% if tutor.times_available %}
+        {{tutor.times_available}} <br />
+        {% else %}
+        TBD <br />
+        {% endif %}
+    </div>
 
 
-        <div class="tutor-rating">
-            {{tutor.tutor_avg_rating}} ★<br />
+    <div>
+        <button type="submit" name="request" value="request" class="request-button" data-toggle="modal"
+            data-target="#tutor-request-modal">Request</button>
+    </div>
 
-            <div class="tutor-rate">
-                {{tutor.rate}} pts/hr<br />
-            </div>
-        </div>
+
+
+    <div class="tutor-rating">
+        {{tutor.tutor_avg_rating}} ★<br />
 
     </div>
     {% endfor %}
@@ -100,21 +90,10 @@ Tutors
         </div>
     </div>
 
-</div>
-{% if form.errors %}
-<script>
-    $(document).ready(function () {
-        $("#tutor-request-modal").modal('show')
-    })
-</script>
-{% endif %}
-
-
 <script type="text/javascript">
     const tutor = document.getElementById('requestedTutor')
     document.querySelector('body').addEventListener('click', event => {
-        const infoContainer = event.target.closest('.tutor-info-container')
-
+        const infoContainer = event.target.closest('.info-container')
         if (!infoContainer) return
         const tutorId = infoContainer.dataset.tutorid
         tutor.value = tutorId
@@ -122,14 +101,6 @@ Tutors
             location.href = `/users/${infoContainer.dataset.tutorid}`
         }
     })
-</script>
-
-{{ success_message | json_script:"success-message" }}
-<script>
-    const successMessage = JSON.parse(document.getElementById('success-message').textContent)
-    if (successMessage !== "") {
-        document.getElementById('success-box').classList.toggle('hidden')
-    }
 </script>
 
 {% endblock %}

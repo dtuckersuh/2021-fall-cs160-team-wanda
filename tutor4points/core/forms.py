@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms.widgets import PasswordInput, SelectDateWidget
-from .models import TutorRequest, User, School, Transaction
+
+
+from .models import TutorRequest, User, School, Transaction, Rating
 from crispy_forms.helper import FormHelper
 from django.contrib.auth import get_user_model
 from django.db import transaction
@@ -140,6 +142,34 @@ class UpdateProfileForm(forms.ModelForm):
     helper = FormHelper()
     helper.form_id = 'form'
 
+class RateTutorForm(forms.ModelForm):
+
+    class Meta:
+        model = Rating
+
+        # layout where want fields to be, type in order you want it to appear
+        fields = ('rating', 'comment','rating_type')
+
+        # customize placeholders
+        widgets = {
+            'rating':
+            forms.NumberInput(attrs={'placeholder': '1-5'}),
+            'comment':
+            forms.TextInput(attrs={'placeholder': 'comment here'}),
+            'Type of rating (tutor or tutee)':
+            forms.TextInput(attrs={'placeholder': 'comment'}),
+
+        }
+
+        # customize form labels
+        labels = {
+            'rating': "Enter a rating 1-5 stars",
+            'comment': "Explain how you're session went",
+            'rating_type': "Is the user you are rating a tutor or tutee?",
+        }
+
+    helper = FormHelper()
+    helper.form_id = 'form'
 
 # Form that allows user to purchase points
 class PurchasePointsForm(forms.Form):
@@ -234,22 +264,25 @@ class TransferPointsForm(forms.Form):
 
 # Form that allows user to send a tutor request
 class TutorRequestForm(forms.ModelForm):
+
+    # def __init__(self, *args,**kwargs):
+    #     self.user = kwargs.pop('user', None)
+    #     super().__init__(*args,**kwargs)
+
     class Meta:
         model = TutorRequest
 
         # layout where want fields to be, type in order you want it to appear
-        fields = ('class_name', 'tutor_date', 'tutor_start_time', 'tutor_end_time', 'location', 'tutee_comment')
+        fields = ('class_name', 'tutor_date', 'tutor_time', 'location', 'tutee_comment')
 
         # customize placeholders
         widgets = {
             'class_name':
             forms.TextInput(attrs={'placeholder': 'Example: CS146'}),
             'tutor_date':
-            forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}), 
-            'tutor_start_time':
-            forms.TimeInput(format='%H:%M', attrs={'type': 'time'}), 
-            'tutor_end_time':
-            forms.TimeInput(format='%H:%M', attrs={'type': 'time'}), 
+            forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
+            'tutor_time':
+            forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
             'location':
             forms.Textarea(attrs={
                 'placeholder': 'Example: 4th floor of MLK Library',
@@ -259,7 +292,7 @@ class TutorRequestForm(forms.ModelForm):
             forms.Textarea(attrs={
                 'placeholder': 'Leave a comment for the tutor',
                 'rows': 5
-            }), 
+            }),
         }
 
         # customize form labels
@@ -274,7 +307,7 @@ class TutorRequestForm(forms.ModelForm):
 
     helper = FormHelper()
     helper.form_id = 'form'
-   
+
 #Form that allows user to accept/decline a tutor request
 class RequestResponseForm (forms.Form):
     def __init__(self, *args,**kwargs):
@@ -289,4 +322,3 @@ class RequestResponseForm (forms.Form):
         request_instance.accepted = self.accepted
         request_instance.tutor_comment = self.cleaned_data['comment']
         request_instance.save()
-

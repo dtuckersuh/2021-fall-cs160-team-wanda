@@ -51,8 +51,7 @@ class TutorRequest (models.Model):
     tutee = models.ForeignKey(
         get_user_model(), null=True, on_delete=models.SET_NULL)
     tutor_date = models.DateField()
-    tutor_start_time = models.TimeField()
-    tutor_end_time = models.TimeField()
+    tutor_time = models.TimeField()
     class_name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     tutor_comment = models.TextField(null=True, blank=True)
@@ -68,7 +67,7 @@ class Transaction (models.Model):
         ('transfer', 'TRANSFER'),
         ('cash_out', 'CASH_OUT'),
     )
-    
+
     # automatically set date every time object is created
     date_transaction_made = models.DateTimeField(auto_now_add=True)
     method = models.CharField(max_length=25, choices=METHODS)
@@ -93,5 +92,5 @@ class Rating (models.Model):
         get_user_model(), null=True, on_delete=models.SET_NULL)
     rating_type = models.CharField(max_length=5, choices=RATING_TYPES)
     rating = models.IntegerField(null=True, validators=[
-                                 MinValueValidator(0), MaxValueValidator(5)])
+                                 MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField()

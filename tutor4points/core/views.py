@@ -1,10 +1,11 @@
-from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm, TransferPointsForm, RequestResponseForm
+
+from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm, RequestResponseForm, RateTutorForm
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
-from .models import TutorRequest
+from .models import TutorRequest, Rating
 
 
 # loginUser handles "/login" endpoint
@@ -102,24 +103,24 @@ def home(request):
 
 
 # tutors handles "/tutors" endpoint
-# allows user to view all tutors that attend the same school as them and send tutor requests
+# allows user to view all tutors that attend the same school as them
+# allows user to send a tutor request
 @login_required
 def tutors(request):
     current_user = request.user
     users = get_user_model().objects.all().exclude(pk=current_user.id)
     tutors = users.filter(is_tutor=True, school=current_user.school)
-    success_message = ""
-        
+
     if request.method == 'POST':
         form = TutorRequestForm(request.POST)
-        if(form.is_valid()):
-            tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor']) # get tutor object
+        if (form.is_valid()):
+            tutor_instance = get_user_model().objects.get(
+                pk=request.POST['requestedTutor'])  # get tutor object
             tutor_request = form.save(commit=False)
             tutor_request.tutee = current_user
             tutor_request.tutor = tutor_instance
             tutor_request.save()
-            success_message = "Success! You have sent a request to " + tutor_instance.first_name + " " + tutor_instance.last_name + "."
-            form = TutorRequestForm()
+            return redirect('tutors')
     else:
         form = TutorRequestForm()
 
@@ -128,38 +129,66 @@ def tutors(request):
         'user': current_user,
         'tutors': tutors,
         'form': form,
-        'success_message': success_message,
     })
 
 
 # users handles "/users/<int:id>" endpoint
-# allows users to view profile of user specified by user id, edit their profile, and send request to tutors
+# allows users to view profile of user specified by user id
+# allows users to edit their profile
 @login_required
 def users(request, id):
 
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
-    if request.method == 'POST':
+
+    if request.method == 'POST' and 'email' in request.POST:
         form_update_profile = UpdateProfileForm(request.POST, request.FILES, instance=user)
-        form_tutor_request = TutorRequestForm(request.POST)
+
         if form_update_profile.is_valid():
             form_update_profile.save()
-        elif form_tutor_request.is_valid():
-            tutor_request = form_tutor_request.save(commit=False)
-            tutor_request.tutee = request.user
-            tutor_request.tutor = user
-            tutor_request.save()
-            return redirect('requests', id=user.id)
     else:
         form_update_profile = UpdateProfileForm(instance=user)
-        form_tutor_request = TutorRequestForm()    
+
+
+    if request.method == 'POST' and 'rating' in request.POST:#code for rating, move once 'paid and done' functionality is added.
+        form_rating = RateTutorForm(request.POST)
+        if form_rating.is_valid():
+            rating = form_rating.save(commit=False)
+            rating.given_to = user
+            rating.given_by = request.user
+            rating.save()
+
+            # calcute new rating, and update the database
+            type = form_rating.cleaned_data['rating_type']
+
+            if type == 'tutor':#for tutors
+                tutor_ratings = Rating.objects.filter(given_to = user).filter(rating_type = 'tutor')
+                count = 0
+                sum = 0
+                for i in tutor_ratings:
+                    count += 1
+                    sum += i.rating
+                user.tutor_avg_rating = sum/count
+            else: #otherwise tutee
+                tutor_ratings = Rating.objects.filter(given_to = user).filter(rating_type = 'tutee')
+                count = 0
+                sum = 0
+                for i in tutor_ratings:
+                    count += 1
+                    sum += i.rating
+                user.tutee_avg_rating = sum/count
+            user.save()
+
+    else:
+        form_rating = RateTutorForm()
 
     return render(request, 'users_profile.html', {
         'user': user,
         'form_update_profile': form_update_profile,
-        'form_tutor_request': form_tutor_request,
+        'form_rating': form_rating, # remove when moving rating
         'current_user': request.user.id == id
     })
+
 
 
 # home handles "/points" endpoint
@@ -242,6 +271,7 @@ def requests(request, id):
         if form_request_response.is_valid():
             form_request_response.save()
     else:
+
         form_request_response = RequestResponseForm()
     return render(
         request, 'requests.html', {
