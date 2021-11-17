@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.forms.widgets import PasswordInput, SelectDateWidget
+from datetime import date, datetime
 
 
 from .models import TutorRequest, User, School, Transaction, Rating
@@ -265,15 +266,34 @@ class TransferPointsForm(forms.Form):
 # Form that allows user to send a tutor request
 class TutorRequestForm(forms.ModelForm):
 
-    # def __init__(self, *args,**kwargs):
-    #     self.user = kwargs.pop('user', None)
-    #     super().__init__(*args,**kwargs)
+    # make sure start time is possible if it is today
+    def clean_tutor_start_time(self):
+        tutor_start_time = self.cleaned_data['tutor_start_time']
+        tutor_date = self.cleaned_data['tutor_date']    
+        if tutor_date == date.today() and tutor_start_time < datetime.now().time():
+            self.add_error('tutor_start_time', "Start time must be now or later")
+        return tutor_start_time
+
+    # make sure end time is after start time
+    def clean_tutor_end_time(self):
+        tutor_start_time = self.cleaned_data['tutor_start_time']
+        tutor_end_time = self.cleaned_data['tutor_end_time']
+        if tutor_end_time <= tutor_start_time:
+            self.add_error('tutor_end_time', "End time must be after start time")
+        return tutor_end_time
+
+    # make sure date is today or later 
+    def clean_tutor_date(self):
+        tutor_date = self.cleaned_data['tutor_date']
+        if tutor_date < date.today():
+            self.add_error('tutor_date', "Date must be today or later")
+        return tutor_date
 
     class Meta:
         model = TutorRequest
 
         # layout where want fields to be, type in order you want it to appear
-        fields = ('class_name', 'tutor_date', 'tutor_time', 'location', 'tutee_comment')
+        fields = ('class_name', 'tutor_date', 'tutor_start_time', 'tutor_end_time', 'location', 'tutee_comment')
 
         # customize placeholders
         widgets = {
@@ -281,7 +301,9 @@ class TutorRequestForm(forms.ModelForm):
             forms.TextInput(attrs={'placeholder': 'Example: CS146'}),
             'tutor_date':
             forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date'}),
-            'tutor_time':
+            'tutor_start_time':
+            forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
+            'tutor_end_time':
             forms.TimeInput(format='%H:%M', attrs={'type': 'time'}),
             'location':
             forms.Textarea(attrs={

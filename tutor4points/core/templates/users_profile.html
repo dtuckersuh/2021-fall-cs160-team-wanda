@@ -13,6 +13,9 @@
 
 {% block content %}
 
+<div class="alert alert-success hidden" id="success-box" role="alert">
+    {{success_message}}{{user.first_name | title}} {{user.last_name | title}}. Click <a href="{% url 'requests' id=user.id %}">here</a> to view all requests.
+</div>
 <div class="profile">
     <div class="left-column">
         <div class="name">{{user.first_name | title}} {{user.last_name | title}}</div>
@@ -55,11 +58,13 @@
 
         {% if current_user %}
             <button type ="submit" name="edit" value="edit" class="btn-secondary" data-toggle= "modal" data-target="#edit-profile-modal">Edit Profile</button>
-        {% else %}
-            <button type ="submit" name="request-tutor" class="btn-secondary">Request Tutor</button>
-
+        {% elif not current_user and user.is_tutor %}
+            <button type="submit" name="request-tutor" class="btn-secondary" data-toggle="modal" data-target="#tutor-request-modal">Request Tutor</button>
+            <br>
             <button type ="submit" name="rate" value="rate" class="btn-secondary" data-toggle= "modal" data-target="#rate-modal">Rate Tutor</button>
-        {% endif %}
+        {% else %}
+        <!-- no button -->
+    {% endif %}
     </div>
 </div>
 
@@ -120,7 +125,7 @@
                 </div>
             </div>
         </div>
-        <!--Code for user rating: move to 'paid and done' once that is complete -->
+        <!-- Code for user rating: move to 'paid and done' once that is complete -->
         <div class="modal fade" id = "rate-modal">
                     <div class = "modal-dialog modal-lg">
                         <div class = "modal-content">
@@ -132,13 +137,13 @@
                                         {% csrf_token %}
                                       <div>
                                         {{form_rating.rating |as_crispy_field}}
-                                      <div>
+                                      </div>
                                       <div>
                                         {{form_rating.comment |as_crispy_field}}
-                                      <div>
+                                      </div>
                                       <div>
                                         {{form_rating.rating_type|as_crispy_field}}
-
+                                    </div>
                                         <button type="submit" class="btn-block btn-secondary">submit</button>
 
                                     </form>
@@ -147,6 +152,52 @@
                         </div>
                     </div>
                 </div>
+
+<!-- insert request form here -->
+<div class="modal fade" id="tutor-request-modal">
+    <div class="modal-dialog model-lg">
+        <div class="modal-content">
+            <div class="modal-flex-container">
+                <div class="form-container">
+                    <h2>Request</h2>
+                    <form method="POST" class="form-group" enctype='multipart/form-data'>
+                        {% csrf_token %}
+                        <input type="hidden" name="requestedTutor" id="requestedTutor" value={{user.id}}>
+
+                        <div class="form-row">
+                            {{form_tutor_request.class_name | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form_tutor_request.tutor_date | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form_tutor_request.tutor_start_time | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form_tutor_request.tutor_end_time | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form_tutor_request.location | as_crispy_field}}
+                        </div>
+                        <div class="form-row">
+                            {{form_tutor_request.tutee_comment | as_crispy_field}}
+                        </div>
+
+                        <button type="submit" class="btn-block btn-secondary btn-style" name="request-tutor">Send Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if form_tutor_request.errors and not current_user %}
+<script>
+    $(document).ready(function () {
+        $("#tutor-request-modal").modal('show')
+    })
+</script>
+{% endif %}
 
 
 {% if form_update_profile.errors %}
@@ -172,6 +223,14 @@
 
         this.parentNode.querySelector('.custom-file-label').textContent = file.name
       }
+    }
+</script>
+
+{{ success_message | json_script:"success-message" }}
+<script>
+    const successMessage = JSON.parse(document.getElementById('success-message').textContent)
+    if (successMessage !== "") {
+        document.getElementById('success-box').classList.toggle('hidden')
     }
 </script>
 
