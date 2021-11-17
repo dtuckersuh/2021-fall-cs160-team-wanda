@@ -39,7 +39,7 @@ Dashboard
                                     </div>
                                 </div>
                                 <div class="times-column">
-                                    {{tutor_request.tutor_date}} @ {{tutor_request.tutor_time}} <br/>
+                                    {{tutor_request.tutor_date}} @ {{tutor_request.tutor_start_time}} <br/>
                                 </div>
                                 {% if tutor_request.tutee_comment %}
                                     Comment: {{tutor_request.tutee_comment}} <br> <br>
@@ -120,7 +120,7 @@ Dashboard
                                     </div>
                                 </div>
                                 <div class="times-column">
-                                    {{sent_request.tutor_date}} @ {{sent_request.tutor_time}} </div>
+                                    {{sent_request.tutor_date}} @ {{sent_request.tutor_start_time}} </div>
                                 {% if sent_request.tutee_comment %}
                                     Comment: {{sent_request.tutee_comment}}
                                 {% else %}
@@ -154,6 +154,7 @@ Dashboard
         <div class="modal-content">
            <div class="modal-flex-container">
                <div class="form-container">
+                    <center><h2>Request</h2></center>
                     <form method="POST" class="form-group" enctype='multipart/form-data'>
                         {% csrf_token %}
                         <input type="hidden" name="requestedTutor" id="requestedTutor" value="">
@@ -164,7 +165,10 @@ Dashboard
                             {{form_request_tutor.tutor_date | as_crispy_field}}
                         </div>
                         <div class="form-row">
-                            {{form_request_tutor.tutor_time | as_crispy_field}} 
+                            {{form_request_tutor.tutor_start_time | as_crispy_field}} 
+                        </div>
+                        <div class="form-row">
+                            {{form_request_tutor.tutor_end_time | as_crispy_field}} 
                         </div>
                         <div class="form-row">
                             {{form_request_tutor.location | as_crispy_field}}
