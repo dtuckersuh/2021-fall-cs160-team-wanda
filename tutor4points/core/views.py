@@ -103,24 +103,24 @@ def home(request):
 
 
 # tutors handles "/tutors" endpoint
-# allows user to view all tutors that attend the same school as them
-# allows user to send a tutor request
+# allows user to view all tutors that attend the same school as them and send a tutor request
 @login_required
 def tutors(request):
     current_user = request.user
     users = get_user_model().objects.all().exclude(pk=current_user.id)
     tutors = users.filter(is_tutor=True, school=current_user.school)
-
+    success_message = ""
+    tutor_instance = None
     if request.method == 'POST':
         form = TutorRequestForm(request.POST)
         if (form.is_valid()):
-            tutor_instance = get_user_model().objects.get(
-                pk=request.POST['requestedTutor'])  # get tutor object
+            tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor'])  # get tutor object
             tutor_request = form.save(commit=False)
             tutor_request.tutee = current_user
             tutor_request.tutor = tutor_instance
             tutor_request.save()
-            return redirect('tutors')
+            success_message = "Success! You have sent a request to " 
+            form = TutorRequestForm()
     else:
         form = TutorRequestForm()
 
@@ -129,18 +129,19 @@ def tutors(request):
         'user': current_user,
         'tutors': tutors,
         'form': form,
+        'success_message': success_message,
+        'tutor_instance': tutor_instance
     })
 
 
 # users handles "/users/<int:id>" endpoint
-# allows users to view profile of user specified by user id
-# allows users to edit their profile
+# allows users to view profile of user specified by user id and edit their own profile
 @login_required
 def users(request, id):
 
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
-
+    success_message=""
     if request.method == 'POST' and 'email' in request.POST:
         form_update_profile = UpdateProfileForm(request.POST, request.FILES, instance=user)
 
@@ -149,6 +150,17 @@ def users(request, id):
     else:
         form_update_profile = UpdateProfileForm(instance=user)
 
+    if request.method == 'POST' and 'request-tutor' in request.POST:
+        form_tutor_request = TutorRequestForm(request.POST)
+        if form_tutor_request.is_valid():
+            tutor_request = form_tutor_request.save(commit=False)
+            tutor_request.tutee = request.user
+            tutor_request.tutor = user
+            tutor_request.save()
+            success_message = "Success! You have sent a request to " 
+            form_tutor_request = TutorRequestForm() 
+    else:
+        form_tutor_request = TutorRequestForm() 
 
     if request.method == 'POST' and 'rating' in request.POST:#code for rating, move once 'paid and done' functionality is added.
         form_rating = RateTutorForm(request.POST)
@@ -185,8 +197,10 @@ def users(request, id):
     return render(request, 'users_profile.html', {
         'user': user,
         'form_update_profile': form_update_profile,
+        'form_tutor_request': form_tutor_request,
         'form_rating': form_rating, # remove when moving rating
-        'current_user': request.user.id == id
+        'current_user': request.user.id == id,
+        'success_message': success_message
     })
 
 
