@@ -48,6 +48,7 @@ a {
 
 .info-container:hover {
     background-color: #242835;
+    cursor: pointer;
 }
 
 .profile-pic {
