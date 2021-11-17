@@ -152,10 +152,10 @@ Dashboard
                                         Status: 
                                         {% if sent_request.accepted %}
                                             <p class="status-confirmed">Accepted</p>
-                                        {% elif sent_request.status is None %}
+                                        {% elif sent_request.accepted is None %}
                                             <p class="status-pending">Awaiting Response</p>
                                         {% else %}
-                                            <p class="status-denied">Declined</p>
+                                            <p class="status-declined">Declined</p>
                                         {% endif %}
                                     </div>
                                 </div>
