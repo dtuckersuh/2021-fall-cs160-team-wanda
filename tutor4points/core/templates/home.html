@@ -41,7 +41,7 @@ Dashboard
                                         </div>
                                     </div>
                                     <div class="times-column d-flex">
-                                        {{tutor_request.tutor_date}} @<br>{{tutor_request.tutor_time}} <br/>
+                                        {{tutor_request.tutor_date}} @<br>{{tutor_request.tutor_start_time}} - {{tutor_request.tutor_end_time}}<br>
                                     </div>
                                     <div class = "respond-btns d-flex">
                                         <button type="submit" name="accept-request" class="btn-secondary respond-button" 
@@ -139,7 +139,7 @@ Dashboard
                                         </div>
                                     </div>
                                     <div class="times-column d-flex">
-                                        {{sent_request.tutor_date}} @<br>{{sent_request.tutor_time}} 
+                                        {{sent_request.tutor_date}} @<br>{{sent_request.tutor_start_time}} - {{sent_request.tutor_end_time}}
                                     </div>
                                     <div class="status">
                                         Status: 

@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from django.contrib.auth import get_user_model
 from .models import School
-
+import time
 class CashOutFormTest (LiveServerTestCase):
 
     def setUp(self):
@@ -25,14 +25,15 @@ class CashOutFormTest (LiveServerTestCase):
     def test_negative_number (self):
         self.logintutee()
         self.driver.find_element_by_id('points-link').send_keys(Keys.RETURN) #go to points page
-        self.transfer_points("-10", "tutor student") #try to transfer -10 points to tutor student
+        # time.sleep(100)
+        self.transfer_points("-10", "Tutor Student") #try to transfer -10 points to tutor student
         assert 'Please enter a positive value' in self.driver.page_source #make sure error message shows up
 
     #test inputting number of points larger than current points balance
     def test_number_larger_than_balance (self):
         self.logintutee()
         self.driver.find_element_by_id('points-link').send_keys(Keys.RETURN) #go to points page
-        self.transfer_points("100", "tutor student")
+        self.transfer_points("100", "Tutor Student")
         assert 'Please enter a value less than or equal to your current points balance' in self.driver.page_source #make sure error message shows up
 
     #test transferring number of points lesser than current points balance
@@ -48,8 +49,7 @@ class CashOutFormTest (LiveServerTestCase):
 
         #transfer 150 points from tutor to tutee
         select = Select(self.driver.find_element_by_id('id_tutors'))
-        select.select_by_visible_text ("tutor student")
-        self.transfer_points ("150", "tutor student")
+        self.transfer_points ("150", "Tutor Student")
         tutee_total_pts = self.driver.find_element_by_id('total-points').text.replace ("\n", " ") #get tutee total points balance
         assert tutee_total_pts == "0 points"
         self.logout()
