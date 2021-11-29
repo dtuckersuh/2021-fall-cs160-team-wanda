@@ -64,6 +64,8 @@ Requests
 
             <div class="respond-buttons">
             {% if request.accepted %}
+                Accepted
+                <br />
                 <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
                 data-toggle="modal" data-target="#modal-complete-request">Complete</button>
             {% else %}
@@ -167,6 +169,8 @@ Requests
             </div>
             <div class="respond-buttons">
                 {% if request.accepted %}
+                    Accepted
+                    <br />
                     <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
                     data-toggle="modal" data-target="#modal-complete-request">Complete</button>
                 {% elif request.accepted is None %}
