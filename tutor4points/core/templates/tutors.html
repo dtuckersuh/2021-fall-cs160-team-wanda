@@ -6,7 +6,7 @@
 {% endblock%}
 
 {% load crispy_forms_tags %}
-
+{% load humanize %}
 {% block heading %}
 Tutors
 {% endblock %}
@@ -65,7 +65,11 @@ Tutors
             <br />
 
             <div class="tutor-rate">
-                {{tutor.rate}} pts/hr<br />
+                {% if tutor.rate %}
+                {{tutor.rate|intcomma}} pts/hr<br />
+                {% else %}
+                Rate: TBD
+                {% endif %}
             </div>
         </div>
 
