@@ -29,7 +29,8 @@ Dashboard
                         {% if requests_received %}
                         {% for tutor_request in requests_received|slice:":3" %}
                             {% with tutee=tutor_request.tutee %}
-                            <div class="received-request-container d-flex" id="request-{{tutor_request.id}}" data-requestid="{{tutor_request.id}}" data-tuteeid="{{tutor_request.tutee.id}}">
+                            <div class="received-request-container d-flex" id="request-{{tutor_request.id}}" 
+                            data-requestid="{{tutor_request.id}}" data-tuteeid="{{tutor_request.tutee.id}}">
                                 <div class = "received-request-content d-flex">
                                     <div>
                                         <img src="{{tutee.profile_pic.url}}" class="profile-pic">
@@ -265,7 +266,7 @@ Dashboard
     const tutor = document.getElementById('requestedTutor')
     const acceptId = document.getElementById('requestIdAccept')
     const declineId = document.getElementById('requestIdDecline')
-
+    const completeId = document.getElementById('requestIdCompleted')
    document.querySelector('body').addEventListener('click', event => {
         const receivedRequestContainer = event.target.closest('.received-request-container')
         if (!receivedRequestContainer) return
@@ -278,7 +279,7 @@ Dashboard
                 declineId.value = requestIdValue
             }
             if (completeId) {
-                completeId.value = infoContainer.dataset.requestid
+                completeId.value = requestIdValue 
             }
         }
         if (!event.target.matches('.btn-secondary')) {

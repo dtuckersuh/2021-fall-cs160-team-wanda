@@ -136,7 +136,7 @@ Requests
     <div class="requests-items container-fluid">
         {% for request in requests_sent %}
         <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
-            data-tuteeid="{{request.tutee.id}}" data-givenTo="{{request.tutor.id}}">
+            data-tuteeid="{{request.tutee.id}}" data-givento="{{request.tutor.id}}">
             <div class="profile-container">
                 <img src="{{request.tutor.profile_pic.url}}" class="profile-pic">
             </div>
@@ -197,10 +197,9 @@ Requests
         declineId.value = requestIdVal
         completedRequestId.value = requestIdVal
         requestGivenTo.value = requestContainer.dataset.givento
-        console.log(requestGivenTo.value)  
-        //if (!event.target.matches('.respond-button')) {
-        //    location.href = `/users/${requestContainer.dataset.tuteeid}`
-        //}
+        if (!event.target.matches('.respond-button')) {
+            location.href = `/users/${requestGivenTo.value}`
+        }
     })
 </script>
 {% endblock %}
