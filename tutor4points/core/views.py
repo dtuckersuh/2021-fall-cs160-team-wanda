@@ -270,7 +270,7 @@ def points(request):
 def requests(request, id):
     current_user = request.user
     requests_received = TutorRequest.objects.all().filter(
-        tutor=current_user, accepted=None, completed=False)  # get all user's tutor requests
+        tutor=current_user, completed=False)  # get all user's tutor requests
     requests_sent = TutorRequest.objects.all().filter(
         tutee=current_user, completed=False)  # get all user's tutor requests
     accept_filter = "" 
