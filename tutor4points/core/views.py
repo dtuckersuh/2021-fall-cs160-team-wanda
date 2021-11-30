@@ -241,7 +241,7 @@ def requests(request, id):
     requests_received = TutorRequest.objects.all().filter(
         tutor=current_user, completed=False)  # get all user's tutor requests
     requests_sent = TutorRequest.objects.all().filter(
-        tutee=current_user, completed=False)  # get all user's tutor requests
+        tutee=current_user, tutee_completed=False)  # get all user's tutor requests
     accept_filter = ""
     if request.method == 'POST' and 'submit-accept-request' in request.POST:
         form_request_response = RequestResponseForm(
@@ -269,14 +269,25 @@ def requests(request, id):
         if form_rating.is_valid():
             rating = form_rating.save(commit=False)
             userGivenTo = get_user_model().objects.get(pk=request.POST['request-tutor'])
+            current_request_ID = request.POST['request-id'] #get current request id
+            current_request =  TutorRequest.objects.get(id = current_request_ID) #get current requests data
+
+            paid = False# get data from checkboxes
+            complete = False
+            if 'complete' in request.POST:
+                print(request.POST['complete'])
+                complete = True
+            if 'paid' in request.POST:
+                print(request.POST['paid'])
+                paid = True
+
+
             rating.given_to = userGivenTo
             rating.given_by = request.user
             rating.save()
 
             # calcute new rating, and update the database
-            type = form_rating.cleaned_data['rating_type']
-
-            if type == 'tutor':#for tutors
+            if current_user != current_request.tutor: #if the current user is the tutee, then give a tutor rating
                 tutor_ratings = Rating.objects.filter(given_to = userGivenTo).filter(rating_type = 'tutor')
                 count = 0
                 sum = 0
@@ -284,7 +295,7 @@ def requests(request, id):
                     count += 1
                     sum += i.rating
                 userGivenTo.tutor_avg_rating = sum/count
-            else: #otherwise tutee
+            else: #otherwise if the current user is a tutor, give a tutor rating
                 tutor_ratings = Rating.objects.filter(given_to = userGivenTo).filter(rating_type = 'tutee')
                 count = 0
                 sum = 0
@@ -295,9 +306,20 @@ def requests(request, id):
             userGivenTo.save()
 
             currentRequest = TutorRequest.objects.get(pk=request.POST['request-id'])
-            currentRequest.completed = True
-            currentRequest.save()
-    else:
+            if current_user == current_request.tutor:
+                if complete == True: #if the checkboxes were marked as true or false
+                    currentRequest.completed = True
+                if paid == True:
+                    currentRequest.paid = True
+                else:
+                    currentRequest.paid = False # if the tutor says that payment was not sent, allow them to ovveride
+            else:
+                if complete == True: #if the checkboxes were marked as true or false
+                    currentRequest.tutee_completed = True
+                if paid == True:
+                    currentRequest.paid = True#do not let the tutee ovveride the false, they can only set this value to true.
+            currentRequest.save()#save
+    else:# if not, then make sure we have a RateTutorForm
         form_rating = RateTutorForm()
 
     return render(

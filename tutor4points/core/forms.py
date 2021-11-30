@@ -149,7 +149,7 @@ class RateTutorForm(forms.ModelForm):
         model = Rating
 
         # layout where want fields to be, type in order you want it to appear
-        fields = ('rating', 'comment','rating_type')
+        fields = ('rating', 'comment')
 
         # customize placeholders
         widgets = {
@@ -157,8 +157,7 @@ class RateTutorForm(forms.ModelForm):
             forms.NumberInput(attrs={'placeholder': '1-5'}),
             'comment':
             forms.TextInput(attrs={'placeholder': 'comment here'}),
-            'Type of rating (tutor or tutee)':
-            forms.TextInput(attrs={'placeholder': 'comment'}),
+
 
         }
 
@@ -166,11 +165,12 @@ class RateTutorForm(forms.ModelForm):
         labels = {
             'rating': "Enter a rating 1-5 stars",
             'comment': "Explain how you're session went",
-            'rating_type': "Is the user you are rating a tutor or tutee?",
+
         }
 
     helper = FormHelper()
     helper.form_id = 'form'
+
 
 # Form that allows user to purchase points
 class PurchasePointsForm(forms.Form):
