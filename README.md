@@ -12,8 +12,8 @@
 3. Clone the project by running the following command in Terminal: ```git clone <url>```
 
 ## Running the Project
-1. Navigate into the tutor4points folder and run ```python3 maange.py migrate```
-2. Run the pythong project setup script ```python3 setup_project.py```
+1. Navigate to ```2021-fall-cs160-team-wanda/tutor4points``` and run ```python3 maange.py migrate```
+2. Run the python project setup script ```python3 setup_project.py```
 3. Type ```python3 manage.py runserver```
 4. Copy the address into your browser (usually it’s http://127.0.0.1:8000/)
 
@@ -31,4 +31,8 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 ```python manage.py test```<br>
 2. You should see the driver being activated, the chrome window opening, and buttons being pressed automatically. The test results will be shown after the script is ran<br>
 ![](media/testResult.png)
+### Running Docker
+1. Navigate to ```2021-fall-cs160-team-wanda/tutor4points```
+2. Build container image using ```docker build -t tutor4points .```
+3. Start container using updated code using ```docker run -p 8000:8000 tutor4points```
 
