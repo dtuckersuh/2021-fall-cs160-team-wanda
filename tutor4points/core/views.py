@@ -58,8 +58,8 @@ def home(request):
         requests_received = TutorRequest.objects.all().filter(tutor=current_user, accepted=None, completed=False)
         sent_requests = TutorRequest.objects.all().filter(tutee=current_user, completed=False)
         if request.method == 'POST' and 'submit-accept-request' in request.POST:
-            form_request_response = RequestResponseForm(request.POST, 
-                                    accepted = True, 
+            form_request_response = RequestResponseForm(request.POST,
+                                    accepted = True,
                                     request_id = request.POST['request-id'])
             if form_request_response.is_valid():
                 form_request_response.save()
@@ -69,8 +69,8 @@ def home(request):
 
         if request.method == 'POST' and 'submit-decline-request' in request.POST:
             print ("DECLINE")
-            form_request_response = RequestResponseForm(request.POST, 
-                                    accepted = False, 
+            form_request_response = RequestResponseForm(request.POST,
+                                    accepted = False,
                                     request_id = request.POST['request-id'])
             if form_request_response.is_valid():
                 form_request_response.save()
@@ -89,10 +89,10 @@ def home(request):
                 form_request_tutor = TutorRequestForm() #reset form after submission
         else:
             form_request_tutor = TutorRequestForm()
-            
-        return render(request, "home.html", 
+
+        return render(request, "home.html",
                 {
-                    'tutors': tutors, 
+                    'tutors': tutors,
                     'requests_received': requests_received,
                     'sent_requests': sent_requests,
                     'form_request_tutor': form_request_tutor,
@@ -120,7 +120,7 @@ def tutors(request):
             tutor_request.tutee = current_user
             tutor_request.tutor = tutor_instance
             tutor_request.save()
-            success_message = "Success! You have sent a request to " 
+            success_message = "Success! You have sent a request to "
             form = TutorRequestForm()
     else:
         form = TutorRequestForm()
@@ -158,48 +158,17 @@ def users(request, id):
             tutor_request.tutee = request.user
             tutor_request.tutor = user
             tutor_request.save()
-            success_message = "Success! You have sent a request to " 
-            form_tutor_request = TutorRequestForm() 
+            success_message = "Success! You have sent a request to "
+            form_tutor_request = TutorRequestForm()
     else:
-        form_tutor_request = TutorRequestForm() 
+        form_tutor_request = TutorRequestForm()
 
-    if request.method == 'POST' and 'rating' in request.POST:#code for rating, move once 'paid and done' functionality is added.
-        form_rating = RateTutorForm(request.POST)
-        if form_rating.is_valid():
-            rating = form_rating.save(commit=False)
-            rating.given_to = user
-            rating.given_by = request.user
-            rating.save()
 
-            # calcute new rating, and update the database
-            type = form_rating.cleaned_data['rating_type']
-
-            if type == 'tutor':#for tutors
-                tutor_ratings = Rating.objects.filter(given_to = user).filter(rating_type = 'tutor')
-                count = 0
-                sum = 0
-                for i in tutor_ratings:
-                    count += 1
-                    sum += i.rating
-                user.tutor_avg_rating = sum/count
-            else: #otherwise tutee
-                tutor_ratings = Rating.objects.filter(given_to = user).filter(rating_type = 'tutee')
-                count = 0
-                sum = 0
-                for i in tutor_ratings:
-                    count += 1
-                    sum += i.rating
-                user.tutee_avg_rating = sum/count
-            user.save()
-
-    else:
-        form_rating = RateTutorForm()
 
     return render(request, 'users_profile.html', {
         'user': user,
         'form_update_profile': form_update_profile,
         'form_tutor_request': form_tutor_request,
-        'form_rating': form_rating, # remove when moving rating
         'current_user': request.user.id == id,
         'success_message': success_message
     })
@@ -273,7 +242,7 @@ def requests(request, id):
         tutor=current_user, completed=False)  # get all user's tutor requests
     requests_sent = TutorRequest.objects.all().filter(
         tutee=current_user, completed=False)  # get all user's tutor requests
-    accept_filter = "" 
+    accept_filter = ""
     if request.method == 'POST' and 'submit-accept-request' in request.POST:
         form_request_response = RequestResponseForm(
             request.POST, accepted=True, request_id=request.POST['request-id'])
@@ -293,14 +262,14 @@ def requests(request, id):
     if request.method == "POST" and 'show-accepted' in request.POST:
         requests_received = requests_received.filter(accepted=True)
         requests_sent= requests_sent.filter(accepted=True)
-        accept_filter = "checked" 
+        accept_filter = "checked"
 
     if request.method == 'POST' and 'submit-rating' in request.POST: #code for rating, move once 'paid and done' functionality is added.
         form_rating = RateTutorForm(request.POST)
         if form_rating.is_valid():
             rating = form_rating.save(commit=False)
             userGivenTo = get_user_model().objects.get(pk=request.POST['request-tutor'])
-            rating.given_to = userGivenTo 
+            rating.given_to = userGivenTo
             rating.given_by = request.user
             rating.save()
 

@@ -95,4 +95,3 @@ class Rating (models.Model):
     rating = models.IntegerField(null=True, validators=[
                                  MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField()
-    
