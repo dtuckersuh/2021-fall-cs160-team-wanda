@@ -59,6 +59,7 @@ class TutorRequest (models.Model):
     tutee_comment = models.TextField(null=True, blank=True)
     accepted = models.BooleanField(null=True)  # null by default
     completed = models.BooleanField(default=False)
+    tutee_completed = models.BooleanField(default=False) # check to see if the tutee has completed thiers as well
     paid = models.BooleanField(default=False)
 
 
@@ -95,4 +96,3 @@ class Rating (models.Model):
     rating = models.IntegerField(null=True, validators=[
                                  MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField()
-    
