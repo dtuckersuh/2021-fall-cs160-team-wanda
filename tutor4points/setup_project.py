@@ -33,31 +33,50 @@ def projectSetup():
 
     #add tutors and tutees to Users model
 
-    #CS sjsu student
+    #CS SJSU student
     if not User.objects.filter(username="alexis"):
         User.objects.create_user (username="alexis", password="ad!654321", first_name="alexis", last_name="davis", email="alexis@gmail.com", school = School.objects.get(name="San Jose State University"), profile_pic="images/profile_pics/alexis.png",
         is_tutor = True, classes_taken = "CS146, MATH42, BIOL10", times_available = "Monday 2-4pm, Tuesday 5-6pm", 
         time_zone="pacific", rate = "20000")
         print ("Added Alexis Davis to Users model")
 
-    #Art sjsu student
+    #Art SJSU student
     if not User.objects.filter(username="amy"):
         User.objects.create_user (username="amy", password="an!654321", first_name="amy", last_name="nguyen", email="amy@gmail.com", school = School.objects.get(name="San Jose State University"), profile_pic="images/profile_pics/amy.png",
         is_tutor = True, classes_taken = "ART68, PHOT40", times_available = "Friday 1-7pm", 
         time_zone="pacific", rate = "18000")
         print ("Added Amy Nguyen to Users model")
 
-    #Engineering sjsu student who doesn't supply rate and times available
+    #Kinesiology SJSU student
+    if not User.objects.filter(username="andre"):
+        User.objects.create_user (username="andre", password="at!654321", first_name="andre", last_name="thomas", email="andre@gmail.com", school = School.objects.get(name="San Jose State University"), profile_pic="images/profile_pics/andre.png",
+        is_tutor = True, classes_taken = "KIN1, KIN2A, KIN2B", times_available = "Monday 2-5pm, Wednesday 4-7pm", 
+        time_zone="pacific", rate = "25000")
+        print ("Added Andrew Thomas to Users model")
+
+    #Engineering SJSU student who doesn't supply rate and times available
     if not User.objects.filter(username="anthony"):
         User.objects.create_user (username="anthony", password="aj!654321", first_name="anthony", last_name="johnson", email="anthony@gmail.com", school = School.objects.get(name="San Jose State University"), profile_pic="images/profile_pics/anthony.png",
         is_tutor = True, classes_taken = "CMPE120, EE97, EE98, CMPE148", time_zone="central")
         print ("Added Anthony Johnson to Users model")
 
-    #Medical sjsu student who does not want to be a tutor
+    #Medical SJSU student who does not want to be a tutor
     if not User.objects.filter(username="brandon"):
         User.objects.create_user (username="brandon", password="bc!654321", first_name="brandon", last_name="castro", email="brandon@gmail.com", school = School.objects.get(name="San Jose State University"), profile_pic="images/profile_pics/brandon.png",
         is_tutor = False, time_zone="mountain")
         print ("Added Brandon Castro to Users model")
+
+    #Business SJSU student who wants to be a tutor
+    if not User.objects.filter(username="drake"):
+        User.objects.create_user (username="drake", password="lj!654321", first_name="drake", last_name="jones", email="drake@gmail.com", school = School.objects.get(name="San Jose State University"), profile_pic="images/profile_pics/drake.png",
+        is_tutor = True, classes_taken = "PHIL186, BUS2 130, ECON 1A", time_zone="pacific")
+        print ("Added Drake Jones to Users model")
+
+    #Dance SJSU student who wants to be a tutor
+    if not User.objects.filter(username="isabelle"):
+        User.objects.create_user (username="isabelle", password="iw!654321", first_name="isabelle", last_name="wilson", email="isabell@gmail.com", school = School.objects.get(name="San Jose State University"), profile_pic="images/profile_pics/isabelle.png",
+        is_tutor = True, classes_taken = "DANC41A, DANC49A", time_zone="pacific", rate="22500")
+        print ("Added Isabelle Wilson to Users model")
 
     #Eng Berkeley student who leaves all tutor fields blank
     if not User.objects.filter(username="joshua"):

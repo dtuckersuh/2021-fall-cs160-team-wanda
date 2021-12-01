@@ -156,7 +156,7 @@ class RateTutorForm(forms.ModelForm):
             'rating':
             forms.NumberInput(attrs={'placeholder': '1-5'}),
             'comment':
-            forms.TextInput(attrs={'placeholder': 'comment here'}),
+            forms.TextInput(attrs={'placeholder': 'Comment'}),
 
 
         }
@@ -164,7 +164,7 @@ class RateTutorForm(forms.ModelForm):
         # customize form labels
         labels = {
             'rating': "Enter a rating 1-5 stars",
-            'comment': "Explain how you're session went",
+            'comment': "Comment",
 
         }
 

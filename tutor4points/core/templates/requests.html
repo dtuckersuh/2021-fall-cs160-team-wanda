@@ -61,17 +61,23 @@ Requests
                 </div>
             </div>
 
-            <div class="respond-buttons">
+            <div class="respond-container">
             {% if request.accepted %}
-                Accepted
-                <br />
+            <div class="request-status d-flex">
+                <p>Request Accepted</p>
                 <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
                 data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+            </div>
             {% else %}
+            <div class="status-text d-flex">
+                <p>Awaiting Response</p>
+            </div>
+            <div class="respond-buttons d-flex">
                 <button type="submit" name="btn-accept-request" class="btn-secondary respond-button" data-toggle="modal"
                     data-target="#modal-accept-request">Accept</button>
                 <button type="submit" name="btn-reject-request" class="btn-secondary respond-button" data-toggle="modal"
                     data-target="#modal-decline-request">Decline</button>
+            </div>
             {% endif %}
             </div>
         </div>
@@ -123,8 +129,10 @@ Requests
                 <input type="hidden" name="request-id" id="completedRequestId" value="">
                 {% csrf_token %}
                 {{ form_rating | crispy }}
-                <input type="checkbox" name="complete" value="complete"> Confirm that the tutor session was completed
-                <input type="checkbox" name="paid" value="paid"> Confirm that payment was sent
+                <div class = "checkbox-container d-flex">
+                    <div class="complete-checkbox"> <input type="checkbox" name="complete" value="complete"> Session Completed* </div>
+                    <div class="paid-checkbox"> <input type="checkbox" name="paid" value="paid"> Session Paid* </div>
+                </div>
 
                 <button type="submit" name="submit-rating" class="btn-secondary btn-block">
                     Complete Tutor Request
@@ -169,12 +177,13 @@ Requests
                     Comments: {{request.tutee_comment}}
                 </div>
             </div>
-            <div class="respond-buttons">
+            <div class="request-status d-flex">
                 {% if request.accepted %}
-                    Accepted
-                    <br />
+                <div class="request-status d-flex">
+                    <p>Request Accepted</p>
                     <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
-                    data-toggle="modal" data-target="#modal-complete-request">Complete and paid</button>
+                    data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+                </div>
                 {% elif request.accepted is None %}
                     Awaiting Response
                 {% else %}
