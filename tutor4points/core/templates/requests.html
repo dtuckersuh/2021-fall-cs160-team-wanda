@@ -14,6 +14,18 @@ Requests
 
 {% block content %}
 
+<div class="show-accepted">
+    <form method="post">
+    {% csrf_token %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted"
+                onChange="this.form.submit()" {{accept_filter}}>
+            <label class="form-check-label" for="show-accepted">
+                Show Accepted
+            </label>
+        </div>
+    </form>
+</div>
 <div class="scroll-box">
     <h2>Inbox</h2>
     {% if requests_received %}
@@ -21,7 +33,7 @@ Requests
         {% for request in requests_received %}
 
         <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
-            data-tuteeid="{{request.tutee.id}}">
+            data-givenTo="{{request.tutee.id}}">
             <div class="profile-container">
                 <img src="{{request.tutee.profile_pic.url}}" class="profile-pic">
             </div>
@@ -49,11 +61,19 @@ Requests
                     Comments: {{request.tutee_comment}}
                 </div>
             </div>
+
             <div class="respond-buttons">
+            {% if request.accepted %}
+                Accepted
+                <br />
+                <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
+                data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+            {% else %}
                 <button type="submit" name="btn-accept-request" class="btn-secondary respond-button" data-toggle="modal"
                     data-target="#modal-accept-request">Accept</button>
                 <button type="submit" name="btn-reject-request" class="btn-secondary respond-button" data-toggle="modal"
                     data-target="#modal-decline-request">Decline</button>
+            {% endif %}
             </div>
         </div>
         {% endfor %}
@@ -94,14 +114,34 @@ Requests
     </div>
 </div>
 
+<!--Complete Request Modal-->
+<div class="modal" id="modal-complete-request">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form method="POST">
+                <p class="modal-request-status">Complete Tutor Request</p>
+                <input type="hidden" name="request-tutor" id="requestGivenTo" value="">
+                <input type="hidden" name="request-id" id="completedRequestId" value="">
+                {% csrf_token %}
+                {{ form_rating | crispy }}
+                <input type="checkbox" name="complete" value="complete"> Confirm that the tutor session was completed
+                <input type="checkbox" name="paid" value="paid"> Confirm that payment was sent
+
+                <button type="submit" name="submit-rating" class="btn-secondary btn-block">
+                    Complete Tutor Request
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="scroll-box">
     <h2>Sent</h2>
     {% if requests_sent %}
     <div class="requests-items container-fluid">
         {% for request in requests_sent %}
-
         <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
-            data-tuteeid="{{request.tutee.id}}">
+            data-tuteeid="{{request.tutee.id}}" data-givento="{{request.tutor.id}}">
             <div class="profile-container">
                 <img src="{{request.tutor.profile_pic.url}}" class="profile-pic">
             </div>
@@ -132,11 +172,14 @@ Requests
             </div>
             <div class="respond-buttons">
                 {% if request.accepted %}
-                Accepted
-                {% elif request.status is None %}
-                Awaiting Response
+                    Accepted
+                    <br />
+                    <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
+                    data-toggle="modal" data-target="#modal-complete-request">Complete and paid</button>
+                {% elif request.accepted is None %}
+                    Awaiting Response
                 {% else %}
-                Declined
+                    Declined
                 {% endif %}
             </div>
         </div>
@@ -151,14 +194,18 @@ Requests
 <script type="text/javascript">
     const acceptId = document.getElementById('requestIdAccept')
     const declineId = document.getElementById('requestIdDecline')
+    const requestGivenTo = document.getElementById('requestGivenTo')
+    const completedRequestId = document.getElementById('completedRequestId')
     document.querySelector('body').addEventListener('click', event => {
         const requestContainer = event.target.closest('.request-container')
         if (!requestContainer) return
         const requestIdVal = requestContainer.dataset.requestid
         acceptId.value = requestIdVal
         declineId.value = requestIdVal
+        completedRequestId.value = requestIdVal
+        requestGivenTo.value = requestContainer.dataset.givento
         if (!event.target.matches('.respond-button')) {
-            location.href = `/users/${requestContainer.dataset.tuteeid}`
+            location.href = `/users/${requestGivenTo.value}`
         }
     })
 </script>

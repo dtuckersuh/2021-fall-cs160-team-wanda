@@ -29,7 +29,8 @@ Dashboard
                         {% if requests_received %}
                         {% for tutor_request in requests_received|slice:":3" %}
                             {% with tutee=tutor_request.tutee %}
-                            <div class="received-request-container d-flex" id="request-{{tutor_request.id}}" data-requestid="{{tutor_request.id}}" data-tuteeid="{{tutor_request.tutee.id}}">
+                            <div class="received-request-container d-flex" id="request-{{tutor_request.id}}" 
+                            data-requestid="{{tutor_request.id}}" data-tuteeid="{{tutor_request.tutee.id}}">
                                 <div class = "received-request-content d-flex">
                                     <div>
                                         <img src="{{tutee.profile_pic.url}}" class="profile-pic">
@@ -44,14 +45,21 @@ Dashboard
                                         {{tutor_request.tutor_date}} @<br>{{tutor_request.tutor_start_time}} - {{tutor_request.tutor_end_time}}<br>
                                     </div>
                                     <div class = "respond-btns d-flex">
-                                        <button type="submit" name="accept-request" class="btn-secondary respond-button" 
-                                            data-toggle= "modal" data-target="#modal-accept-request">
-                                            Accept
-                                        </button>
-                                        <button type="submit" name="decline-request" class="btn-secondary respond-button" 
-                                        data-toggle= "modal" data-target="#modal-decline-request">
-                                            Decline
-                                        </button>
+                                        {% if tutor_request.accepted %}
+                                            <button type="submit" name="btn-accept-request" cless="btn-secondary"
+                                                data-toggle="modal" data-target="#modal-complete-request">
+                                                Complete 
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" name="accept-request" class="btn-secondary respond-button" 
+                                                data-toggle= "modal" data-target="#modal-accept-request">
+                                                Accept
+                                            </button>
+                                            <button type="submit" name="decline-request" class="btn-secondary respond-button" 
+                                            data-toggle= "modal" data-target="#modal-decline-request">
+                                                Decline
+                                            </button>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div class = "comment-container">
@@ -145,10 +153,10 @@ Dashboard
                                         Status: 
                                         {% if sent_request.accepted %}
                                             <p class="status-confirmed">Accepted</p>
-                                        {% elif sent_request.status is None %}
+                                        {% elif sent_request.accepted is None %}
                                             <p class="status-pending">Awaiting Response</p>
                                         {% else %}
-                                            <p class="status-denied">Declined</p>
+                                            <p class="status-declined">Declined</p>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -239,12 +247,26 @@ Dashboard
         </div>
     </div>
 </div>
-
+<div class="modal" id="modal-complete-request">
+    <div class="modal-dialog modal-lg">
+        <div class="request-modal-content">
+            <form method="POST">
+                <p class="modal-request-status">Complete Tutor Request</p>
+                <input type="hidden" name="request-id" id="requestIdCompleted" value="">
+                {% csrf_token %}
+                {{ form_rating | crispy }}
+                <button type="submit" name="submit-complete-request" class="btn-secondary btn-block">
+                    Complete Tutor Request
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
 <script type = "text/javascript">
     const tutor = document.getElementById('requestedTutor')
     const acceptId = document.getElementById('requestIdAccept')
     const declineId = document.getElementById('requestIdDecline')
-
+    const completeId = document.getElementById('requestIdCompleted')
    document.querySelector('body').addEventListener('click', event => {
         const receivedRequestContainer = event.target.closest('.received-request-container')
         if (!receivedRequestContainer) return
@@ -255,6 +277,9 @@ Dashboard
             } 
             if (declineId) {
                 declineId.value = requestIdValue
+            }
+            if (completeId) {
+                completeId.value = requestIdValue 
             }
         }
         if (!event.target.matches('.btn-secondary')) {

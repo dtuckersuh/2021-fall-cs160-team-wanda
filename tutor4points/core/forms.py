@@ -149,7 +149,7 @@ class RateTutorForm(forms.ModelForm):
         model = Rating
 
         # layout where want fields to be, type in order you want it to appear
-        fields = ('rating', 'comment','rating_type')
+        fields = ('rating', 'comment')
 
         # customize placeholders
         widgets = {
@@ -157,8 +157,7 @@ class RateTutorForm(forms.ModelForm):
             forms.NumberInput(attrs={'placeholder': '1-5'}),
             'comment':
             forms.TextInput(attrs={'placeholder': 'comment here'}),
-            'Type of rating (tutor or tutee)':
-            forms.TextInput(attrs={'placeholder': 'comment'}),
+
 
         }
 
@@ -166,11 +165,12 @@ class RateTutorForm(forms.ModelForm):
         labels = {
             'rating': "Enter a rating 1-5 stars",
             'comment': "Explain how you're session went",
-            'rating_type': "Is the user you are rating a tutor or tutee?",
+
         }
 
     helper = FormHelper()
     helper.form_id = 'form'
+
 
 # Form that allows user to purchase points
 class PurchasePointsForm(forms.Form):
@@ -251,7 +251,7 @@ class TransferPointsForm(forms.Form):
     def save(self):
         amount_to_transfer = self.cleaned_data['amount_to_transfer']
         tutor = self.cleaned_data['tutors']
-        
+
         #subtract points from user's balance
         self.user.total_points -= amount_to_transfer
         self.user.save()
@@ -269,7 +269,7 @@ class TutorRequestForm(forms.ModelForm):
     # make sure start time is possible if it is today
     def clean_tutor_start_time(self):
         tutor_start_time = self.cleaned_data['tutor_start_time']
-        tutor_date = self.cleaned_data['tutor_date']    
+        tutor_date = self.cleaned_data['tutor_date']
         if tutor_date == date.today() and tutor_start_time < datetime.now().time():
             self.add_error('tutor_start_time', "Start time must be now or later")
         return tutor_start_time
@@ -282,7 +282,7 @@ class TutorRequestForm(forms.ModelForm):
             self.add_error('tutor_end_time', "End time must be after start time")
         return tutor_end_time
 
-    # make sure date is today or later 
+    # make sure date is today or later
     def clean_tutor_date(self):
         tutor_date = self.cleaned_data['tutor_date']
         if tutor_date < date.today():
