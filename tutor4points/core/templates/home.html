@@ -7,7 +7,7 @@
 {% endblock%}
 
 {% load crispy_forms_tags %}
-
+{% load humanize %}
 {% block heading %}
 Dashboard
 {% endblock %}
@@ -108,7 +108,7 @@ Dashboard
                                     {% endif %}
                                     <div class="tutor-rate-column">
                                     {% if tutor.rate%}
-                                        {{tutor.rate}} pts/hr<br/>
+                                        {{tutor.rate|intcomma}} pts/hr<br/>
                                     {% else %}
                                         Rate: TBD
                                     {% endif %}

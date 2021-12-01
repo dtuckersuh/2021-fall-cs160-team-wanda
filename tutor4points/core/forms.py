@@ -207,8 +207,8 @@ class CashOutPointsForm(forms.Form):
 
     def clean_cashed_points (self): #validate cashed points field
         cashed_points = self.cleaned_data['cashed_points']
-        if (cashed_points is None or cashed_points <= 0):
-            self.add_error ('cashed_points', 'Please enter a positive value.')
+        if (cashed_points is None or cashed_points < 1):
+            self.add_error ('cashed_points', 'Please enter a value greater than 1 point.')
         elif cashed_points > self.user.total_points: #if user tries to cash out more points than point balance
             self.add_error ('cashed_points', 'Please enter a value less than or equal to your points balance.')
         return cashed_points
