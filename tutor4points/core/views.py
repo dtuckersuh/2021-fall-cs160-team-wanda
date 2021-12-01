@@ -267,58 +267,45 @@ def requests(request, id):
     if request.method == 'POST' and 'submit-rating' in request.POST: #code for rating, move once 'paid and done' functionality is added.
         form_rating = RateTutorForm(request.POST)
         if form_rating.is_valid():
-            rating = form_rating.save(commit=False)
-            userGivenTo = get_user_model().objects.get(pk=request.POST['request-tutor'])
-            current_request_ID = request.POST['request-id'] #get current request id
-            current_request =  TutorRequest.objects.get(id = current_request_ID) #get current requests data
+            rating = form_rating.save(commit=False) #create a rating form
+            userGivenTo = get_user_model().objects.get(pk=request.POST['request-tutor']) #get the user that its given to
 
-            paid = False# get data from checkboxes
-            complete = False
-            if 'complete' in request.POST:
-                print(request.POST['complete'])
-                complete = True
-            if 'paid' in request.POST:
-                print(request.POST['paid'])
-                paid = True
+            current_request =  TutorRequest.objects.get(pk=request.POST['request-id']) #get current requests data
+            current_request.paid = True # make sure the paid is true
 
+            if 'complete' in request.POST and 'paid' in request.POST: #continue only if paid and completed.
+                rating.given_to = userGivenTo #update the rating form
+                rating.given_by = request.user
+                # calcute new rating, and update the database
+                if current_user != current_request.tutor: #if the current user is the tutee, then give a tutor rating
+                    rating.rating_type = 'tutor' #set the tutor type
+                    rating.save() #save the rating
 
-            rating.given_to = userGivenTo
-            rating.given_by = request.user
-            rating.save()
+                    tutor_ratings = Rating.objects.filter(given_to = userGivenTo).filter(rating_type = 'tutor') #grab all tutor ratings for the user
+                    count = 0 #sum up the rating
+                    sum = 0
+                    for i in tutor_ratings:
+                        count += 1
+                        sum += i.rating
+                    userGivenTo.tutor_avg_rating = sum/count #geaverage
 
-            # calcute new rating, and update the database
-            if current_user != current_request.tutor: #if the current user is the tutee, then give a tutor rating
-                tutor_ratings = Rating.objects.filter(given_to = userGivenTo).filter(rating_type = 'tutor')
-                count = 0
-                sum = 0
-                for i in tutor_ratings:
-                    count += 1
-                    sum += i.rating
-                userGivenTo.tutor_avg_rating = sum/count
-            else: #otherwise if the current user is a tutor, give a tutor rating
-                tutor_ratings = Rating.objects.filter(given_to = userGivenTo).filter(rating_type = 'tutee')
-                count = 0
-                sum = 0
-                for i in tutor_ratings:
-                    count += 1
-                    sum += i.rating
-                userGivenTo.tutee_avg_rating = sum/count
-            userGivenTo.save()
+                    current_request.tutee_completed  = True
+                else: #otherwise if the current user is a tutor, give a tutee
+                    rating.rating_type = 'tutee'
+                    rating.save()
 
-            currentRequest = TutorRequest.objects.get(pk=request.POST['request-id'])
-            if current_user == current_request.tutor:
-                if complete == True: #if the checkboxes were marked as true or false
-                    currentRequest.completed = True
-                if paid == True:
-                    currentRequest.paid = True
-                else:
-                    currentRequest.paid = False # if the tutor says that payment was not sent, allow them to ovveride
-            else:
-                if complete == True: #if the checkboxes were marked as true or false
-                    currentRequest.tutee_completed = True
-                if paid == True:
-                    currentRequest.paid = True#do not let the tutee ovveride the false, they can only set this value to true.
-            currentRequest.save()#save
+                    tutor_ratings = Rating.objects.filter(given_to = userGivenTo).filter(rating_type = 'tutee')
+                    count = 0
+                    sum = 0
+                    for i in tutor_ratings:
+                        count += 1
+                        sum += i.rating
+                    userGivenTo.tutee_avg_rating = sum/count
+
+                    current_request.completed = True
+                userGivenTo.save() #after branches come together, save the rating average
+                current_request.save()#save the requests completed and paid
+
     else:# if not, then make sure we have a RateTutorForm
         form_rating = RateTutorForm()
 
