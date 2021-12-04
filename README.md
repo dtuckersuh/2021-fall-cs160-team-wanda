@@ -50,3 +50,9 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 2. Build container image using ```docker build -t tutor4points .```
 3. Start container using updated code using ```docker run -p 8000:8000 tutor4points```
 
+## Team Practices
+* Every feature is a separate branch and is named in the format feature-featurename
+* If more than one person is working on a feature, that particular feature branch can be branched into even smaller branches
+* There must be at least 2 code reviews before code is merged into the main branch
+* During code reviews, check for code styling as well as check for any bugs. Approve if the the bugs are minor, request changes if there are major bugs or the feature implemented does not align with project vision and requires rework
+
