@@ -20,7 +20,7 @@ Dashboard
     <div class="row d-flex">
         <div class="col">
             <div class="dashboard-container d-flex flex-row">
-                <h2>Account Balance: {{ user.total_points }} points</h3>
+                <h2>Account Balance: {{ user.total_points|intcomma}} points</h3>
             </div>
             {% if user.is_tutor %}
                 <div class="dashboard-container">
