@@ -19,6 +19,7 @@ Note: This script adds sample tutors and schools into the database. It also sets
 3. Type ```python3 manage.py runserver```
 4. Copy the address into your browser (usually it’s ```http://127.0.0.1:8000/```). It should redirect you to the login page
 ![](media/loginPage.png)
+
 ### Accessing Admin Page
 The admin page allows you to see an overview of all the database instances and allows you to add, modify, and delete those instances.
 1. Navigate to ```http://127.0.0.1:8000/admin```
@@ -43,7 +44,8 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 ```python manage.py test```<br>
 2. You should see the driver being activated, the chrome window opening, and buttons being pressed automatically. The test results will be shown after the script is ran<br>
 ![](media/testResult.png)
-### Running Docker
+
+## Running Docker
 1. Navigate to ```2021-fall-cs160-team-wanda/tutor4points```
 2. Build container image using ```docker build -t tutor4points .```
 3. Start container using updated code using ```docker run -p 8000:8000 tutor4points```
