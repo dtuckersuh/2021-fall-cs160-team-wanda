@@ -9,13 +9,26 @@
 ## Cloning the Project
 1. Using Terminal to navigate to the folder where you would like the project to be stored.
 2. Copy the URL from the GitHub Repository
-3. Clone the project by running the following command in Terminal: ```git clone <url>```
+![](media/repoURL.png)
+4. Clone the project by running the following command in Terminal: ```git clone <url>```
 
 ## Running the Project
 1. Navigate to ```2021-fall-cs160-team-wanda/tutor4points``` and run ```python3 maange.py migrate```
 2. Run the python project setup script ```python3 setup_project.py```
+Note: This script adds sample tutors and schools into the database. It also sets up the admin account. 
 3. Type ```python3 manage.py runserver```
-4. Copy the address into your browser (usually it’s http://127.0.0.1:8000/)
+4. Copy the address into your browser (usually it’s ```http://127.0.0.1:8000/```). It should redirect you to the login page
+![](media/loginPage.png)
+
+### Accessing Admin Page
+The admin page allows you to see an overview of all the database instances and allows you to add, modify, and delete those instances.
+1. Navigate to ```http://127.0.0.1:8000/admin```
+2. The page wil prompt you to log into the admin account. The following credentials are set up for the admin account.
+Username: admin
+Password: wanda
+![](media/adminLogin.png)
+3. After signing in,you will have access to all the database instances.
+![](media/adminHomepage.png)
 
 ## Selenium Test Automation
 ### Downloading & Configuring the Driver
@@ -31,7 +44,8 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 ```python manage.py test```<br>
 2. You should see the driver being activated, the chrome window opening, and buttons being pressed automatically. The test results will be shown after the script is ran<br>
 ![](media/testResult.png)
-### Running Docker
+
+## Running Docker
 1. Navigate to ```2021-fall-cs160-team-wanda/tutor4points```
 2. Build container image using ```docker build -t tutor4points .```
 3. Start container using updated code using ```docker run -p 8000:8000 tutor4points```
