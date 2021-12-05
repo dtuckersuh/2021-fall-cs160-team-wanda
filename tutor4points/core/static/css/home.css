@@ -123,24 +123,29 @@ a {
     flex-direction: row;
 }
 
+.request-status{
+    align-items: center;
+    flex-direction: column;
+  }
+
 .status {
     flex: 2;
-    padding: 1em;
     text-align: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 .status-confirmed {
     color: green;
-    margin: 0;
 }
 
 .status-pending {
-    margin: 0;
+    color: white;
 }
 
 .status-declined {
     color: red;
-    margin: 0;
 }
 
 .comment-container {

@@ -15,7 +15,8 @@ class SchoolAdmin (admin.ModelAdmin):
     list_display = ('id', 'name')
 
 class TutorRequestAdmin (admin.ModelAdmin):
-    list_display = ('id', 'date_sent_request', 'tutor', 'tutee', 'tutor_date', 'tutor_start_time', 'tutor_end_time', 'class_name', 'location', 'tutor_comment', 'tutee_comment', 'accepted', 'completed', 'paid')
+    list_display = ('id', 'date_sent_request', 'tutor', 'tutee', 'tutor_date', 'tutor_start_time', 'tutor_end_time', 'class_name', 'location', 'tutor_comment', 'tutee_comment', 'accepted', 'tutor_confirm_completed', 'tutee_confirm_completed',
+    'both_confirm_completed', 'tutor_confirm_paid', 'tutee_confirm_paid', 'both_confirm_paid')
 
 class TransactionAdmin (admin.ModelAdmin):
     list_display = ('id', 'sent_from', 'sent_to', 'method', 'points', 'date_transaction_made')

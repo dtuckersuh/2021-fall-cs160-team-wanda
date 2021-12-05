@@ -30,7 +30,7 @@ Dashboard
                         {% for tutor_request in requests_received|slice:":3" %}
                             {% with tutee=tutor_request.tutee %}
                             <div class="received-request-container d-flex" id="request-{{tutor_request.id}}" 
-                            data-requestid="{{tutor_request.id}}" data-tuteeid="{{tutor_request.tutee.id}}">
+                            data-requestid="{{tutor_request.id}}" data-tuteeid="{{tutor_request.tutee.id}}" data-givento="{{tutor_request.tutee.id}}">
                                 <div class = "received-request-content d-flex">
                                     <div>
                                         <img src="{{tutee.profile_pic.url}}" class="profile-pic">
@@ -46,7 +46,7 @@ Dashboard
                                     </div>
                                     <div class = "respond-btns d-flex">
                                         {% if tutor_request.accepted %}
-                                            <button type="submit" name="btn-accept-request" cless="btn-secondary"
+                                            <button type="submit" name="btn-submit-rating" class="btn-secondary"
                                                 data-toggle="modal" data-target="#modal-complete-request">
                                                 Complete 
                                             </button>
@@ -135,7 +135,7 @@ Dashboard
                     {% if sent_requests %}
                     {% for sent_request in sent_requests|slice:":3" %}
                         {% with tutor=sent_request.tutor %}
-                            <div class="sent-request-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
+                            <div class="sent-request-container d-flex" id="tutor-{{tutor.id}}" data-givento="{{tutor.id}}">
                                 <div class="sent-request-content d-flex">
                                     <div class = "tutor-profile-pic">
                                         <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
@@ -149,14 +149,17 @@ Dashboard
                                     <div class="times-column d-flex">
                                         {{sent_request.tutor_date}} @<br>{{sent_request.tutor_start_time}} - {{sent_request.tutor_end_time}}
                                     </div>
-                                    <div class="status">
-                                        Status: 
+                                    <div class="status d-flex">
                                         {% if sent_request.accepted %}
-                                            <p class="status-confirmed">Accepted</p>
+                                        <div class="request-status d-flex">
+                                            <p class="status-confirmed"> Request Accepted</p>
+                                            <button type="submit" name="btn-submit-rating" class="btn-secondary"
+                                                data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+                                        </div>
                                         {% elif sent_request.accepted is None %}
-                                            <p class="status-pending">Awaiting Response</p>
+                                        <p class="status-pending">Awaiting Response</p>
                                         {% else %}
-                                            <p class="status-declined">Declined</p>
+                                        <p class="status-declined">Request Declined</p>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -252,6 +255,7 @@ Dashboard
         <div class="request-modal-content">
             <form method="POST">
                 <p class="modal-request-status">Complete Tutor Request</p>
+                <input type="hidden" name="user-given-to" id="requestGivenTo" value="">
                 <input type="hidden" name="request-id" id="requestIdCompleted" value="">
                 {% csrf_token %}
                 {{ form_rating | crispy }}
@@ -262,30 +266,41 @@ Dashboard
         </div>
     </div>
 </div>
+
+{% if form_rating.errors %}
+<script>
+    $(document).ready(function () {
+        $("#modal-complete-request").modal('show')
+    })
+</script>
+{% endif %}
+
 <script type = "text/javascript">
     const tutor = document.getElementById('requestedTutor')
     const acceptId = document.getElementById('requestIdAccept')
     const declineId = document.getElementById('requestIdDecline')
+    const requestGivenTo = document.getElementById('requestGivenTo')
     const completeId = document.getElementById('requestIdCompleted')
-   document.querySelector('body').addEventListener('click', event => {
-        const receivedRequestContainer = event.target.closest('.received-request-container')
-        if (!receivedRequestContainer) return
-        const requestIdValue = receivedRequestContainer.dataset.requestid
-        if (requestIdValue) {
-            if (acceptId) {
-                acceptId.value = requestIdValue
-            } 
-            if (declineId) {
-                declineId.value = requestIdValue
+    document.querySelector('body').addEventListener('click', event => {
+            const receivedRequestContainer = event.target.closest('.received-request-container')
+            if (!receivedRequestContainer) return
+            const requestIdValue = receivedRequestContainer.dataset.requestid
+            if (requestIdValue) {
+                if (acceptId) {
+                    acceptId.value = requestIdValue
+                } 
+                if (declineId) {
+                    declineId.value = requestIdValue
+                }
+                if (completeId) {
+                    completeId.value = requestIdValue 
+                }
             }
-            if (completeId) {
-                completeId.value = requestIdValue 
+            requestGivenTo.value = receivedRequestContainer.dataset.givento
+            if (!event.target.matches('.btn-secondary')) {
+                location.href = `/users/${receivedRequestContainer.dataset.tuteeid}`
             }
-        }
-        if (!event.target.matches('.btn-secondary')) {
-            location.href = `/users/${receivedRequestContainer.dataset.tuteeid}`
-        }
-    })
+        })
 
     document.querySelector('body').addEventListener('click', event => {
         const tutorContainer = event.target.closest('.tutor-container')
@@ -300,10 +315,12 @@ Dashboard
 
     document.querySelector('body').addEventListener('click', event => {
         const infoContainer = event.target.closest('.sent-request-container')
-        if (!infoContainer) return
-        location.href = `/users/${infoContainer.dataset.tutorid}`
+        const requestGivenTo = document.getElementById('requestGivenTo')
+        requestGivenTo.value = infoContainer.dataset.givento
+        if (!event.target.matches('.btn-secondary')){
+            location.href = `/users/${infoContainer.dataset.givento}`
+        }
     })
-    
 </script>
 
 

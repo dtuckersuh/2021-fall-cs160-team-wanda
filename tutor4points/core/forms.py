@@ -145,11 +145,24 @@ class UpdateProfileForm(forms.ModelForm):
 
 class RateTutorForm(forms.ModelForm):
 
+    paid = forms.BooleanField(required=False, label="Session Paid*")
+    completed = forms.BooleanField(required=False, label="Session Completed*")
+
+    def clean_paid (self): #validate cashed points field
+        paid = self.cleaned_data['paid']
+        if (not paid):
+            self.add_error ('paid', 'Please confirm that you have paid for the tutor session')
+
+    def clean_completed (self): #validate cashed points field
+        completed = self.cleaned_data['completed']
+        if (not completed):
+            self.add_error ('completed', 'Please confirm that you have completed the tutor session')
+
     class Meta:
         model = Rating
 
         # layout where want fields to be, type in order you want it to appear
-        fields = ('rating', 'comment')
+        fields = ('rating', 'comment', 'paid', 'completed')
 
         # customize placeholders
         widgets = {
@@ -157,16 +170,15 @@ class RateTutorForm(forms.ModelForm):
             forms.NumberInput(attrs={'placeholder': '1-5'}),
             'comment':
             forms.TextInput(attrs={'placeholder': 'Comment'}),
-
-
         }
 
         # customize form labels
         labels = {
             'rating': "Enter a rating 1-5 stars",
             'comment': "Comment",
-
         }
+
+        exclude = ('request',)
 
     helper = FormHelper()
     helper.form_id = 'form'

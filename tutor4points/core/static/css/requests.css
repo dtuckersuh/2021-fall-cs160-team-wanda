@@ -175,6 +175,18 @@ h3 {
   flex-direction: column;
 }
 
+.status-confirmed {
+  color: green;
+}
+
+.status-pending {
+  color: white;
+}
+
+.status-declined {
+  color: red;
+}
+
 .respond-buttons{
   justify-content: center;
 }
