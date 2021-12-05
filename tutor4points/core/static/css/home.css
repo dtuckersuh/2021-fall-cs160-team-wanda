@@ -129,12 +129,13 @@ a {
     text-align: center;
 }
 
-.status-confirmed {
+.status-accepted {
     color: green;
     margin: 0;
 }
 
 .status-pending {
+    font-style:italic;
     margin: 0;
 }
 
