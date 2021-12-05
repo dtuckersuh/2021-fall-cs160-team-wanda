@@ -1,6 +1,54 @@
-.show-accepted {
-  margin: 0 3rem;
+.form-check-label {
+  display: block;
+  position: relative;
+  padding-left: 2.8rem;
+  margin:0 3rem 0 3.2rem;
+  cursor: pointer;
+  font-size: 1.3rem;
 }
+
+.form-check-label input {
+  opacity: 0;
+}
+
+.checkmark{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height:2rem;
+  width:2rem;
+  border-radius: 0.5rem;
+  background-color:#2a2f3b;
+}
+
+.form-check-label:hover input ~ .checkmark {
+  background-color: #242835;
+}
+
+.form-check-label input:checked ~ .checkmark {
+  background-color: #242835;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.form-check-label input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.form-check-label .checkmark:after {
+  left: 0.75rem;
+  top: 0.4rem;
+  width: 0.5rem;
+  height: 1rem;
+  border: solid #c5cadb;
+  border-width: 0 0.3rem 0.3rem 0;
+  transform: rotate(45deg);
+}
+
 .modal-content {
   background-color: #323849;
   padding: 1.25rem;
@@ -45,8 +93,23 @@
   margin: 2rem;
 }
 
+.scroll-box::-webkit-scrollbar {
+  width: 1rem;
+}
+
+.scroll-box::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background-color: #242835;
+}
+
+.scroll-box::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #323849;
+}
+
 .request-container:hover {
   background-color: #242835;
+  cursor: pointer;
 }
 
 .request-items {
@@ -91,6 +154,30 @@
 .times {
   font-size: 1.125rem;
   width: 40%;
+}
+
+.btn-accept{
+  border: none;
+  border-radius: 0.625rem;
+  padding: 0.625rem;
+  background-color: green; 
+  color:white;
+}
+
+.btn-accept:hover{
+  background-color: darkgreen;
+}
+
+.btn-decline{
+  border: none;
+  border-radius: 0.625rem;
+  padding: 0.625rem;
+  background-color: red;
+  color:white;
+}
+
+.btn-decline:hover{
+  background-color: maroon;
 }
 
 .modal-lg {

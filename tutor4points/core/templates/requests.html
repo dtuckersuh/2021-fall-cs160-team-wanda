@@ -17,9 +17,10 @@ Requests
     <form method="post">
     {% csrf_token %}
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted"
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted"
                 onChange="this.form.submit()" {{accept_filter}}>
-            <label class="form-check-label" for="show-accepted">
+                <span class="checkmark"></span>
                 Show Accepted
             </label>
         </div>
@@ -73,9 +74,9 @@ Requests
                 <p>Awaiting Response</p>
             </div>
             <div class="respond-buttons d-flex">
-                <button type="submit" name="btn-accept-request" class="btn-secondary respond-button" data-toggle="modal"
+                <button type="submit" name="btn-accept-request" class="btn-accept respond-button" data-toggle="modal"
                     data-target="#modal-accept-request">Accept</button>
-                <button type="submit" name="btn-reject-request" class="btn-secondary respond-button" data-toggle="modal"
+                <button type="submit" name="btn-reject-request" class="btn-decline respond-button" data-toggle="modal"
                     data-target="#modal-decline-request">Decline</button>
             </div>
             {% endif %}

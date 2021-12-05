@@ -185,6 +185,31 @@ a {
     width: 15%;
   }
 
+
+ .btn-accept{
+  border: none;
+  border-radius: 0.625rem;
+  padding: 0.625rem;
+  background-color: green; 
+  color:white;
+}
+
+.btn-accept:hover{
+  background-color: darkgreen;
+}
+
+.btn-decline{
+  border: none;
+  border-radius: 0.625rem;
+  padding: 0.625rem;
+  background-color: red;
+  color:white;
+}
+
+.btn-decline:hover{
+  background-color: maroon;
+} 
+
 .profile-pic {
     height:5rem;
     width:5rem;
@@ -252,7 +277,7 @@ a {
 }
 .modal-flex-container {
     display: flex;
-    padding:1.25rem 3.5rem 1.25rem 3.5rem;
+    padding:2.25rem 3.5rem 2.25rem 3.5rem;
     flex-direction: column;
     background-color: #323849;
     border-style: solid;
