@@ -46,16 +46,16 @@ Dashboard
                                     </div>
                                     <div class = "respond-btns d-flex">
                                         {% if tutor_request.accepted %}
-                                            <button type="submit" name="btn-accept-request" cless="btn-secondary"
+                                            <button type="submit" name="btn-accept-request" class="btn-secondary"
                                                 data-toggle="modal" data-target="#modal-complete-request">
                                                 Complete 
                                             </button>
                                         {% else %}
-                                            <button type="submit" name="accept-request" class="btn-secondary respond-button" 
+                                            <button type="submit" name="accept-request" class="btn-accept respond-button" 
                                                 data-toggle= "modal" data-target="#modal-accept-request">
                                                 Accept
                                             </button>
-                                            <button type="submit" name="decline-request" class="btn-secondary respond-button" 
+                                            <button type="submit" name="decline-request" class="btn-decline respond-button" 
                                             data-toggle= "modal" data-target="#modal-decline-request">
                                                 Decline
                                             </button>

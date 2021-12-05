@@ -180,6 +180,31 @@ a {
     width: 15%;
   }
 
+
+ .btn-accept{
+  border: none;
+  border-radius: 0.625rem;
+  padding: 0.625rem;
+  background-color: green; 
+  color:white;
+}
+
+.btn-accept:hover{
+  background-color: darkgreen;
+}
+
+.btn-decline{
+  border: none;
+  border-radius: 0.625rem;
+  padding: 0.625rem;
+  background-color: red;
+  color:white;
+}
+
+.btn-decline:hover{
+  background-color: maroon;
+} 
+
 .profile-pic {
     height:5rem;
     width:5rem;
