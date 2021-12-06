@@ -18,8 +18,9 @@ Requests
     {% csrf_token %}
         <div class="form-check">
             <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted"
-                onChange="this.form.submit()" {{accept_filter}}>
+                <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted-inbox" 
+                onChange="this.form.submit()" {{inbox_accept_filter}}>
+                <input type="hidden" name="filter-accepted" id='filter-accepted' value="">
                 <span class="checkmark"></span>
                 Show Accepted
             </label>
@@ -136,6 +137,21 @@ Requests
             </form>
         </div>
     </div>
+</div>
+
+<div class="show-accepted">
+    <form method="post">
+    {% csrf_token %}
+        <div class="form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted-sent"
+                onChange="this.form.submit()" {{sent_accept_filter}}>
+                <input type="hidden" name="filter-sent" value="">
+                <span class="checkmark"></span>
+                Show Accepted Sent Requests
+            </label>
+        </div>
+    </form>
 </div>
 
 <div class="scroll-box">

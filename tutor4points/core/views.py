@@ -303,7 +303,8 @@ def requests(request, id):
         tutor=current_user, tutor_confirm_completed=False)  # get all user's tutor requests
     requests_sent = TutorRequest.objects.all().filter(
         tutee=current_user, tutee_confirm_completed=False)  # get all user's tutor requests
-    accept_filter = ""
+    inbox_accept_filter = ""
+    sent_accept_filter = ""
     if request.method == 'POST' and 'submit-accept-request' in request.POST:
         form_request_response = RequestResponseForm(
             request.POST, accepted=True, request_id=request.POST['request-id'])
@@ -320,10 +321,12 @@ def requests(request, id):
             form_request_response = RequestResponseForm()
     else:
         form_request_response = RequestResponseForm()
-    if request.method == "POST" and 'show-accepted' in request.POST:
+    if request.method == "POST" and 'show-accepted-inbox' in request.POST:
         requests_received = requests_received.filter(accepted=True)
+        inbox_accept_filter = "checked"
+    if request.method == "POST" and 'show-accepted-sent' in request.POST:
         requests_sent= requests_sent.filter(accepted=True)
-        accept_filter = "checked"
+        sent_accept_filter = "checked"
 
     if request.method == 'POST' and 'submit-rating' in request.POST: #code for rating, move once 'paid and done' functionality is added.
         form_rating = RateTutorForm(request.POST)
@@ -390,6 +393,7 @@ def requests(request, id):
             'form_request_response': form_request_response,
             'requests_received': requests_received,
             'requests_sent': requests_sent,
-            'accept_filter': accept_filter,
+            'inbox_accept_filter': inbox_accept_filter,
+            'sent_accept_filter': sent_accept_filter,
             'form_rating': form_rating
         })
