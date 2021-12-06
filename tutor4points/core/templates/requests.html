@@ -14,12 +14,14 @@ Requests
 {% block content %}
 
 <div class="show-accepted">
-    <form method="post">
-    {% csrf_token %}
+    <form method="post" id="show-accepted-inbox-form">
+        {% csrf_token %}
         <div class="form-check">
             <label class="form-check-label label-text-style">
-                <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted-inbox" 
-                onChange="this.form.submit()" {{inbox_accept_filter}}>
+                <input class="form-check-input" type="checkbox" value="" id="show-accepted-inbox"
+                    name="show-accepted-inbox" onChange="handleCheckShowAcceptedInbox()" {{inbox_accept_filter}}>
+                <input class="form-check-input" type="checkbox" value="" id="show-accepted-sent-hidden" name=""
+                    {{sent_accept_filter}}>
                 <span class="checkmark"></span>
                 Show Accepted Incoming Requests
             </label>
@@ -63,23 +65,23 @@ Requests
             </div>
 
             <div class="respond-container">
-            {% if request.accepted %}
-            <div class="request-status d-flex">
-                <p class="status-confirmed"> Request Accepted</p>
-                <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
-                data-toggle="modal" data-target="#modal-complete-request">Complete</button>
-            </div>
-            {% else %}
-            <div class="status-text d-flex">
-                <p>Awaiting Response</p>
-            </div>
-            <div class="respond-buttons d-flex">
-                <button type="submit" name="btn-accept-request" class="btn-accept respond-button" data-toggle="modal"
-                    data-target="#modal-accept-request">Accept</button>
-                <button type="submit" name="btn-reject-request" class="btn-decline respond-button" data-toggle="modal"
-                    data-target="#modal-decline-request">Decline</button>
-            </div>
-            {% endif %}
+                {% if request.accepted %}
+                <div class="request-status d-flex">
+                    <p class="status-confirmed"> Request Accepted</p>
+                    <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
+                        data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+                </div>
+                {% else %}
+                <div class="status-text d-flex">
+                    <p>Awaiting Response</p>
+                </div>
+                <div class="respond-buttons d-flex">
+                    <button type="submit" name="btn-accept-request" class="btn-accept respond-button"
+                        data-toggle="modal" data-target="#modal-accept-request">Accept</button>
+                    <button type="submit" name="btn-reject-request" class="btn-decline respond-button"
+                        data-toggle="modal" data-target="#modal-decline-request">Decline</button>
+                </div>
+                {% endif %}
             </div>
         </div>
         {% endfor %}
@@ -139,12 +141,14 @@ Requests
 </div>
 
 <div class="show-accepted">
-    <form method="post">
-    {% csrf_token %}
+    <form method="post" id="show-accepted-sent-form">
+        {% csrf_token %}
         <div class="form-check">
             <label class="form-check-label label-text-style">
-                <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted-sent"
-                onChange="this.form.submit()" {{sent_accept_filter}}>
+                <input class="form-check-input" type="checkbox" value="" id="show-accepted-sent"
+                    name="show-accepted-sent" onChange="handleCheckShowAcceptedSent()" {{sent_accept_filter}}>
+                <input class="form-check-input" type="hidden" value="" id="show-accepted-inbox-hidden" name=""
+                    {{inbox_accept_filter}}>
                 <span class="checkmark"></span>
                 Show Accepted Sent Requests
             </label>
@@ -191,8 +195,8 @@ Requests
                 {% if request.accepted %}
                 <div class="request-status d-flex">
                     <p class="status-confirmed"> Request Accepted</p>
-                    <button type="submit" name="btn-submit-rating" class="btn-secondary"
-                    data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+                    <button type="submit" name="btn-submit-rating" class="btn-secondary" data-toggle="modal"
+                        data-target="#modal-complete-request">Complete</button>
                 </div>
                 {% elif request.accepted is None %}
                 <p class="status-pending">Awaiting Response</p>
@@ -226,5 +230,23 @@ Requests
             location.href = `/users/${requestGivenTo.value}`
         }
     })
+
+    function handleCheckShowAcceptedInbox(event) {
+        // populate hidden input for show accepted sent (to keep checked if already checked)
+        document.querySelector("#show-accepted-sent-hidden").name = $("#show-accepted-sent").prop('checked') ? "show-accepted-sent" : ""
+
+        // submit filter form
+        document.querySelector("#show-accepted-inbox-form").submit()
+    }
+
+    function handleCheckShowAcceptedSent(event) {
+        // populate hidden input for show accepted inbox (to keep checked if already checked)
+        document.querySelector("#show-accepted-inbox-hidden").name = $("#show-accepted-inbox").prop('checked') ? "show-accepted-inbox" : ""
+
+        // submit filter form
+        document.querySelector("#show-accepted-sent-form").submit()
+    }
+
+
 </script>
 {% endblock %}
