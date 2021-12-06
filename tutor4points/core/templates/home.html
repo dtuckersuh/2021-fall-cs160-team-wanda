@@ -17,6 +17,11 @@ Dashboard
 
 <!-- Content -->
 <div class="container-fluid main-container">
+    <div class="alert alert-success hidden" id="success-box" role="alert">
+        {{success_message}}{{tutor_instance.first_name | title}} {{tutor_instance.last_name | title}}. Click <a
+            href="{% url 'requests' id=user.id %}">here</a> to view all requests.
+    </div>
+
     <div class="row d-flex">
         <div class="col">
             <div class="dashboard-container d-flex flex-row">
@@ -310,12 +315,24 @@ Dashboard
     document.querySelector('body').addEventListener('click', event => {
         const tutorContainer = event.target.closest('.tutor-container')
         if (!tutorContainer) return
+
+        const tutorId = tutorContainer.dataset.tutorid
+
         if (tutorContainer.dataset.tutorid) {
-            tutor.value = tutorContainer.dataset.tutorid
+            tutor.value = tutorId
         }
+
+        // save tutorId from request in local storage (in case page reloads because of error)
+        localStorage.setItem('tutorIdRequested', JSON.stringify(tutorId))
+
         if (!event.target.matches('.btn-secondary')) {
             location.href = `/users/${tutorContainer.dataset.tutorid}`
         }
+    })
+
+    $(document).ready(function () {
+        // retrieve tutorId from local storage and populate hidden input in modal with id
+        tutor.value = JSON.parse(localStorage.getItem('tutorIdRequested'))
     })
 
     document.querySelector('body').addEventListener('click', event => {
@@ -326,6 +343,23 @@ Dashboard
             location.href = `/users/${infoContainer.dataset.givento}`
         }
     })
+
+</script>
+
+{% if form_request_tutor.errors %}
+<script>
+    $(document).ready(function () {
+        $("#tutor-request-modal").modal('show')
+    })
+</script>
+{% endif %}
+
+{{ success_message | json_script:"success-message" }}
+<script>
+    const successMessage = JSON.parse(document.getElementById('success-message').textContent)
+    if (successMessage !== "") {
+        document.getElementById('success-box').classList.toggle('hidden')
+    }
 </script>
 
 {% endwith %}

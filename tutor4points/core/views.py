@@ -1,5 +1,4 @@
-
-from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm,TransferPointsForm, RequestResponseForm, RateTutorForm
+from .forms import RegisterForm, TutorRequestForm, UpdateProfileForm, PurchasePointsForm, CashOutPointsForm, TransferPointsForm, RequestResponseForm, RateTutorForm
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, get_user_model, login, forms
@@ -52,6 +51,8 @@ def register(request):
 @login_required
 def home(request):
     current_user = request.user
+    success_message = ""
+    tutor_instance = None
     if current_user.is_authenticated:
         users = get_user_model().objects.all().exclude(pk=current_user.id)
         tutors = users.filter(is_tutor=True, school=current_user.school)
@@ -59,12 +60,14 @@ def home(request):
         print (requests_received)
         sent_requests = TutorRequest.objects.all().filter(tutee=current_user, tutee_confirm_completed=False)
         if request.method == 'POST' and 'submit-accept-request' in request.POST:
-            form_request_response = RequestResponseForm(request.POST,
-                                    accepted = True,
-                                    request_id = request.POST['request-id'])
+            form_request_response = RequestResponseForm(
+                request.POST,
+                accepted=True,
+                request_id=request.POST['request-id'])
             if form_request_response.is_valid():
                 form_request_response.save()
-                form_request_response = RequestResponseForm() #reset form after submission
+                form_request_response = RequestResponseForm(
+                )  #reset form after submission
         else:
             form_request_response = RequestResponseForm()
 
@@ -74,19 +77,23 @@ def home(request):
                                     request_id = request.POST['request-id'])
             if form_request_response.is_valid():
                 form_request_response.save()
-                form_request_response = RequestResponseForm() #reset form after submission
+                form_request_response = RequestResponseForm(
+                )  #reset form after submission
         else:
             form_request_response = RequestResponseForm()
 
         if request.method == 'POST' and 'submit-tutor-request' in request.POST:
             form_request_tutor = TutorRequestForm(request.POST)
             if form_request_tutor.is_valid():
-                tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor']) # get tutor object
+                tutor_instance = get_user_model().objects.get(
+                    pk=request.POST['requestedTutor'])  # get tutor object
                 tutor_request = form_request_tutor.save(commit=False)
                 tutor_request.tutee = current_user
                 tutor_request.tutor = tutor_instance
                 tutor_request.save()
-                form_request_tutor = TutorRequestForm() #reset form after submission
+                success_message = "Success! You have sent a request to "
+                form_request_tutor = TutorRequestForm(
+                )  #reset form after submission
         else:
             form_request_tutor = TutorRequestForm()
 
@@ -176,7 +183,8 @@ def tutors(request):
     if request.method == 'POST':
         form = TutorRequestForm(request.POST)
         if (form.is_valid()):
-            tutor_instance = get_user_model().objects.get(pk=request.POST['requestedTutor'])  # get tutor object
+            tutor_instance = get_user_model().objects.get(
+                pk=request.POST['requestedTutor'])  # get tutor object
             tutor_request = form.save(commit=False)
             tutor_request.tutee = current_user
             tutor_request.tutor = tutor_instance
@@ -186,14 +194,15 @@ def tutors(request):
     else:
         form = TutorRequestForm()
 
-    return render(request, 'tutors.html', {
-        'users': users,
-        'user': current_user,
-        'tutors': tutors,
-        'form': form,
-        'success_message': success_message,
-        'tutor_instance': tutor_instance
-    })
+    return render(
+        request, 'tutors.html', {
+            'users': users,
+            'user': current_user,
+            'tutors': tutors,
+            'form': form,
+            'success_message': success_message,
+            'tutor_instance': tutor_instance
+        })
 
 
 # users handles "/users/<int:id>" endpoint
@@ -203,9 +212,11 @@ def users(request, id):
 
     # get user that is specified by URL
     user = get_user_model().objects.get(pk=id)
-    success_message=""
+    success_message = ""
     if request.method == 'POST' and 'email' in request.POST:
-        form_update_profile = UpdateProfileForm(request.POST, request.FILES, instance=user)
+        form_update_profile = UpdateProfileForm(request.POST,
+                                                request.FILES,
+                                                instance=user)
 
         if form_update_profile.is_valid():
             form_update_profile.save()
@@ -224,16 +235,14 @@ def users(request, id):
     else:
         form_tutor_request = TutorRequestForm()
 
-
-
-    return render(request, 'users_profile.html', {
-        'user': user,
-        'form_update_profile': form_update_profile,
-        'form_tutor_request': form_tutor_request,
-        'current_user': request.user.id == id,
-        'success_message': success_message
-    })
-
+    return render(
+        request, 'users_profile.html', {
+            'user': user,
+            'form_update_profile': form_update_profile,
+            'form_tutor_request': form_tutor_request,
+            'current_user': request.user.id == id,
+            'success_message': success_message
+        })
 
 
 # home handles "/points" endpoint
@@ -328,7 +337,7 @@ def requests(request, id):
         requests_sent= requests_sent.filter(accepted=True)
         sent_accept_filter = "checked"
 
-    if request.method == 'POST' and 'submit-rating' in request.POST: #code for rating, move once 'paid and done' functionality is added.
+    if request.method == 'POST' and 'submit-rating' in request.POST:  #code for rating, move once 'paid and done' functionality is added.
         form_rating = RateTutorForm(request.POST)
         if form_rating.is_valid():
             rating = form_rating.save(commit=False) #create a rating form
@@ -385,7 +394,7 @@ def requests(request, id):
             current_request.save() #save the requests completed and paid
             form_rating = RateTutorForm()
 
-    else:# if not, then make sure we have a RateTutorForm
+    else:  # if not, then make sure we have a RateTutorForm
         form_rating = RateTutorForm()
 
     return render(
