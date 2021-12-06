@@ -138,46 +138,46 @@ Dashboard
                 <div class="list-container">
                     <h2>Sent Requests</h2>
                     {% if sent_requests %}
-                    {% for sent_request in sent_requests|slice:":3" %}
-                        {% with tutor=sent_request.tutor %}
-                            <div class="sent-request-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
-                                <div class="sent-request-content d-flex">
-                                    <div class = "tutor-profile-pic">
-                                        <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
-                                    </div>
-                                    <div class="name-column d-flex">
-                                        {{ tutor }}
-                                        <div class="classes-column d-flex">
-                                            {{ sent_request.class_name }} @ {{ sent_request.location }}
+                        {% for sent_request in sent_requests|slice:":3" %}
+                            {% with tutor=sent_request.tutor %}
+                                <div class="sent-request-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
+                                    <div class="sent-request-content d-flex">
+                                        <div class = "tutor-profile-pic">
+                                            <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
+                                        </div>
+                                        <div class="name-column d-flex">
+                                            {{ tutor }}
+                                            <div class="classes-column d-flex">
+                                                {{ sent_request.class_name }} @ {{ sent_request.location }}
+                                            </div>
+                                        </div>
+                                        <div class="times-column d-flex">
+                                            {{sent_request.tutor_date}} @<br>{{sent_request.tutor_start_time}} - {{sent_request.tutor_end_time}}
+                                        </div>
+                                        <div class="status">
+                                            Status: 
+                                            {% if sent_request.accepted %}
+                                                <p class="status-accepted">Accepted</p>
+                                            {% elif sent_request.accepted is None %}
+                                                <p class="status-pending">Awaiting Response</p>
+                                            {% else %}
+                                                <p class="status-declined">Declined</p>
+                                            {% endif %}
                                         </div>
                                     </div>
-                                    <div class="times-column d-flex">
-                                        {{sent_request.tutor_date}} @<br>{{sent_request.tutor_start_time}} - {{sent_request.tutor_end_time}}
-                                    </div>
-                                    <div class="status">
-                                        Status: 
-                                        {% if sent_request.accepted %}
-                                            <p class="status-accepted">Accepted</p>
-                                        {% elif sent_request.accepted is None %}
-                                            <p class="status-pending">Awaiting Response</p>
+
+                                    <div class="comment-container">
+                                        {% if sent_request.tutee_comment and sent_request.accepted is None%}
+                                            Your Comment: {{sent_request.tutee_comment}}
+                                        {% elif sent_request.tutor_comment %}
+                                            Tutor Comment: {{sent_request.tutor_comment}}
                                         {% else %}
-                                            <p class="status-declined">Declined</p>
+                                            No comment
                                         {% endif %}
                                     </div>
                                 </div>
-
-                                <div class="comment-container">
-                                    {% if sent_request.tutee_comment %}
-                                        Comment: {{sent_request.tutee_comment}}
-                                    {% else %}
-                                        No comment
-                                    {% endif %}
-
-                                </div>
-                            </div>
-                    </div>
-                    {% endwith %}
-                    {% endfor %}
+                            {% endwith %}
+                        {% endfor %}
                     {% else %}
                     <h3>No Sent Requests</h3>
                     {% endif %}
