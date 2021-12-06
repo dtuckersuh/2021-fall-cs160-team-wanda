@@ -118,17 +118,6 @@ Tutors
     </div>
 </div>
 
-</div>
-{% if form.errors %}
-<script>
-    $(document).ready(function () {
-        $("#tutor-request-modal").modal('show')
-    })
-</script>
-{% endif %}
-
-
-
 {% if form.errors %}
 <script>
     $(document).ready(function () {
@@ -144,19 +133,10 @@ Tutors
 
         if (!infoContainer) return
         const tutorId = infoContainer.dataset.tutorid
-
-        // save tutorId from request in local storage (in case page reloads because of error)
-        localStorage.setItem('tutorIdRequested', JSON.stringify(tutorId))
-
         tutor.value = tutorId
         if (!event.target.matches('.request-button')) {
             location.href = `/users/${infoContainer.dataset.tutorid}`
         }
-    })
-
-    $(document).ready(function () {
-        // retrieve tutorId from local storage and populate hidden input in modal with id
-        tutor.value = JSON.parse(localStorage.getItem('tutorIdRequested'))
     })
 </script>
 

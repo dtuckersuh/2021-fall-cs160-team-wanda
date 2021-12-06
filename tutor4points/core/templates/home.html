@@ -306,7 +306,16 @@ Dashboard
                 completeId.value = requestIdValue
             }
         }
-        requestGivenTo.value = receivedRequestContainer.dataset.givento
+
+        const givenTo = receivedRequestContainer.dataset.givento
+        requestGivenTo.value = givenTo
+
+        // save requesdtIdVal from request in local storage (in case page reloads because of error)
+        localStorage.setItem('requestedIdVal', JSON.stringify(requestIdVal))
+
+        // save givenTo from request in local storage (in case page reloads because of error)
+        localStorage.setItem('givenTo', JSON.stringify(givenTo))
+
         if (!event.target.matches('.respond-button') && !event.target.matches('.btn-secondary')) {
             location.href = `/users/${receivedRequestContainer.dataset.tuteeid}`
         }
@@ -344,12 +353,58 @@ Dashboard
         }
     })
 
+    // const acceptId = document.getElementById('requestIdAccept')
+    // const declineId = document.getElementById('requestIdDecline')
+    // const requestGivenTo = document.getElementById('requestGivenTo')
+    // const completedRequestId = document.getElementById('completedRequestId')
+    // document.querySelector('body').addEventListener('click', event => {
+    //     const requestContainer = event.target.closest('.request-container')
+    //     if (!requestContainer) return
+    //     const requestIdVal = requestContainer.dataset.requestid
+    //     acceptId.value = requestIdVal
+    //     declineId.value = requestIdVal
+    //     completedRequestId.value = requestIdVal
+
+    //     const givenTo = requestContainer.dataset.givento
+    //     requestGivenTo.value = givenTo
+
+    //     // save requesdtIdVal from request in local storage (in case page reloads because of error)
+    //     localStorage.setItem('requestedIdVal', JSON.stringify(requestIdVal))
+
+    //     // save givenTo from request in local storage (in case page reloads because of error)
+    //     localStorage.setItem('givenTo', JSON.stringify(givenTo))
+
+    //     if (!event.target.matches('.btn-secondary') && !event.target.matches('.respond-button')) {
+    //         location.href = `/users/${requestGivenTo.value}`
+    //     }
+    // })
+
+    $(document).ready(function () {
+        // retrieve requestIdVal from local storage and populate hidden input in modal with id
+        const requestIdVal = JSON.parse(localStorage.getItem('requestedIdVal'))
+        acceptId.value = requestIdVal
+        declineId.value = requestIdVal
+        completeId.value = requestIdVal
+
+        // retrieve givenTo from local storage and populate hidden input in modal with id
+        const givenTo = JSON.parse(localStorage.getItem('givenTo'))
+        requestGivenTo.value = givenTo
+    })
+
 </script>
 
 {% if form_request_tutor.errors %}
 <script>
     $(document).ready(function () {
         $("#tutor-request-modal").modal('show')
+    })
+</script>
+{% endif %}
+
+{% if form_rating.errors %}
+<script>
+    $(document).ready(function () {
+        $("#modal-complete-request").modal('show')
     })
 </script>
 {% endif %}

@@ -224,12 +224,17 @@ Requests
         const requestIdVal = requestContainer.dataset.requestid
         acceptId.value = requestIdVal
         declineId.value = requestIdVal
+        completedRequestId.value = requestIdVal
 
-        // save tutorId from request in local storage (in case page reloads because of error)
+        const givenTo = requestContainer.dataset.givento
+        requestGivenTo.value = givenTo
+
+        // save requesdtIdVal from request in local storage (in case page reloads because of error)
         localStorage.setItem('requestedIdVal', JSON.stringify(requestIdVal))
 
-        completedRequestId.value = requestIdVal
-        requestGivenTo.value = requestContainer.dataset.givento
+        // save givenTo from request in local storage (in case page reloads because of error)
+        localStorage.setItem('givenTo', JSON.stringify(givenTo))
+
         if (!event.target.matches('.btn-secondary') && !event.target.matches('.respond-button')) {
             location.href = `/users/${requestGivenTo.value}`
         }
@@ -240,6 +245,11 @@ Requests
         const requestIdVal = JSON.parse(localStorage.getItem('requestedIdVal'))
         acceptId.value = requestIdVal
         declineId.value = requestIdVal
+        completedRequestId.value = requestIdVal
+
+        // retrieve givenTo from local storage and populate hidden input in modal with id
+        const givenTo = JSON.parse(localStorage.getItem('givenTo'))
+        requestGivenTo.value = givenTo
     })
 
     function handleCheckShowAcceptedInbox(event) {
@@ -261,11 +271,12 @@ Requests
 
 </script>
 
-{% if form.errors %}
+{% if form_rating.errors %}
 <script>
     $(document).ready(function () {
-        $("#tutor-request-modal").modal('show')
+        $("#modal-complete-request").modal('show')
     })
 </script>
 {% endif %}
+
 {% endblock %}
