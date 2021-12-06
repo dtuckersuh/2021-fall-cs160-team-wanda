@@ -168,11 +168,11 @@ Dashboard
 
                                     <div class="comment-container">
                                         {% if sent_request.tutee_comment and sent_request.accepted is None%}
-                                            Your Comment: {{sent_request.tutee_comment}}
+                                            Your comment: {{sent_request.tutee_comment}}
                                         {% elif sent_request.tutor_comment %}
-                                            Tutor Comment: {{sent_request.tutor_comment}}
+                                            Tutor comment: {{sent_request.tutor_comment}}
                                         {% else %}
-                                            No comment
+                                            <i>No comment</i>
                                         {% endif %}
                                     </div>
                                 </div>
