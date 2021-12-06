@@ -298,7 +298,7 @@ Dashboard
                 }
             }
             requestGivenTo.value = receivedRequestContainer.dataset.givento
-            if (!event.target.matches('.btn-secondary')) {
+            if (!event.target.matches('.respond-button') && !event.target.matches('.btn-secondary')) {
                 location.href = `/users/${receivedRequestContainer.dataset.tuteeid}`
             }
         })

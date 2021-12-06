@@ -17,11 +17,11 @@ Requests
     <form method="post">
     {% csrf_token %}
         <div class="form-check">
-            <label class="form-check-label">
+            <label class="form-check-label label-text-style">
                 <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted-inbox" 
                 onChange="this.form.submit()" {{inbox_accept_filter}}>
                 <span class="checkmark"></span>
-                Show Accepted
+                Show Accepted Incoming Requests
             </label>
         </div>
     </form>
@@ -65,7 +65,7 @@ Requests
             <div class="respond-container">
             {% if request.accepted %}
             <div class="request-status d-flex">
-                <p>Request Accepted</p>
+                <p class="status-confirmed"> Request Accepted</p>
                 <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
                 data-toggle="modal" data-target="#modal-complete-request">Complete</button>
             </div>
@@ -142,7 +142,7 @@ Requests
     <form method="post">
     {% csrf_token %}
         <div class="form-check">
-            <label class="form-check-label">
+            <label class="form-check-label label-text-style">
                 <input class="form-check-input" type="checkbox" value="" id="show-accepted" name="show-accepted-sent"
                 onChange="this.form.submit()" {{sent_accept_filter}}>
                 <span class="checkmark"></span>
@@ -222,7 +222,7 @@ Requests
         declineId.value = requestIdVal
         completedRequestId.value = requestIdVal
         requestGivenTo.value = requestContainer.dataset.givento
-        if (!event.target.matches('.btn-secondary')) {
+        if (!event.target.matches('.btn-secondary') && !event.target.matches('.respond-button')) {
             location.href = `/users/${requestGivenTo.value}`
         }
     })
