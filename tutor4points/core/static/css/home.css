@@ -128,13 +128,14 @@ a {
   text-align: center;
 }
 
-.status-confirmed {
-  color: green;
-  margin: 0;
+.status-accepted {
+    color: green;
+    margin: 0;
 }
 
 .status-pending {
-  margin: 0;
+    font-style:italic;
+    margin: 0;
 }
 
 .status-declined {
