@@ -58,7 +58,11 @@ Requests
 
                     </div>
                     <div class="container-fluid row comment">
-                        Comments: {{request.tutee_comment}}
+                        {% if request.tutee_comment %}
+                            Tutee comment: {{request.tutee_comment}}
+                        {% else %}
+                            <i>No comment</i>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -176,7 +180,13 @@ Requests
 
                 </div>
                 <div class="container-fluid row comment">
-                    Comments: {{request.tutor_comment}}
+                    {% if request.tutee_comment and request.accepted is None %}
+                        Your comment: {{request.tutee_comment}}
+                    {% elif request.tutor_comment %}
+                        Tutor comment: {{request.tutor_comment}}
+                    {% else %}
+                        <i>No comment</i>
+                    {% endif %}
                 </div>
             </div>
             <div class="request-status d-flex">
