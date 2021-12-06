@@ -20,7 +20,8 @@ Tutors
 
 <div class="content-container">
     <div class="alert alert-success hidden" id="success-box" role="alert">
-        {{success_message}}{{tutor_instance.first_name | title}} {{tutor_instance.last_name | title}}. Click <a href="{% url 'requests' id=user.id %}">here</a> to view all requests.
+        {{success_message}}{{tutor_instance.first_name | title}} {{tutor_instance.last_name | title}}. Click <a
+            href="{% url 'requests' id=user.id %}">here</a> to view all requests.
     </div>
 
 
@@ -143,10 +144,19 @@ Tutors
 
         if (!infoContainer) return
         const tutorId = infoContainer.dataset.tutorid
+
+        // save tutorId from request in local storage (in case page reloads because of error)
+        localStorage.setItem('tutorIdRequested', JSON.stringify(tutorId))
+
         tutor.value = tutorId
         if (!event.target.matches('.request-button')) {
             location.href = `/users/${infoContainer.dataset.tutorid}`
         }
+    })
+
+    $(document).ready(function () {
+        // retrieve tutorId from local storage and populate hidden input in modal with id
+        tutor.value = JSON.parse(localStorage.getItem('tutorIdRequested'))
     })
 </script>
 
