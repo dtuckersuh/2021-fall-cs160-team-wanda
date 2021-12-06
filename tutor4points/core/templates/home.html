@@ -67,36 +67,6 @@ Dashboard
                                         {% endif %}
                                     </div>
                                 </div>
-                                <div class = "comment-container">
-                                    {% if tutor_request.tutee_comment %}
-                                        Comment: {{tutor_request.tutee_comment}} <br>
-                                    {% else %}
-                                        No comment <br>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="times-column d-flex">
-                                {{tutor_request.tutor_date}} @<br>{{tutor_request.tutor_start_time}} -
-                                {{tutor_request.tutor_end_time}}<br>
-                            </div>
-                            <div class="respond-btns d-flex">
-                                {% if tutor_request.accepted %}
-                                <button type="submit" name="btn-accept-request" cless="btn-secondary"
-                                    data-toggle="modal" data-target="#modal-complete-request">
-                                    Complete
-                                </button>
-                                {% else %}
-                                <button type="submit" name="accept-request" class="btn-secondary respond-button"
-                                    data-toggle="modal" data-target="#modal-accept-request">
-                                    Accept
-                                </button>
-                                <button type="submit" name="decline-request" class="btn-secondary respond-button"
-                                    data-toggle="modal" data-target="#modal-decline-request">
-                                    Decline
-                                </button>
-                                {% endif %}
-                            </div>
-                        </div>
                         <div class="comment-container">
                             {% if tutor_request.tutee_comment %}
                             Comment: {{tutor_request.tutee_comment}} <br>
@@ -205,29 +175,6 @@ Dashboard
 
                                 </div>
                             </div>
-                            <div class="times-column d-flex">
-                                {{sent_request.tutor_date}} @<br>{{sent_request.tutor_start_time}} -
-                                {{sent_request.tutor_end_time}}
-                            </div>
-                            <div class="status">
-                                Status:
-                                {% if sent_request.accepted %}
-                                <p class="status-confirmed">Accepted</p>
-                                {% elif sent_request.accepted is None %}
-                                <p class="status-pending">Awaiting Response</p>
-                                {% else %}
-                                <p class="status-declined">Declined</p>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="comment-container">
-                            {% if sent_request.tutee_comment %}
-                            Comment: {{sent_request.tutee_comment}}
-                            {% else %}
-                            No comment
-                            {% endif %}
-                        </div>
                     </div>
                     {% endwith %}
                     {% endfor %}
