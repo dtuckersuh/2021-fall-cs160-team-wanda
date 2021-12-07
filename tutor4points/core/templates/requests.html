@@ -141,7 +141,7 @@ Requests
         <div class="modal-content">
             <form method="POST">
                 <p class="modal-request-status">Complete Tutor Request</p>
-                <input type="hidden" name="request-tutor" id="requestGivenTo" value="">
+                <input type="hidden" name="user-given-to" id="requestGivenTo" value="">
                 <input type="hidden" name="request-id" id="completedRequestId" value="">
                 {% csrf_token %}
                 {{ form_rating | crispy }}

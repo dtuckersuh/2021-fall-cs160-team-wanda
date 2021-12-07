@@ -160,7 +160,7 @@ Dashboard
                     {% if sent_requests %}
                     {% for sent_request in sent_requests|slice:":3" %}
                     {% with tutor=sent_request.tutor %}
-                    <div class="sent-request-container d-flex" id="tutor-{{tutor.id}}" data-givento="{{tutor.id}}">
+                    <div class="sent-request-container d-flex" id="tutor-{{tutor.id}}" data-givento="{{tutor.id}}" data-requestid="{{sent_request.id}}">
                         <div class="sent-request-content d-flex">
                             <div class="tutor-profile-pic">
                                 <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
@@ -377,7 +377,9 @@ Dashboard
     document.querySelector('body').addEventListener('click', event => {
         const infoContainer = event.target.closest('.sent-request-container')
         const requestGivenTo = document.getElementById('requestGivenTo')
+        const requestIdValue = infoContainer.dataset.requestid
         requestGivenTo.value = infoContainer.dataset.givento
+        completeId.value = requestIdValue
         if (!event.target.matches('.btn-secondary')) {
             location.href = `/users/${infoContainer.dataset.givento}`
         }

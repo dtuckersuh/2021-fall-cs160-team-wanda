@@ -107,8 +107,10 @@ def home(request):
                 rating.given_to = user_given_to #update the rating form
                 rating.given_by = request.user
                 # calcute new rating, and update the database
+                
                 if current_user != current_request.tutor: #if the current user is the tutee, then give a tutor rating
                     rating.rating_type = 'tutor' #set the tutor type
+
                     rating.save() #save the rating
 
                     tutor_ratings = Rating.objects.filter(given_to = user_given_to).filter(rating_type = 'tutor') #grab all tutor ratings for the user
@@ -124,7 +126,6 @@ def home(request):
                     current_request.tutee_confirm_paid  = True
 
                 else: #otherwise if the current user is a tutor, give a tutee
-                    print ('tutee')
                     rating.rating_type = 'tutee'
                     rating.save()
 
@@ -163,7 +164,9 @@ def home(request):
                     'sent_requests': sent_requests,
                     'form_request_tutor': form_request_tutor,
                     'form_request_response': form_request_response,
-                    'form_rating': form_rating
+                    'form_rating': form_rating,
+                    'success_message': success_message,
+                    'tutor_instance': tutor_instance
                 }
         )
     else:
@@ -340,7 +343,7 @@ def requests(request, id):
         form_rating = RateTutorForm(request.POST)
         if form_rating.is_valid():
             rating = form_rating.save(commit=False) #create a rating form
-            user_given_to = get_user_model().objects.get(pk=request.POST['request-tutor']) #get the user that its given to
+            user_given_to = get_user_model().objects.get(pk=request.POST['user-given-to']) #get the user that its given to
 
             current_request =  TutorRequest.objects.get(pk=request.POST['request-id']) #get current requests data
 
