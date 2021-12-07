@@ -45,11 +45,17 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 2. You should see the driver being activated, the chrome window opening, and buttons being pressed automatically. The test results will be shown after the script is ran<br>
 ![](media/testResult.png)
 
-## Running Docker
+## Docker
+### Building Docker Image and Running it
 1. Open and Run Docker app
 2. Navigate to ```2021-fall-cs160-team-wanda/tutor4points```
 3. Build container image using ```docker build -t tutor4points .```
-4. Start container using updated code using ```docker run -p 8000:8000 tutor4points```
+4. Start container with image using ```docker run -p 8000:8000 tutor4points```
+### BLoading Docker Image and Running it
+1. Navigate to the following link to download the Docker Image: https://drive.google.com/file/d/1UG966POXTSBD1L4GTh3kJzXOblDggP6p/view?usp=sharing 
+2. Run ```docker load -i tutor4points.tar``` to load the Docker image
+3. Run ```docker images``` to make sure the image is listed
+4. Start container with image using ```docker run -p 8000:8000 tutor4points```
 
 ## Team Practices
 * Every feature is a separate branch and is named in the format ```feature-featurename```
