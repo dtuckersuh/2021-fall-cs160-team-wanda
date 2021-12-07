@@ -1,5 +1,18 @@
 # 2021-fall-cs160-team-wanda
 
+Tutor4Points is the new way to get tutoring for your college classes or offer your tutoring services to others. Tutor4Points allows you to request tutoring from tutors at your school, set up a meeting, and pay/rate the tutor, all in one website. Tutors can advertise what classes they can help with, when they are available, and how much they charge per hour.
+	Users are divided by which school they go to. Our service uses an internal point system for payment, allowing users to purchase and redeem points with cash, and transfer points to other users. Tutor4Points takes a percentage of points as payment upon redemption.
+
+## Tutor4Points User Guide 
+To View the User Guide of Tutor4Points, please refer to https://docs.google.com/document/d/1Na6jS_GYyCfXgkQGRjr_q003Uin6jBZLni4xZW_BaBk/edit?usp=sharing
+
+## Main Technologies
+* Sprint Tracking: JIRA
+* Main Framework used: Django (Python Framework)
+* Frontend: CSS, HTML, Bootstrap, JavaScript
+* Database: SQLite3
+* Automated Testing: Selenium
+
 ## Downloading Project Dependencies
 1. Download python from https://www.python.org/downloads/. If you are a Mac user, it is likely that you already have python installed.
 2. The best way to install other project dependencies is through pip. Instructions to install pip can be found here https://pip.pypa.io/en/stable/installation/
@@ -52,7 +65,7 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 3. Build container image using ```docker build -t tutor4points .```
 4. Start container with image using ```docker run -p 8000:8000 tutor4points```
 ### Loading Docker Image and Running it (from Terminal)
-1. Navigate to the following link to download the Docker Image: https://drive.google.com/file/d/1vBXlHetCmQcKJJ10HV2GgiaZ3DXpYR_n/view?usp=sharing 
+1. Navigate to the following link to download the Docker Image: https://drive.google.com/file/d/1vBXlHetCmQcKJJ10HV2GgiaZ3DXpYR_n/view?usp=sharing
 2. Run ```docker load -i tutor4points.tar``` to load the Docker image
 Docker will display the image ID that is being loaded. The image ID should start with ```0764c73df3f1```
 4. Run ```docker images``` to make sure the image with the ID is listed.
