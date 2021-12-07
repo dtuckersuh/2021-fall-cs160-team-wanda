@@ -285,3 +285,18 @@ h3 {
 .status-text{
   justify-content: center;
 }
+
+.status-accepted {
+  color: green;
+  margin: 0;
+}
+
+.status-pending {
+  font-style:italic;
+  margin: 0;
+}
+
+.status-declined {
+  color: red;
+  margin: 0;
+}

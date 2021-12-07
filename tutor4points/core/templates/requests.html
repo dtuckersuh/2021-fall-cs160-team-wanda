@@ -32,57 +32,62 @@ Requests
     {% if requests_received %}
     <div class="requests-items container-fluid">
         {% for request in requests_received %}
+            {% if request.accepted or request.accepted is None %}
+            <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
+                data-givenTo="{{request.tutee.id}}">
+                <div class="profile-container">
+                    <img src="{{request.tutee.profile_pic.url}}" class="profile-pic">
+                </div>
+                <div class="request-content">
+                    <div class="container-fluid row">
 
-        <div class="request-container d-flex" id="request-{{request.id}}" data-requestid="{{request.id}}"
-            data-givenTo="{{request.tutee.id}}">
-            <div class="profile-container">
-                <img src="{{request.tutee.profile_pic.url}}" class="profile-pic">
-            </div>
-            <div class="request-content">
-                <div class="container-fluid row">
-
-                    <div class="name">
-                        {{request.tutee.first_name | title}} {{request.tutee.last_name | title}} <br />
-                        <div class="sent-date">
-                            {{request.date_sent_request}}
+                        <div class="name">
+                            {{request.tutee.first_name | title}} {{request.tutee.last_name | title}} <br />
+                            <div class="sent-date">
+                                {{request.date_sent_request}}
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="tutor-class">
-                        {{request.class_name}}
-                    </div>
+                        <div class="tutor-class">
+                            {{request.class_name}}
+                        </div>
 
-                    <div class="times">
-                        {{request.location}}, <br>
-                        {{request.tutor_date}},<br>{{request.tutor_start_time}} - {{request.tutor_end_time}}
-                    </div>
+                        <div class="times">
+                            {{request.location}}, <br>
+                            {{request.tutor_date}},<br>{{request.tutor_start_time}} - {{request.tutor_end_time}}
+                        </div>
 
+                    </div>
+                    <div class="container-fluid row comment">
+                        {% if request.tutee_comment %}
+                            Tutee comment: {{request.tutee_comment}}
+                        {% else %}
+                            <i>No comment</i>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="container-fluid row comment">
-                    Comments: {{request.tutee_comment}}
-                </div>
-            </div>
 
-            <div class="respond-container">
+                <div class="respond-container">
                 {% if request.accepted %}
                 <div class="request-status d-flex">
-                    <p class="status-confirmed"> Request Accepted</p>
+                    <p class="status-accepted">Request Accepted</p>
                     <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
-                        data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+                    data-toggle="modal" data-target="#modal-complete-request">Complete</button>
                 </div>
                 {% else %}
                 <div class="status-text d-flex">
-                    <p>Awaiting Response</p>
+                    <p class="status-pending">Awaiting Response</p>
                 </div>
                 <div class="respond-buttons d-flex">
-                    <button type="submit" name="btn-accept-request" class="btn-accept respond-button"
-                        data-toggle="modal" data-target="#modal-accept-request">Accept</button>
-                    <button type="submit" name="btn-reject-request" class="btn-decline respond-button"
-                        data-toggle="modal" data-target="#modal-decline-request">Decline</button>
+                    <button type="submit" name="btn-accept-request" class="btn-accept respond-button" data-toggle="modal"
+                        data-target="#modal-accept-request">Accept</button>
+                    <button type="submit" name="btn-reject-request" class="btn-decline respond-button" data-toggle="modal"
+                        data-target="#modal-decline-request">Decline</button>
                 </div>
                 {% endif %}
+                </div>
             </div>
-        </div>
+            {% endif %}
         {% endfor %}
     </div>
 
@@ -186,13 +191,19 @@ Requests
 
                 </div>
                 <div class="container-fluid row comment">
-                    Comments: {{request.tutor_comment}}
+                    {% if request.tutee_comment and request.accepted is None %}
+                        Your comment: {{request.tutee_comment}}
+                    {% elif request.tutor_comment %}
+                        Tutor comment: {{request.tutor_comment}}
+                    {% else %}
+                        <i>No comment</i>
+                    {% endif %}
                 </div>
             </div>
             <div class="request-status d-flex">
                 {% if request.accepted %}
                 <div class="request-status d-flex">
-                    <p class="status-confirmed"> Request Accepted</p>
+                    <p class="status-accepted"> Request Accepted</p>
                     <button type="submit" name="btn-submit-rating" class="btn-secondary" data-toggle="modal"
                         data-target="#modal-complete-request">Complete</button>
                 </div>
