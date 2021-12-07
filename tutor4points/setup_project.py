@@ -68,7 +68,7 @@ def projectSetup():
 
     #Business SJSU student who wants to be a tutor
     if not User.objects.filter(username="drake"):
-        User.objects.create_user (username="drake", password="lj!654321", first_name="drake", last_name="jones", email="drake@gmail.com", school = School.objects.get(name="San Jose State University"), profile_pic="images/profile_pics/drake.png",
+        User.objects.create_user (username="drake", password="dj!654321", first_name="drake", last_name="jones", email="drake@gmail.com", school = School.objects.get(name="San Jose State University"), profile_pic="images/profile_pics/drake.png",
         is_tutor = True, classes_taken = "PHIL186, BUS2 130, ECON 1A", time_zone="pacific")
         print ("Added Drake Jones to Users model")
 
