@@ -90,6 +90,7 @@ def home(request):
                 tutor_request.tutee = current_user
                 tutor_request.tutor = tutor_instance
                 tutor_request.save()
+                success_message = "Success! You have sent a request to "
                 form_request_tutor = TutorRequestForm()  #reset form after submission
         else:
             form_request_tutor = TutorRequestForm()
@@ -123,6 +124,7 @@ def home(request):
                     current_request.tutee_confirm_paid  = True
 
                 else: #otherwise if the current user is a tutor, give a tutee
+                    print ('tutee')
                     rating.rating_type = 'tutee'
                     rating.save()
 

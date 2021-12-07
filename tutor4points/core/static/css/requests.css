@@ -276,6 +276,7 @@ h3 {
 
 .status-pending {
   color: white;
+  font-style: italic;
 }
 
 .status-declined {
@@ -298,6 +299,7 @@ h3 {
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-bottom:1rem;
 }
 
 .status-accepted {

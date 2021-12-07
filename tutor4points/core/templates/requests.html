@@ -70,7 +70,9 @@ Requests
                 <div class="respond-container">
                 {% if request.accepted %}
                     <div class="request-status d-flex">
-                        <p class="status-accepted">Request Accepted</p>
+                        <div class="status-text d-flex">
+                            <p class="status-accepted">Request Accepted</p>
+                        </div>
                         <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
                         data-toggle="modal" data-target="#modal-complete-request">Complete</button>
                     </div>
@@ -210,7 +212,9 @@ Requests
             <div class="sent-container d-flex">
                 {% if request.accepted %}
                 <div class="request-status d-flex">
-                    <p class="status-accepted"> Request Accepted</p>
+                    <div class="status-text d-flex">
+                        <p class="status-accepted"> Request Accepted</p>
+                    </div>
                     <button type="submit" name="btn-submit-rating" class="btn-secondary" data-toggle="modal"
                         data-target="#modal-complete-request">Complete</button>
                 </div>

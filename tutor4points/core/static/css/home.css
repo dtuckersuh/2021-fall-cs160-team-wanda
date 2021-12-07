@@ -158,6 +158,7 @@ a {
 
 .status-pending {
     color: white;
+    font-style: italic;
 }
 
 .status-declined {
