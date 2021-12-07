@@ -134,9 +134,18 @@ Tutors
         if (!infoContainer) return
         const tutorId = infoContainer.dataset.tutorid
         tutor.value = tutorId
+
+        // save tutorId from request in local storage (in case page reloads because of error)
+        localStorage.setItem('tutorIdRequested', JSON.stringify(tutorId))
+
         if (!event.target.matches('.request-button')) {
             location.href = `/users/${infoContainer.dataset.tutorid}`
         }
+    })
+
+    $(document).ready(function () {
+        // retrieve tutorId from local storage and populate hidden input in modal with id
+        tutor.value = JSON.parse(localStorage.getItem('tutorIdRequested'))
     })
 </script>
 

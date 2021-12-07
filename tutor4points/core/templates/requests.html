@@ -20,11 +20,10 @@ Requests
             <label class="form-check-label label-text-style">
                 <input class="form-check-input" type="checkbox" value="" id="show-accepted-inbox"
                     name="show-accepted-inbox" onChange="handleCheckShowAcceptedInbox()" {{inbox_accept_filter}}>
-                <input class="form-check-input" type="checkbox" value="" id="show-accepted-sent-hidden" name=""
-                    {{sent_accept_filter}}>
                 <span class="checkmark"></span>
                 Show Accepted Incoming Requests
             </label>
+            <input class="form-check-input" type="hidden" value="" id="show-accepted-sent-hidden" name="">
         </div>
     </form>
 </div>
@@ -159,11 +158,10 @@ Requests
             <label class="form-check-label label-text-style">
                 <input class="form-check-input" type="checkbox" value="" id="show-accepted-sent"
                     name="show-accepted-sent" onChange="handleCheckShowAcceptedSent()" {{sent_accept_filter}}>
-                <input class="form-check-input" type="hidden" value="" id="show-accepted-inbox-hidden" name=""
-                    {{inbox_accept_filter}}>
                 <span class="checkmark"></span>
                 Show Accepted Sent Requests
             </label>
+            <input class="form-check-input" type="hidden" value="" id="show-accepted-inbox-hidden" name="">
         </div>
     </form>
 </div>
