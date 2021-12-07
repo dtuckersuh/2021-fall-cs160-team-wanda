@@ -57,7 +57,7 @@ a {
   font-size: 25px;
   justify-content: center;
   flex-direction: column;
-  flex: 2;
+  flex: 3;
   text-align: center;
 }
 
@@ -127,6 +127,22 @@ a {
     flex-direction: column;
   }
 
+.respond-buttons{
+  justify-content: center;
+}
+
+.respond-container {
+  display: inline-block;
+  white-space: nowrap;
+  width: 15%;
+}
+
+.status-text{
+  justify-content: center;
+  align-items: center;
+  width: 100%
+}
+
 .status {
     flex: 2;
     text-align: center;
@@ -146,6 +162,10 @@ a {
 
 .status-declined {
     color: red;
+}
+
+.status-expired {
+  color: red;
 }
 
 .comment-container {

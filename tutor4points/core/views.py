@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import TutorRequest, Rating
-
+from django.db.models import Q
 
 # loginUser handles "/login" endpoint
 # logs in the user that has the specified login credentials from the login form
@@ -56,8 +56,7 @@ def home(request):
     if current_user.is_authenticated:
         users = get_user_model().objects.all().exclude(pk=current_user.id)
         tutors = users.filter(is_tutor=True, school=current_user.school)
-        requests_received = TutorRequest.objects.all().filter(tutor=current_user, tutor_confirm_completed=False)
-        print (requests_received)
+        requests_received = TutorRequest.objects.all().filter(Q(tutor=current_user, tutor_confirm_completed=False, accepted=True)|Q(tutor=current_user, tutor_confirm_completed=False, accepted=None))
         sent_requests = TutorRequest.objects.all().filter(tutee=current_user, tutee_confirm_completed=False)
         if request.method == 'POST' and 'submit-accept-request' in request.POST:
             form_request_response = RequestResponseForm(
@@ -91,9 +90,7 @@ def home(request):
                 tutor_request.tutee = current_user
                 tutor_request.tutor = tutor_instance
                 tutor_request.save()
-                success_message = "Success! You have sent a request to "
-                form_request_tutor = TutorRequestForm(
-                )  #reset form after submission
+                form_request_tutor = TutorRequestForm()  #reset form after submission
         else:
             form_request_tutor = TutorRequestForm()
 

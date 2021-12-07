@@ -7,6 +7,7 @@
 {% endblock%}
 
 {% load crispy_forms_tags %}
+{% load core_extras %}
 {% load humanize %}
 {% block heading %}
 Dashboard
@@ -53,19 +54,25 @@ Dashboard
                             </div>
                             <div class="respond-btns d-flex">
                                 {% if tutor_request.accepted %}
+                                
                                 <button type="submit" name="btn-submit-rating" class="btn-secondary" data-toggle="modal"
                                     data-target="#modal-complete-request">
                                     Complete
                                 </button>
                                 {% else %}
-                                <button type="submit" name="accept-request" class="btn-accept respond-button"
-                                    data-toggle="modal" data-target="#modal-accept-request">
-                                    Accept
-                                </button>
-                                <button type="submit" name="decline-request" class="btn-decline respond-button"
-                                    data-toggle="modal" data-target="#modal-decline-request">
-                                    Decline
-                                </button>
+                                    {% requeststatus request_date=tutor_request.tutor_date end_time=tutor_request.tutor_end_time status=tutor_request.accepted as status %} 
+                                    {% if status == "Awaiting Response" %}
+                                        <button type="submit" name="accept-request" class="btn-accept respond-button"
+                                            data-toggle="modal" data-target="#modal-accept-request">
+                                            Accept
+                                        </button>
+                                        <button type="submit" name="decline-request" class="btn-decline respond-button"
+                                            data-toggle="modal" data-target="#modal-decline-request">
+                                            Decline
+                                        </button>
+                                    {% else %}
+                                        <p class="status-expired">Request Expired</p>
+                                    {% endif %}
                                 {% endif %}
                             </div>
                         </div>
@@ -117,7 +124,7 @@ Dashboard
                         </div>
                         <div class="tutor-rating-column d-flex">
                             {% if tutor.tutor_avg_rating %}
-                            {{tutor.tutor_avg_rating}} ★<br />
+                            {{tutor.tutor_avg_rating|floatformat:1}} ★<br />
                             {% else %}
                             Rating: N/A
                             {% endif %}
@@ -159,15 +166,26 @@ Dashboard
                             </div>
                             <div class="status d-flex">
                                 {% if sent_request.accepted %}
-                                <div class="request-status d-flex">
-                                    <p class="status-accepted"> Request Accepted</p>
-                                    <button type="submit" name="btn-submit-rating" class="btn-secondary"
-                                        data-toggle="modal" data-target="#modal-complete-request">Complete</button>
-                                </div>
+                                    <div class="request-status d-flex">
+                                        <p class="status-accepted"> Request Accepted</p>
+                                        <button type="submit" name="btn-submit-rating" class="btn-secondary"
+                                            data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+                                    </div>
                                 {% elif sent_request.accepted is None %}
-                                <p class="status-pending">Awaiting Response</p>
+                                    {% requeststatus request_date=sent_request.tutor_date end_time=sent_request.tutor_end_time status=sent_request.accepted as status %} 
+                                    {% if status == "Awaiting Response" %}
+                                    <div class="status-text d-flex">
+                                        <p class="status-pending">Awaiting Response</p>
+                                    </div>
+                                    {% else %}
+                                    <div class="status-text d-flex">
+                                        <p class="status-expired">Request Expired</p>
+                                    </div>
+                                    {% endif %}
                                 {% else %}
-                                <p class="status-declined">Request Declined</p>
+                                <div class="status-text d-flex">
+                                    <p class="status-declined">Request Declined</p>
+                                </div>
                                 {% endif %}
                             </div>
                         </div>                                                            

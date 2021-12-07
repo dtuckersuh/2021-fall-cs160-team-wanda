@@ -59,9 +59,9 @@ Tutors
 
         <div class="tutor-rating">
             {% if tutor.tutor_avg_rating %}
-            {{tutor.tutor_avg_rating}}★
+            {{tutor.tutor_avg_rating|floatformat:1}}★
             {% else %}
-            N/A ★
+            Rating: N/A
             {% endif %}
             <br />
 

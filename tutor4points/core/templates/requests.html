@@ -6,7 +6,7 @@
 {% endblock%}
 
 {% load crispy_forms_tags %}
-
+{% load core_extras %}
 {% block heading %}
 Requests
 {% endblock %}
@@ -70,21 +70,28 @@ Requests
 
                 <div class="respond-container">
                 {% if request.accepted %}
-                <div class="request-status d-flex">
-                    <p class="status-accepted">Request Accepted</p>
-                    <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
-                    data-toggle="modal" data-target="#modal-complete-request">Complete</button>
-                </div>
+                    <div class="request-status d-flex">
+                        <p class="status-accepted">Request Accepted</p>
+                        <button type="submit" name="btn-submit-rating" class="btn-secondary respond-button"
+                        data-toggle="modal" data-target="#modal-complete-request">Complete</button>
+                    </div>
                 {% else %}
-                <div class="status-text d-flex">
-                    <p class="status-pending">Awaiting Response</p>
-                </div>
-                <div class="respond-buttons d-flex">
-                    <button type="submit" name="btn-accept-request" class="btn-accept respond-button" data-toggle="modal"
-                        data-target="#modal-accept-request">Accept</button>
-                    <button type="submit" name="btn-reject-request" class="btn-decline respond-button" data-toggle="modal"
-                        data-target="#modal-decline-request">Decline</button>
-                </div>
+                    {% requeststatus request_date=request.tutor_date end_time=request.tutor_end_time status=request.accepted as status %} 
+                    {% if status == "Awaiting Response" %}
+                        <div class="status-text d-flex">
+                            <p class="status-pending">Awaiting Response</p>
+                        </div>
+                        <div class="respond-buttons d-flex">
+                            <button type="submit" name="btn-accept-request" class="btn-accept respond-button" data-toggle="modal"
+                                data-target="#modal-accept-request">Accept</button>
+                            <button type="submit" name="btn-reject-request" class="btn-decline respond-button" data-toggle="modal"
+                                data-target="#modal-decline-request">Decline</button>
+                        </div>
+                    {% else %}
+                        <div class="status-text d-flex">
+                            <p class="status-expired">Request Expired</p>
+                        </div>
+                    {% endif %}
                 {% endif %}
                 </div>
             </div>
@@ -202,7 +209,7 @@ Requests
                     {% endif %}
                 </div>
             </div>
-            <div class="request-status d-flex">
+            <div class="sent-container d-flex">
                 {% if request.accepted %}
                 <div class="request-status d-flex">
                     <p class="status-accepted"> Request Accepted</p>
@@ -210,9 +217,20 @@ Requests
                         data-target="#modal-complete-request">Complete</button>
                 </div>
                 {% elif request.accepted is None %}
-                <p class="status-pending">Awaiting Response</p>
+                    {% requeststatus request_date=request.tutor_date end_time=request.tutor_end_time status=request.accepted as status %} 
+                    {% if status == "Awaiting Response" %}
+                    <div class="status-text d-flex">
+                        <p class="status-pending">Awaiting Response</p>
+                    </div>
+                    {% else %}
+                    <div class="status-text d-flex">
+                        <p class="status-expired">Request Expired</p>
+                    </div>
+                    {% endif %}
                 {% else %}
-                <p class="status-declined">Request Declined</p>
+                <div class="status-text d-flex">
+                    <p class="status-declined">Request Declined</p>
+                </div>
                 {% endif %}
             </div>
         </div>
