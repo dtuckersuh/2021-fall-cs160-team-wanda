@@ -160,7 +160,8 @@ Dashboard
                     {% if sent_requests %}
                     {% for sent_request in sent_requests|slice:":3" %}
                     {% with tutor=sent_request.tutor %}
-                    <div class="sent-request-container d-flex" id="tutor-{{tutor.id}}" data-givento="{{tutor.id}}" data-requestid="{{sent_request.id}}">
+                    <div class="sent-request-container d-flex" id="tutor-{{tutor.id}}"
+                        data-requestid="{{sent_request.id}}" data-givento="{{tutor.id}}">
                         <div class="sent-request-content d-flex">
                             <div class="tutor-profile-pic">
                                 <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
@@ -199,19 +200,19 @@ Dashboard
                                 </div>
                                 {% endif %}
                             </div>
-                        </div>                                                            
+                        </div>
                         <div class="comment-container">
-                                        {% if sent_request.tutee_comment and sent_request.accepted is None%}
-                                            Your comment: {{sent_request.tutee_comment}}
-                                        {% elif sent_request.tutor_comment %}
-                                            Tutor comment: {{sent_request.tutor_comment}}
-                                        {% else %}
-                                            <i>No comment</i>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endwith %}
-                        {% endfor %}
+                            {% if sent_request.tutee_comment and sent_request.accepted is None%}
+                            Your comment: {{sent_request.tutee_comment}}
+                            {% elif sent_request.tutor_comment %}
+                            Tutor comment: {{sent_request.tutor_comment}}
+                            {% else %}
+                            <i>No comment</i>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endwith %}
+                    {% endfor %}
                     {% else %}
                     <h3>No Sent Requests</h3>
                     {% endif %}
@@ -322,9 +323,11 @@ Dashboard
     const requestGivenTo = document.getElementById('requestGivenTo')
     const completeId = document.getElementById('requestIdCompleted')
     document.querySelector('body').addEventListener('click', event => {
-        const receivedRequestContainer = event.target.closest('.received-request-container')
-        if (!receivedRequestContainer) return
-        const requestIdValue = receivedRequestContainer.dataset.requestid
+        let requestContainer = event.target.closest('.received-request-container') || event.target.closest('.sent-request-container')
+
+        if (!requestContainer) return
+        const requestIdValue = requestContainer.dataset.requestid
+
         if (requestIdValue) {
             if (acceptId) {
                 acceptId.value = requestIdValue
@@ -337,17 +340,17 @@ Dashboard
             }
         }
 
-        const givenTo = receivedRequestContainer.dataset.givento
+        const givenTo = requestContainer.dataset.givento
         requestGivenTo.value = givenTo
 
         // save requesdtIdVal from request in local storage (in case page reloads because of error)
-        localStorage.setItem('requestedIdVal', JSON.stringify(requestIdVal))
+        localStorage.setItem('requestedIdVal', JSON.stringify(requestIdValue))
 
         // save givenTo from request in local storage (in case page reloads because of error)
         localStorage.setItem('givenTo', JSON.stringify(givenTo))
 
         if (!event.target.matches('.respond-button') && !event.target.matches('.btn-secondary')) {
-            location.href = `/users/${receivedRequestContainer.dataset.tuteeid}`
+            location.href = `/users/${requestContainer.dataset.tuteeid}`
         }
     })
 
