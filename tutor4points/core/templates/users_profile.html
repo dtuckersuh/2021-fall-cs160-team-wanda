@@ -26,14 +26,14 @@
         <div class="rating">
             {% if user.tutor_avg_rating %}
                 <b>Tutor rating:</b>
-                {{user.tutor_avg_rating}}<br>
+                {{user.tutor_avg_rating|floatformat:1}}<br>
             {% else %}
                 <i>No tutoring history</i>
             {% endif %} <br>
 
             {% if user.tutee_avg_rating %}
                 Tutee rating:
-                {{user.tutee_avg_rating}}
+                {{user.tutee_avg_rating|floatformat:1}}
             {% else %}
                 <i>No tutee history</i>
             {% endif %}

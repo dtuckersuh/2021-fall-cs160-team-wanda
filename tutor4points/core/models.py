@@ -58,9 +58,13 @@ class TutorRequest (models.Model):
     tutor_comment = models.TextField(null=True, blank=True)
     tutee_comment = models.TextField(null=True, blank=True)
     accepted = models.BooleanField(null=True)  # null by default
-    completed = models.BooleanField(default=False)
-    tutee_completed = models.BooleanField(default=False) # check to see if the tutee has completed thiers as well
-    paid = models.BooleanField(default=False)
+    tutor_confirm_completed = models.BooleanField(default=False) # tutor confirmed session has completed
+    tutee_confirm_completed = models.BooleanField(default=False) # tutee confirm session has completed
+    both_confirm_completed = models.BooleanField(default=False) # both tutor and tutee confirmed session has been completed
+    tutor_confirm_paid = models.BooleanField(default=False) #tutor confirmed session has been paid
+    tutee_confirm_paid = models.BooleanField(default=False) #tutee confirmed session has been paid
+    both_confirm_paid = models.BooleanField(default=False) #both tutor and tutee confirmed session has been completed
+    
 
 
 class Transaction (models.Model):
@@ -92,7 +96,8 @@ class Rating (models.Model):
         get_user_model(), null=True, on_delete=models.SET_NULL, related_name='given_by')
     given_to = models.ForeignKey(
         get_user_model(), null=True, on_delete=models.SET_NULL)
-    rating_type = models.CharField(max_length=5, choices=RATING_TYPES)
+    rating_type = models.CharField(max_length=5, choices=RATING_TYPES) #tutor means rating given to a tutor, tutee means rating given to a tutee
     rating = models.IntegerField(null=True, validators=[
                                  MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField()
+    request = models.ForeignKey(TutorRequest, null=True, on_delete=models.SET_NULL)

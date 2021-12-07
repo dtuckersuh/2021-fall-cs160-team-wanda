@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, get_user_model, login, forms
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from .models import TutorRequest, Rating
-
+from django.db.models import Q
 
 # loginUser handles "/login" endpoint
 # logs in the user that has the specified login credentials from the login form
@@ -56,10 +56,8 @@ def home(request):
     if current_user.is_authenticated:
         users = get_user_model().objects.all().exclude(pk=current_user.id)
         tutors = users.filter(is_tutor=True, school=current_user.school)
-        requests_received = TutorRequest.objects.all().filter(
-            tutor=current_user, accepted=None, completed=False)
-        sent_requests = TutorRequest.objects.all().filter(tutee=current_user,
-                                                          completed=False)
+        requests_received = TutorRequest.objects.all().filter(Q(tutor=current_user, tutor_confirm_completed=False, accepted=True)|Q(tutor=current_user, tutor_confirm_completed=False, accepted=None))
+        sent_requests = TutorRequest.objects.all().filter(tutee=current_user, tutee_confirm_completed=False)
         if request.method == 'POST' and 'submit-accept-request' in request.POST:
             form_request_response = RequestResponseForm(
                 request.POST,
@@ -73,11 +71,9 @@ def home(request):
             form_request_response = RequestResponseForm()
 
         if request.method == 'POST' and 'submit-decline-request' in request.POST:
-            print("DECLINE")
-            form_request_response = RequestResponseForm(
-                request.POST,
-                accepted=False,
-                request_id=request.POST['request-id'])
+            form_request_response = RequestResponseForm(request.POST,
+                                    accepted = False,
+                                    request_id = request.POST['request-id'])
             if form_request_response.is_valid():
                 form_request_response.save()
                 form_request_response = RequestResponseForm(
@@ -95,21 +91,84 @@ def home(request):
                 tutor_request.tutor = tutor_instance
                 tutor_request.save()
                 success_message = "Success! You have sent a request to "
-                form_request_tutor = TutorRequestForm(
-                )  #reset form after submission
+                form_request_tutor = TutorRequestForm()  #reset form after submission
         else:
             form_request_tutor = TutorRequestForm()
 
-        return render(
-            request, "home.html", {
-                'tutors': tutors,
-                'requests_received': requests_received,
-                'sent_requests': sent_requests,
-                'form_request_tutor': form_request_tutor,
-                'form_request_response': form_request_response,
-                'success_message': success_message,
-                'tutor_instance': tutor_instance
-            })
+        if request.method == 'POST' and 'submit-complete-request' in request.POST: #code for rating, move once 'paid and done' functionality is added.
+            form_rating = RateTutorForm(request.POST)
+            if form_rating.is_valid():
+                rating = form_rating.save(commit=False) #create a rating form
+                user_given_to = get_user_model().objects.get(pk=request.POST['user-given-to']) #get the user that its given to
+
+                current_request =  TutorRequest.objects.get(pk=request.POST['request-id']) #get current requests data
+
+                # if 'complete' in request.POST and 'paid' in request.POST: #continue only if paid and completed.
+                rating.given_to = user_given_to #update the rating form
+                rating.given_by = request.user
+                # calcute new rating, and update the database
+                
+                if current_user != current_request.tutor: #if the current user is the tutee, then give a tutor rating
+                    rating.rating_type = 'tutor' #set the tutor type
+
+                    rating.save() #save the rating
+
+                    tutor_ratings = Rating.objects.filter(given_to = user_given_to).filter(rating_type = 'tutor') #grab all tutor ratings for the user
+                    count = 0 #sum up the rating
+                    sum = 0
+                    for i in tutor_ratings:
+                        count += 1
+                        sum += i.rating
+                    user_given_to.tutor_avg_rating = sum/count #get average
+
+                    #mark that tutee has confirm session has completed and paid for
+                    current_request.tutee_confirm_completed  = True
+                    current_request.tutee_confirm_paid  = True
+
+                else: #otherwise if the current user is a tutor, give a tutee
+                    rating.rating_type = 'tutee'
+                    rating.save()
+
+                    tutor_ratings = Rating.objects.filter(given_to = user_given_to).filter(rating_type = 'tutee')
+                    count = 0
+                    sum = 0
+                    for i in tutor_ratings:
+                        count += 1
+                        sum += i.rating
+                    user_given_to.tutee_avg_rating = sum/count
+
+                    #mark that tutor has confirm session has completed and paid for
+                    current_request.tutor_confirm_completed  = True
+                    current_request.tutor_confirm_paid  = True
+
+                #if both tutor and tutee has confirmed session is completed and paid
+                if current_request.tutee_confirm_completed and current_request.tutor_confirm_completed: 
+                    current_request.both_confirm_completed = True
+
+                #if both tutor and tutee has confirmed session is completed and paid
+                if current_request.tutee_confirm_paid and current_request.tutor_confirm_paid: 
+                    current_request.both_confirm_paid = True
+                
+                rating.request = current_request #save current into request field of rating instance
+                user_given_to.save() #after branches come together, save the rating average
+                current_request.save() #save the requests completed and paid
+                form_rating = RateTutorForm()
+                
+        else:# if not, then make sure we have a RateTutorForm
+            form_rating = RateTutorForm()
+
+        return render(request, "home.html",
+                {
+                    'tutors': tutors,
+                    'requests_received': requests_received,
+                    'sent_requests': sent_requests,
+                    'form_request_tutor': form_request_tutor,
+                    'form_request_response': form_request_response,
+                    'form_rating': form_rating,
+                    'success_message': success_message,
+                    'tutor_instance': tutor_instance
+                }
+        )
     else:
         return redirect("")
 
@@ -252,11 +311,11 @@ def points(request):
 def requests(request, id):
     current_user = request.user
     requests_received = TutorRequest.objects.all().filter(
-        tutor=current_user, completed=False)  # get all user's tutor requests
+        tutor=current_user, tutor_confirm_completed=False)  # get all user's tutor requests
     requests_sent = TutorRequest.objects.all().filter(
-        tutee=current_user,
-        tutee_completed=False)  # get all user's tutor requests
-    accept_filter = ""
+        tutee=current_user, tutee_confirm_completed=False)  # get all user's tutor requests
+    inbox_accept_filter = ""
+    sent_accept_filter = ""
     if request.method == 'POST' and 'submit-accept-request' in request.POST:
         form_request_response = RequestResponseForm(
             request.POST, accepted=True, request_id=request.POST['request-id'])
@@ -273,60 +332,69 @@ def requests(request, id):
             form_request_response = RequestResponseForm()
     else:
         form_request_response = RequestResponseForm()
-    if request.method == "POST" and 'show-accepted' in request.POST:
+    if request.method == "POST" and 'show-accepted-inbox' in request.POST:
         requests_received = requests_received.filter(accepted=True)
-        requests_sent = requests_sent.filter(accepted=True)
-        accept_filter = "checked"
+        inbox_accept_filter = "checked"
+    if request.method == "POST" and 'show-accepted-sent' in request.POST:
+        requests_sent= requests_sent.filter(accepted=True)
+        sent_accept_filter = "checked"
 
     if request.method == 'POST' and 'submit-rating' in request.POST:  #code for rating, move once 'paid and done' functionality is added.
         form_rating = RateTutorForm(request.POST)
         if form_rating.is_valid():
-            rating = form_rating.save(commit=False)  #create a rating form
-            userGivenTo = get_user_model().objects.get(
-                pk=request.POST['request-tutor']
-            )  #get the user that its given to
+            rating = form_rating.save(commit=False) #create a rating form
+            user_given_to = get_user_model().objects.get(pk=request.POST['user-given-to']) #get the user that its given to
 
-            current_request = TutorRequest.objects.get(
-                pk=request.POST['request-id'])  #get current requests data
-            current_request.paid = True  # make sure the paid is true
+            current_request =  TutorRequest.objects.get(pk=request.POST['request-id']) #get current requests data
 
-            if 'complete' in request.POST and 'paid' in request.POST:  #continue only if paid and completed.
-                rating.given_to = userGivenTo  #update the rating form
-                rating.given_by = request.user
-                # calcute new rating, and update the database
-                if current_user != current_request.tutor:  #if the current user is the tutee, then give a tutor rating
-                    rating.rating_type = 'tutor'  #set the tutor type
-                    rating.save()  #save the rating
+            # if 'complete' in request.POST and 'paid' in request.POST: #continue only if paid and completed.
+            rating.given_to = user_given_to #update the rating form
+            rating.given_by = request.user
+            # calcute new rating, and update the database
+            if current_user != current_request.tutor: #if the current user is the tutee, then give a tutor rating
+                rating.rating_type = 'tutor' #set the tutor type
+                rating.save() #save the rating
 
-                    tutor_ratings = Rating.objects.filter(
-                        given_to=userGivenTo).filter(
-                            rating_type='tutor'
-                        )  #grab all tutor ratings for the user
-                    count = 0  #sum up the rating
-                    sum = 0
-                    for i in tutor_ratings:
-                        count += 1
-                        sum += i.rating
-                    userGivenTo.tutor_avg_rating = sum / count  #geaverage
+                tutor_ratings = Rating.objects.filter(given_to = user_given_to).filter(rating_type = 'tutor') #grab all tutor ratings for the user
+                count = 0 #sum up the rating
+                sum = 0
+                for i in tutor_ratings:
+                    count += 1
+                    sum += i.rating
+                user_given_to.tutor_avg_rating = sum/count #get average
 
-                    current_request.tutee_completed = True
-                else:  #otherwise if the current user is a tutor, give a tutee
-                    rating.rating_type = 'tutee'
-                    rating.save()
+                #mark that tutee has confirm session has completed and paid for
+                current_request.tutee_confirm_completed  = True
+                current_request.tutee_confirm_paid  = True
 
-                    tutor_ratings = Rating.objects.filter(
-                        given_to=userGivenTo).filter(rating_type='tutee')
-                    count = 0
-                    sum = 0
-                    for i in tutor_ratings:
-                        count += 1
-                        sum += i.rating
-                    userGivenTo.tutee_avg_rating = sum / count
+            else: #otherwise if the current user is a tutor, give a tutee
+                rating.rating_type = 'tutee'
+                rating.save()
 
-                    current_request.completed = True
-                userGivenTo.save(
-                )  #after branches come together, save the rating average
-                current_request.save()  #save the requests completed and paid
+                tutor_ratings = Rating.objects.filter(given_to = user_given_to).filter(rating_type = 'tutee')
+                count = 0
+                sum = 0
+                for i in tutor_ratings:
+                    count += 1
+                    sum += i.rating
+                user_given_to.tutee_avg_rating = sum/count
+
+                #mark that tutor has confirm session has completed and paid for
+                current_request.tutor_confirm_completed  = True
+                current_request.tutor_confirm_paid  = True
+
+            #if both tutor and tutee has confirmed session is completed and paid
+            if current_request.tutee_confirm_completed and current_request.tutor_confirm_completed: 
+                current_request.both_confirm_completed = True
+
+            #if both tutor and tutee has confirmed session is completed and paid
+            if current_request.tutee_confirm_paid and current_request.tutor_confirm_paid: 
+                current_request.both_confirm_paid = True
+            
+            rating.request = current_request #save current into request field of rating instance
+            user_given_to.save() #after branches come together, save the rating average
+            current_request.save() #save the requests completed and paid
+            form_rating = RateTutorForm()
 
     else:  # if not, then make sure we have a RateTutorForm
         form_rating = RateTutorForm()
@@ -336,6 +404,7 @@ def requests(request, id):
             'form_request_response': form_request_response,
             'requests_received': requests_received,
             'requests_sent': requests_sent,
-            'accept_filter': accept_filter,
+            'inbox_accept_filter': inbox_accept_filter,
+            'sent_accept_filter': sent_accept_filter,
             'form_rating': form_rating
         })

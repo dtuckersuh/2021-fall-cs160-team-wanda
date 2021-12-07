@@ -57,7 +57,7 @@ a {
   font-size: 25px;
   justify-content: center;
   flex-direction: column;
-  flex: 2;
+  flex: 3;
   text-align: center;
 }
 
@@ -122,25 +122,51 @@ a {
   flex-direction: row;
 }
 
+.request-status{
+    align-items: center;
+    flex-direction: column;
+  }
+
+.respond-buttons{
+  justify-content: center;
+}
+
+.respond-container {
+  display: inline-block;
+  white-space: nowrap;
+  width: 15%;
+}
+
+.status-text{
+  justify-content: center;
+  align-items: center;
+  width: 100%
+}
+
 .status {
-  flex: 2;
-  padding: 1em;
-  text-align: center;
+    flex: 2;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 1em;
 }
 
 .status-accepted {
     color: green;
-    margin: 0;
 }
 
 .status-pending {
-    font-style:italic;
-    margin: 0;
+    color: white;
+    font-style: italic;
 }
 
 .status-declined {
+    color: red;
+}
+
+.status-expired {
   color: red;
-  margin: 0;
 }
 
 .comment-container {

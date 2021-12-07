@@ -145,11 +145,26 @@ class UpdateProfileForm(forms.ModelForm):
 
 class RateTutorForm(forms.ModelForm):
 
+    completed = forms.BooleanField(required=False, label="Session Completed*")
+    paid = forms.BooleanField(required=False, label="Session Paid*")
+
+    def clean_paid (self): #validate cashed points field
+        paid = self.cleaned_data['paid']
+        if (not paid):
+            self.add_error ('paid', 'Please confirm that the tutor session has been paid')
+        return True
+
+    def clean_completed (self): #validate cashed points field
+        completed = self.cleaned_data['completed']
+        if (not completed):
+            self.add_error ('completed', 'Please confirm that the tutor session has completed')
+        return True
+
     class Meta:
         model = Rating
 
         # layout where want fields to be, type in order you want it to appear
-        fields = ('rating', 'comment')
+        fields = ('rating', 'comment', 'completed', 'paid')
 
         # customize placeholders
         widgets = {
@@ -157,16 +172,15 @@ class RateTutorForm(forms.ModelForm):
             forms.NumberInput(attrs={'placeholder': '1-5'}),
             'comment':
             forms.TextInput(attrs={'placeholder': 'Comment'}),
-
-
         }
 
         # customize form labels
         labels = {
             'rating': "Enter a rating 1-5 stars",
             'comment': "Comment",
-
         }
+
+        exclude = ('request',)
 
     helper = FormHelper()
     helper.form_id = 'form'
@@ -207,8 +221,8 @@ class CashOutPointsForm(forms.Form):
 
     def clean_cashed_points (self): #validate cashed points field
         cashed_points = self.cleaned_data['cashed_points']
-        if (cashed_points is None or cashed_points < 1):
-            self.add_error ('cashed_points', 'Please enter a value greater than 1 point.')
+        if (cashed_points is None or cashed_points < 100):
+            self.add_error ('cashed_points', 'Please enter a value greater than 100 points.')
         elif cashed_points > self.user.total_points: #if user tries to cash out more points than point balance
             self.add_error ('cashed_points', 'Please enter a value less than or equal to your points balance.')
         return cashed_points

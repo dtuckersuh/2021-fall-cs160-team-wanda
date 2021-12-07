@@ -7,6 +7,7 @@
 {% endblock%}
 
 {% load crispy_forms_tags %}
+{% load core_extras %}
 {% load humanize %}
 {% block heading %}
 Dashboard
@@ -28,45 +29,64 @@ Dashboard
                 <h2>Account Balance: {{ user.total_points|intcomma}} points</h3>
             </div>
             {% if user.is_tutor %}
-                <div class="dashboard-container">
-                    <div class="list-container">
-                        <h2>Tutor Requests</h2>
-                        {% if requests_received %}
-                        {% for tutor_request in requests_received|slice:":3" %}
-                            {% with tutee=tutor_request.tutee %}
-                            <div class="received-request-container d-flex" id="request-{{tutor_request.id}}" 
-                            data-requestid="{{tutor_request.id}}" data-tuteeid="{{tutor_request.tutee.id}}">
-                                <div class = "received-request-content d-flex">
-                                    <div>
-                                        <img src="{{tutee.profile_pic.url}}" class="profile-pic">
-                                    </div>
-                                    <div class="name-column d-flex">
-                                        {{ tutee }} <br>
-                                        <div class="classes-column">
-                                            {{ tutor_request.class_name }} @ {{ tutor_request.location }} <br/>
+            <div class="dashboard-container">
+                <div class="list-container">
+                    <h2>Tutor Requests</h2>
+                    {% if requests_received %}
+                    {% for tutor_request in requests_received|slice:":3" %}
+                    {% with tutee=tutor_request.tutee %}
+                    <div class="received-request-container d-flex" id="request-{{tutor_request.id}}"
+                        data-requestid="{{tutor_request.id}}" data-tuteeid="{{tutor_request.tutee.id}}"
+                        data-givento="{{tutor_request.tutee.id}}">
+                        <div class="received-request-content d-flex">
+                            <div>
+                                <img src="{{tutee.profile_pic.url}}" class="profile-pic">
+                            </div>
+                            <div class="name-column d-flex">
+                                {{ tutee }} <br>
+                                <div class="classes-column">
+                                    {{ tutor_request.class_name }} @ {{ tutor_request.location }} <br />
+                                </div>
+                            </div>
+                            <div class="times-column d-flex">
+                                {{tutor_request.tutor_date}} @<br>{{tutor_request.tutor_start_time}} -
+                                {{tutor_request.tutor_end_time}}<br>
+                            </div>
+                            <div class="status d-flex">
+                                {% if tutor_request.accepted %}
+                                <div class="request-status d-flex">
+                                    <p class="status-accepted">Request Accepted</p>
+                                    <button type="submit" name="btn-submit-rating" class="btn-secondary" data-toggle="modal"
+                                        data-target="#modal-complete-request">
+                                        Complete
+                                    </button>
+                                </div>
+                                {% else %}
+                                    {% requeststatus request_date=tutor_request.tutor_date end_time=tutor_request.tutor_end_time status=tutor_request.accepted as status %} 
+                                    {% if status == "Awaiting Response" %}
+                                    <div class="request-status d-flex">
+                                        <div class="status-text d-flex">
+                                            <p class="status-pending">Awaiting Response</p>
                                         </div>
-                                    </div>
-                                    <div class="times-column d-flex">
-                                        {{tutor_request.tutor_date}} @<br>{{tutor_request.tutor_start_time}} - {{tutor_request.tutor_end_time}}<br>
-                                    </div>
-                                    <div class = "respond-btns d-flex">
-                                        {% if tutor_request.accepted %}
-                                            <button type="submit" name="btn-accept-request" class="btn-secondary"
-                                                data-toggle="modal" data-target="#modal-complete-request">
-                                                Complete 
-                                            </button>
-                                        {% else %}
-                                            <button type="submit" name="accept-request" class="btn-accept respond-button" 
-                                                data-toggle= "modal" data-target="#modal-accept-request">
+                                        <div class="respond-buttons d-flex">
+                                            <button type="submit" name="accept-request" class="btn-accept respond-button"
+                                                data-toggle="modal" data-target="#modal-accept-request">
                                                 Accept
                                             </button>
-                                            <button type="submit" name="decline-request" class="btn-decline respond-button" 
-                                            data-toggle= "modal" data-target="#modal-decline-request">
+                                            <button type="submit" name="decline-request" class="btn-decline respond-button"
+                                                data-toggle="modal" data-target="#modal-decline-request">
                                                 Decline
                                             </button>
-                                        {% endif %}
+                                        </div>
                                     </div>
-                                </div>
+                                    {% else %}
+                                    <div class="status-text d-flex">
+                                        <p class="status-expired">Request Expired</p>
+                                    </div>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
                         <div class="comment-container">
                             {% if tutor_request.tutee_comment %}
                             Comment: {{tutor_request.tutee_comment}} <br>
@@ -115,7 +135,7 @@ Dashboard
                         </div>
                         <div class="tutor-rating-column d-flex">
                             {% if tutor.tutor_avg_rating %}
-                            {{tutor.tutor_avg_rating}} ★<br />
+                            {{tutor.tutor_avg_rating|floatformat:1}} ★<br />
                             {% else %}
                             Rating: N/A
                             {% endif %}
@@ -138,35 +158,49 @@ Dashboard
                 <div class="list-container">
                     <h2>Sent Requests</h2>
                     {% if sent_requests %}
-                        {% for sent_request in sent_requests|slice:":3" %}
-                            {% with tutor=sent_request.tutor %}
-                                <div class="sent-request-container d-flex" id="tutor-{{tutor.id}}" data-tutorid="{{tutor.id}}" >
-                                    <div class="sent-request-content d-flex">
-                                        <div class = "tutor-profile-pic">
-                                            <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
-                                        </div>
-                                        <div class="name-column d-flex">
-                                            {{ tutor }}
-                                            <div class="classes-column d-flex">
-                                                {{ sent_request.class_name }} @ {{ sent_request.location }}
-                                            </div>
-                                        </div>
-                                        <div class="times-column d-flex">
-                                            {{sent_request.tutor_date}} @<br>{{sent_request.tutor_start_time}} - {{sent_request.tutor_end_time}}
-                                        </div>
-                                        <div class="status">
-                                            Status: 
-                                            {% if sent_request.accepted %}
-                                                <p class="status-accepted">Accepted</p>
-                                            {% elif sent_request.accepted is None %}
-                                                <p class="status-pending">Awaiting Response</p>
-                                            {% else %}
-                                                <p class="status-declined">Declined</p>
-                                            {% endif %}
-                                        </div>
+                    {% for sent_request in sent_requests|slice:":3" %}
+                    {% with tutor=sent_request.tutor %}
+                    <div class="sent-request-container d-flex" id="tutor-{{tutor.id}}" data-givento="{{tutor.id}}" data-requestid="{{sent_request.id}}">
+                        <div class="sent-request-content d-flex">
+                            <div class="tutor-profile-pic">
+                                <img src="{{sent_request.tutor.profile_pic.url}}" class="profile-pic">
+                            </div>
+                            <div class="name-column d-flex">
+                                {{ tutor }}
+                                <div class="classes-column d-flex">
+                                    {{ sent_request.class_name }} @ {{ sent_request.location }}
+                                </div>
+                            </div>
+                            <div class="times-column d-flex">
+                                {{sent_request.tutor_date}} @<br>{{sent_request.tutor_start_time}} -
+                                {{sent_request.tutor_end_time}}
+                            </div>
+                            <div class="status d-flex">
+                                {% if sent_request.accepted %}
+                                    <div class="request-status d-flex">
+                                        <p class="status-accepted"> Request Accepted</p>
+                                        <button type="submit" name="btn-submit-rating" class="btn-secondary"
+                                            data-toggle="modal" data-target="#modal-complete-request">Complete</button>
                                     </div>
-
-                                    <div class="comment-container">
+                                {% elif sent_request.accepted is None %}
+                                    {% requeststatus request_date=sent_request.tutor_date end_time=sent_request.tutor_end_time status=sent_request.accepted as status %} 
+                                    {% if status == "Awaiting Response" %}
+                                    <div class="status-text d-flex">
+                                        <p class="status-pending">Awaiting Response</p>
+                                    </div>
+                                    {% else %}
+                                    <div class="status-text d-flex">
+                                        <p class="status-expired">Request Expired</p>
+                                    </div>
+                                    {% endif %}
+                                {% else %}
+                                <div class="status-text d-flex">
+                                    <p class="status-declined">Request Declined</p>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>                                                            
+                        <div class="comment-container">
                                         {% if sent_request.tutee_comment and sent_request.accepted is None%}
                                             Your comment: {{sent_request.tutee_comment}}
                                         {% elif sent_request.tutor_comment %}
@@ -193,8 +227,8 @@ Dashboard
 <div class="modal fade" id="tutor-request-modal">
     <div class="modal-dialog model-lg">
         <div class="modal-content">
-           <div class="modal-flex-container">
-               <div class="form-container">
+            <div class="modal-flex-container">
+                <div class="form-container">
                     <h2 style="padding-bottom:1rem">Request</h2>
                     <form method="POST" class="form-group" enctype='multipart/form-data'>
                         {% csrf_token %}
@@ -261,6 +295,7 @@ Dashboard
         <div class="request-modal-content">
             <form method="POST">
                 <p class="modal-request-status">Complete Tutor Request</p>
+                <input type="hidden" name="user-given-to" id="requestGivenTo" value="">
                 <input type="hidden" name="request-id" id="requestIdCompleted" value="">
                 {% csrf_token %}
                 {{ form_rating | crispy }}
@@ -271,10 +306,20 @@ Dashboard
         </div>
     </div>
 </div>
+
+{% if form_rating.errors %}
+<script>
+    $(document).ready(function () {
+        $("#modal-complete-request").modal('show')
+    })
+</script>
+{% endif %}
+
 <script type="text/javascript">
     const tutor = document.getElementById('requestedTutor')
     const acceptId = document.getElementById('requestIdAccept')
     const declineId = document.getElementById('requestIdDecline')
+    const requestGivenTo = document.getElementById('requestGivenTo')
     const completeId = document.getElementById('requestIdCompleted')
     document.querySelector('body').addEventListener('click', event => {
         const receivedRequestContainer = event.target.closest('.received-request-container')
@@ -291,7 +336,17 @@ Dashboard
                 completeId.value = requestIdValue
             }
         }
-        if (!event.target.matches('.respond-button')) {
+
+        const givenTo = receivedRequestContainer.dataset.givento
+        requestGivenTo.value = givenTo
+
+        // save requesdtIdVal from request in local storage (in case page reloads because of error)
+        localStorage.setItem('requestedIdVal', JSON.stringify(requestIdVal))
+
+        // save givenTo from request in local storage (in case page reloads because of error)
+        localStorage.setItem('givenTo', JSON.stringify(givenTo))
+
+        if (!event.target.matches('.respond-button') && !event.target.matches('.btn-secondary')) {
             location.href = `/users/${receivedRequestContainer.dataset.tuteeid}`
         }
     })
@@ -321,8 +376,25 @@ Dashboard
 
     document.querySelector('body').addEventListener('click', event => {
         const infoContainer = event.target.closest('.sent-request-container')
-        if (!infoContainer) return
-        location.href = `/users/${infoContainer.dataset.tutorid}`
+        const requestGivenTo = document.getElementById('requestGivenTo')
+        const requestIdValue = infoContainer.dataset.requestid
+        requestGivenTo.value = infoContainer.dataset.givento
+        completeId.value = requestIdValue
+        if (!event.target.matches('.btn-secondary')) {
+            location.href = `/users/${infoContainer.dataset.givento}`
+        }
+    })
+
+    $(document).ready(function () {
+        // retrieve requestIdVal from local storage and populate hidden input in modal with id
+        const requestIdVal = JSON.parse(localStorage.getItem('requestedIdVal'))
+        acceptId.value = requestIdVal
+        declineId.value = requestIdVal
+        completeId.value = requestIdVal
+
+        // retrieve givenTo from local storage and populate hidden input in modal with id
+        const givenTo = JSON.parse(localStorage.getItem('givenTo'))
+        requestGivenTo.value = givenTo
     })
 
 </script>
@@ -331,6 +403,14 @@ Dashboard
 <script>
     $(document).ready(function () {
         $("#tutor-request-modal").modal('show')
+    })
+</script>
+{% endif %}
+
+{% if form_rating.errors %}
+<script>
+    $(document).ready(function () {
+        $("#modal-complete-request").modal('show')
     })
 </script>
 {% endif %}

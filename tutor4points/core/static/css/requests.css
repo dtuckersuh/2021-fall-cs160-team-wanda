@@ -1,4 +1,4 @@
-.form-check-label {
+.label-text-style {
   display: block;
   position: relative;
   padding-left: 2.8rem;
@@ -77,6 +77,13 @@
   border-width: 0.125rem;
   border-radius: 2rem;
 }
+
+.sent-container{
+  display: inline-block;
+  white-space: nowrap;
+  width: 15%;
+}
+
 
 .row {
   flex-direction: row;
@@ -261,6 +268,24 @@ h3 {
 .request-status{
   align-items: center;
   flex-direction: column;
+  width: 100%;
+}
+
+.status-accepted {
+  color: green;
+}
+
+.status-pending {
+  color: white;
+  font-style: italic;
+}
+
+.status-declined {
+  color: red;
+}
+
+.status-expired {
+  color: red;
 }
 
 .respond-buttons{
@@ -273,6 +298,9 @@ h3 {
 
 .status-text{
   justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom:1rem;
 }
 
 .status-accepted {
