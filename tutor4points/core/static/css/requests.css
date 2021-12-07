@@ -98,12 +98,12 @@
 }
 
 .scroll-box::-webkit-scrollbar-track {
-  border-radius: 10px;
+  border-radius: 0.625rem;
   background-color: #242835;
 }
 
 .scroll-box::-webkit-scrollbar-thumb {
-  border-radius: 10px;
+  border-radius: 0.625rem;
   background: #323849;
 }
 
