@@ -46,9 +46,10 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 ![](media/testResult.png)
 
 ## Running Docker
-1. Navigate to ```2021-fall-cs160-team-wanda/tutor4points```
-2. Build container image using ```docker build -t tutor4points .```
-3. Start container using updated code using ```docker run -p 8000:8000 tutor4points```
+1. Open and Run Docker app
+2. Navigate to ```2021-fall-cs160-team-wanda/tutor4points```
+3. Build container image using ```docker build -t tutor4points .```
+4. Start container using updated code using ```docker run -p 8000:8000 tutor4points```
 
 ## Team Practices
 * Every feature is a separate branch and is named in the format ```feature-featurename```
