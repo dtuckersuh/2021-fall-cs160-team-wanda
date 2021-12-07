@@ -52,10 +52,11 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 3. Build container image using ```docker build -t tutor4points .```
 4. Start container with image using ```docker run -p 8000:8000 tutor4points```
 ### Loading Docker Image and Running it
-1. Navigate to the following link to download the Docker Image: https://drive.google.com/file/d/1UG966POXTSBD1L4GTh3kJzXOblDggP6p/view?usp=sharing 
+1. Navigate to the following link to download the Docker Image: https://drive.google.com/file/d/1vBXlHetCmQcKJJ10HV2GgiaZ3DXpYR_n/view?usp=sharing 
 2. Run ```docker load -i tutor4points.tar``` to load the Docker image
-3. Run ```docker images``` to make sure the image is listed
-4. Start container with image using ```docker run -p 8000:8000 tutor4points```
+Docker will display the image ID that is being loaded. The image ID should start with ```0764c73df3f1```
+4. Run ```docker images``` to make sure the image with the ID is listed.
+5. Start container with image using the image ID ```docker run -p 8000:8000 0764c73df3f1```
 
 ## Team Practices
 * Every feature is a separate branch and is named in the format ```feature-featurename```
