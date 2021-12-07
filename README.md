@@ -51,7 +51,7 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 2. Navigate to ```2021-fall-cs160-team-wanda/tutor4points```
 3. Build container image using ```docker build -t tutor4points .```
 4. Start container with image using ```docker run -p 8000:8000 tutor4points```
-### Loading Docker Image and Running it
+### Loading Docker Image and Running it (from Terminal)
 1. Navigate to the following link to download the Docker Image: https://drive.google.com/file/d/1vBXlHetCmQcKJJ10HV2GgiaZ3DXpYR_n/view?usp=sharing 
 2. Run ```docker load -i tutor4points.tar``` to load the Docker image
 Docker will display the image ID that is being loaded. The image ID should start with ```0764c73df3f1```
