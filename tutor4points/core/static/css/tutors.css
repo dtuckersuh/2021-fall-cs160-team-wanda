@@ -13,7 +13,7 @@
 }
 
 .tutor-info-container{
-    height:9rem;
+    height:fit-content;
     margin-bottom: 1.875rem;
     padding: 1.563rem;
     align-items: center;
