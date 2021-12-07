@@ -226,11 +226,12 @@ h2 {
   position: sticky;
   top: 0;
   background-color: #37425f;
-  border-radius: 1.9rem;
+  border-radius: 2rem;
   border-color: #2a2f3b;
   border-style: solid;
   border-width: 1rem;
   margin-top: 0rem;
+  box-shadow: 0.3rem -2.563rem 0rem 1.625rem rgba(42,47,59,1);
 }
 
 h3 {
