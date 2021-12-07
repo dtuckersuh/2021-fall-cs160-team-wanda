@@ -354,32 +354,6 @@ Dashboard
         }
     })
 
-    // const acceptId = document.getElementById('requestIdAccept')
-    // const declineId = document.getElementById('requestIdDecline')
-    // const requestGivenTo = document.getElementById('requestGivenTo')
-    // const completedRequestId = document.getElementById('completedRequestId')
-    // document.querySelector('body').addEventListener('click', event => {
-    //     const requestContainer = event.target.closest('.request-container')
-    //     if (!requestContainer) return
-    //     const requestIdVal = requestContainer.dataset.requestid
-    //     acceptId.value = requestIdVal
-    //     declineId.value = requestIdVal
-    //     completedRequestId.value = requestIdVal
-
-    //     const givenTo = requestContainer.dataset.givento
-    //     requestGivenTo.value = givenTo
-
-    //     // save requesdtIdVal from request in local storage (in case page reloads because of error)
-    //     localStorage.setItem('requestedIdVal', JSON.stringify(requestIdVal))
-
-    //     // save givenTo from request in local storage (in case page reloads because of error)
-    //     localStorage.setItem('givenTo', JSON.stringify(givenTo))
-
-    //     if (!event.target.matches('.btn-secondary') && !event.target.matches('.respond-button')) {
-    //         location.href = `/users/${requestGivenTo.value}`
-    //     }
-    // })
-
     $(document).ready(function () {
         // retrieve requestIdVal from local storage and populate hidden input in modal with id
         const requestIdVal = JSON.parse(localStorage.getItem('requestedIdVal'))
