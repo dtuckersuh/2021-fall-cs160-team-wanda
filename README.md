@@ -23,7 +23,7 @@ To View the User Guide of Tutor4Points, please refer to https://docs.google.com/
 1. Using Terminal to navigate to the folder where you would like the project to be stored.
 2. Copy the URL from the GitHub Repository
 ![](media/repoURL.png)
-4. Clone the project by running the following command in Terminal: ```git clone <url>```
+3. Clone the project by running the following command in Terminal: ```git clone <url>```
 
 ## Running the Project
 1. Navigate to ```2021-fall-cs160-team-wanda/tutor4points``` and run ```python3 manage.py migrate```
@@ -62,19 +62,20 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 ## Docker
 ### Building Docker Image and Running it
 1. Download the Docker from https://www.docker.com/get-started
-1. Open and Run Docker app
-2. Navigate to ```2021-fall-cs160-team-wanda/tutor4points```
-3. Build container image using ```docker build -t tutor4points .```
-4. Start container with image using ```docker run -p 8000:8000 tutor4points```
-5. Type ```http://127.0.0.1:8000/``` into your browser to navigate to the web app
+2. Open and Run Docker app
+3. Navigate to ```2021-fall-cs160-team-wanda/tutor4points```
+4. Build container image using ```docker build -t tutor4points .```
+5. Start container with image using ```docker run -p 8000:8000 tutor4points```
+6. Type ```http://127.0.0.1:8000/``` into your browser to navigate to the web app
 ### Loading Docker Image and Running it (from Terminal)
 1. Download Docker from https://www.docker.com/get-started
-1. Navigate to the following link to download the Docker Image: https://drive.google.com/file/d/1vBXlHetCmQcKJJ10HV2GgiaZ3DXpYR_n/view?usp=sharing
-2. Run ```docker load -i tutor4points.tar``` to load the Docker image
+2. Navigate to the following link to download the Docker Image: https://drive.google.com/file/d/1vBXlHetCmQcKJJ10HV2GgiaZ3DXpYR_n/view?usp=sharing
+3. Nvigate to the folder containing the image via terminal
+4. Run ```docker load -i tutor4points.tar``` to load the Docker image
 Docker will display the image ID that is being loaded. The image ID should start with ```0764c73df3f1```
-3. Run ```docker images``` to make sure the image with the ID is listed.
-4. Start container with image using the image ID ```docker run -p 8000:8000 0764c73df3f1```
-5. Type ```http://127.0.0.1:8000/``` into your browser to navigate to the web app
+5. Run ```docker images``` to make sure the image with the ID is listed.
+6. Start container with image using the image ID ```docker run -p 8000:8000 0764c73df3f1```
+7. Type ```http://127.0.0.1:8000/``` into your browser to navigate to the web app
 
 ## Team Practices
 * Every feature is a separate branch and is named in the format ```feature-featurename```
