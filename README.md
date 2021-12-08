@@ -26,7 +26,7 @@ To View the User Guide of Tutor4Points, please refer to https://docs.google.com/
 4. Clone the project by running the following command in Terminal: ```git clone <url>```
 
 ## Running the Project
-1. Navigate to ```2021-fall-cs160-team-wanda/tutor4points``` and run ```python3 maange.py migrate```
+1. Navigate to ```2021-fall-cs160-team-wanda/tutor4points``` and run ```python3 manage.py migrate```
 2. Run the python project setup script ```python3 setup_project.py```
 Note: This script adds sample tutors and schools into the database. It also sets up the admin account. 
 3. Type ```python3 manage.py runserver```
@@ -45,7 +45,8 @@ Password: wanda
 
 ## Selenium Test Automation
 ### Downloading & Configuring the Driver
-1. Go to Chrome, click Settings > Help > About Google Chrome to check what version your Chrome browser is at.
+1. Download Chrome Browser (if you do not already have it) from https://www.google.com/chrome/
+2. Go to Chrome, click Settings > Help > About Google Chrome to check what version your Chrome browser is at.
 ![](media/aboutChromeMenu.png)
 ![](media/viewChromeVer.png)
 3. Download the chromedriver that matches the version of your browser: https://chromedriver.chromium.org/downloads <br>
@@ -60,18 +61,20 @@ If you have a Mac, you can add the driver to your system by opening Terminal, th
 
 ## Docker
 ### Building Docker Image and Running it
+1. Download the Docker from https://www.docker.com/get-started
 1. Open and Run Docker app
 2. Navigate to ```2021-fall-cs160-team-wanda/tutor4points```
 3. Build container image using ```docker build -t tutor4points .```
 4. Start container with image using ```docker run -p 8000:8000 tutor4points```
 5. Type ```http://127.0.0.1:8000/``` into your browser to navigate to the web app
 ### Loading Docker Image and Running it (from Terminal)
+1. Download Docker from https://www.docker.com/get-started
 1. Navigate to the following link to download the Docker Image: https://drive.google.com/file/d/1vBXlHetCmQcKJJ10HV2GgiaZ3DXpYR_n/view?usp=sharing
 2. Run ```docker load -i tutor4points.tar``` to load the Docker image
 Docker will display the image ID that is being loaded. The image ID should start with ```0764c73df3f1```
-4. Run ```docker images``` to make sure the image with the ID is listed.
-5. Start container with image using the image ID ```docker run -p 8000:8000 0764c73df3f1```
-6. Type ```http://127.0.0.1:8000/``` into your browser to navigate to the web app
+3. Run ```docker images``` to make sure the image with the ID is listed.
+4. Start container with image using the image ID ```docker run -p 8000:8000 0764c73df3f1```
+5. Type ```http://127.0.0.1:8000/``` into your browser to navigate to the web app
 
 ## Team Practices
 * Every feature is a separate branch and is named in the format ```feature-featurename```
